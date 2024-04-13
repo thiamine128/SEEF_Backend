@@ -1,7 +1,5 @@
 <template>
-  <div id="app">
-
-  </div>
+  <router-view/>
 </template>
 
 <script>
@@ -15,11 +13,11 @@ export default {
 
     }
   },
-  created: function(){
-    axios.get("http://localhost:8088/city").then(function(response){
-
-    })
-  },
+  // created: function(){
+  //   axios.get("http://localhost:8088/city").then(function(response){
+  //
+  //   })
+  // },
   components: {
 
   }
