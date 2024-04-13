@@ -1,13 +1,13 @@
-import Vue from 'vue'
+import {createApp} from 'vue'
 import App from './App.vue'
-import ElementUI from 'element-ui'
+import ElementPlus from 'element-plus'
 import axios from 'axios'
+import router from './router'
 
 axios.defaults.baseURL = "http://localhost:8080"
 
-
-Vue.config.productionTip = false
-Vue.use(ElementUI)
-new Vue({
-  render: h => h(App),
-}).$mount('#app')
+const app = createApp(App);
+app.use(App);
+app.use(ElementPlus);
+app.use(router)
+app.mount('#app');
