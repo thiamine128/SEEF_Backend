@@ -5,9 +5,14 @@
 <script>
 
 import axios from 'axios'
+import {provide} from "vue";
 
 export default {
   name: 'App',
+  setup(){
+      const webURL = "http://localhost:5653/"
+      provide('webURL', webURL)
+  },
   data: function(){
     return{
 

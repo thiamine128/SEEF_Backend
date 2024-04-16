@@ -10,8 +10,10 @@
     "axios": "^1.6.7",
     "core-js": "^3.8.3",
     "element-plus": "^2.7.0",
+    "markdown-it": "^14.1.0",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "vue3-markdown-it": "^1.0.10"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",
