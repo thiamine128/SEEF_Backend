@@ -25,12 +25,29 @@ const router = createRouter({
             path: '/blog',
             name: 'blog',
             component: defineAsyncComponent(() => import(`../pages/blog/index.vue`)),
+            children:[
+
+                {
+                    path: '/blog/article',
+                    name: 'article',
+                    component: defineAsyncComponent(() =>
+                        import(`../pages/blog/subPages/article/index.vue`)),
+                },
+                {
+                    path: '/blog/:catchAll(.*)',
+                    redirect: '/blog/article',
+                },
+                {
+                    path: '/blog/',
+                    redirect: '/blog/article'
+                }
+            ],
             meta: {
-                title: '教学论坛',
+                title: '学业论坛',
             },
         },
         {
-            path: '/*',
+            path: '/:catchAll(.*)',
             redirect: '/login',
         },
         {

@@ -1,6 +1,7 @@
 <template>
     <nav class="mainTitleContainer">
         <div :class="{ customFont: true }">software and life</div>
+
         <nav class="button-nav">
             <nav-button v-for="item in buttonSet" :button-name="item.name"></nav-button>
         </nav>
@@ -30,15 +31,14 @@ export default {
 }
 .button-nav {
     display: flex;
+    flex-direction: row;
     justify-content: right;
 }
 .customFont {
     font-family: 'rage', sans-serif;
     font-weight: bold;
     font-size: 32px;
-    margin-top: 25px;
-    margin-bottom: 25px;
-    margin-right: 200px;
-    margin-left: 60px;
+    margin: 25px 200px 25px 60px;
+    color: white;
 }
 </style>

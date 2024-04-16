@@ -22,11 +22,12 @@ export default {
     font-weight: bold;
     font-size: 50px;
     margin: auto;
+    color: rgba(255, 255, 255, 0.8);
 }
 .dateFont {
     font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
     font-weight: bold;
-    color: darkgray;
+    color: #bcbcbc;
     font-size: 20px;
     margin: auto;
 }

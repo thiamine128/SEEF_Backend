@@ -29,7 +29,7 @@ export default {
 .title-control {
     margin-top: 3px;
     width: 100%;
-    height: 610px;
+    height: 310px;
     background-color: rgba(0.34, 0.22, 0.28, 0.4);
     display: flex;
     flex-direction: column;
