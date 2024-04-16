@@ -1,5 +1,7 @@
 package com.software.entity;
 
+import lombok.Data;
+
 import java.util.Date;
 
 /**
@@ -7,6 +9,7 @@ import java.util.Date;
  * @Description：
  * @date
  */
+@Data
 public class User {
     private Long id;
 
