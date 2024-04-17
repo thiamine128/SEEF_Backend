@@ -34,7 +34,7 @@ export default {
 
 }
 .col:hover{
-    background-color: rgba(0.34, 0.34, 0.34, 0.7);
+    background-color: rgba(255, 255, 255, 0.35);
 }
 
 .linkStyle{

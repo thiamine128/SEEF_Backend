@@ -71,3 +71,9 @@ result.save('result.stl')  # 旋转后的长方体保存为stl格式
 ```
 
 上述前八行输入了一个长方体的顶点，之后输入了旋转轴`(1, 2, 1)`，最后输入旋转角度`22`度
+
+公式测试：$\sum_{i=1}^n q_i + y = \frac{\sum_{i=1}^{n}a_i\sum_{i=1}^nb_i}{\Pi_{i=1}^n(a_i+b_i)}$
+
+图片测试：
+
+![]( http://localhost:5653/favicon.ico)
