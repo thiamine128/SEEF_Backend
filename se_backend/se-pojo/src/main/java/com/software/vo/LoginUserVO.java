@@ -44,7 +44,10 @@ public class LoginUserVO implements Serializable {
      */
     private String userRole;
 
-
+    /**
+     * 用户昵称
+     */
+    private String email;
 
     private String token;
 

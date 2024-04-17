@@ -1,6 +1,7 @@
 package com.software.controller;
 
 import com.software.constant.JwtClaimsConstant;
+import com.software.dto.UserEmailLoginDTO;
 import com.software.dto.UserLoginDTO;
 import com.software.entity.User;
 import com.software.properties.JwtProperties;
@@ -12,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -33,7 +35,7 @@ public class UserController {
     private JwtProperties jwtProperties;
 
     @PostMapping("/login")
-    @ApiOperation(value = "员工登录")
+    @ApiOperation(value = "用户登录")
     public Result<LoginUserVO> login(@RequestBody UserLoginDTO userLoginDTO) {
         log.info("员工登录：{}", userLoginDTO);
 
@@ -54,6 +56,37 @@ public class UserController {
                 .userAvatar(user.getUserAvatar())
                 .userProfile(user.getUserProfile())
                 .userRole(user.getUserRole())
+                .email(user.getEmail())
+                .token(token)
+                .build();
+
+        return Result.success(loginUserVO);
+    }
+
+
+    @PostMapping("/eLogin")
+    @ApiOperation(value = "用户邮箱登录")
+    public Result<LoginUserVO> eLogin(@RequestBody  UserEmailLoginDTO userEmailLoginDTO) {
+        log.info("用户邮箱登录：{}", userEmailLoginDTO);
+
+        User user = userService.eLogin(userEmailLoginDTO);
+
+        //登录成功后，生成jwt令牌
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(JwtClaimsConstant.USER_ID, user.getId());
+        String token = JwtUtil.createJWT(
+                jwtProperties.getAdminSecretKey(),
+                jwtProperties.getAdminTtl(),
+                claims);
+
+        LoginUserVO loginUserVO = LoginUserVO.builder()
+                .id(user .getId())
+                .userAccount(user.getUserAccount())
+                .userName(user.getUserName())
+                .userAvatar(user.getUserAvatar())
+                .userProfile(user.getUserProfile())
+                .userRole(user.getUserRole())
+                .email(user.getEmail())
                 .token(token)
                 .build();
 

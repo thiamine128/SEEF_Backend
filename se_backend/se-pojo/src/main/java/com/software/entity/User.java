@@ -30,7 +30,10 @@ public class User {
      * 用户昵称
      */
     private String userName;
-
+    /**
+     * 用户邮箱
+     */
+    private String email;//邮箱
     /**
      * 用户头像
      */
