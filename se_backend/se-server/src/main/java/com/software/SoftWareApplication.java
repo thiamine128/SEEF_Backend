@@ -6,14 +6,19 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.bind.annotation.RequestMapping;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 @SpringBootApplication
 @EnableTransactionManagement //开启注解方式的事务管理
 @EnableCaching//开启缓存注解功能
 @Slf4j
-//@ComponentScan(basePackages = {"com.software.mapper"})
+@ComponentScan(basePackages = {"com.software"})
 public class SoftWareApplication {
+
+
+
+
     public static void main(String[] args) {
         SpringApplication.run(SoftWareApplication.class, args);
         log.info("server started");

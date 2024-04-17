@@ -4,6 +4,8 @@ server:
 
 
 spring:
+  profiles:
+    active: dev
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/se_db
@@ -17,6 +19,14 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
 
+
+logging:
+  level:
+    com:
+      software:
+        mapper: debug
+        service: info
+        controller: info
 
 software:
   jwt:
