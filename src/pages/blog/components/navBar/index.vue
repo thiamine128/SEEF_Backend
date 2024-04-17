@@ -27,7 +27,7 @@ export default {
 .mainTitleContainer{
     display: flex;
     justify-content: space-between;
-    background-color: rgba(0.3, 0.2, 0.3, 0.3);
+    /*background-color: rgba(0.3, 0.2, 0.3, 0.3);*/
 }
 .button-nav {
     display: flex;

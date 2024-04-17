@@ -1,5 +1,5 @@
 <template>
-    <blogTitle title="我的软件生涯" post-time="2023-12-11" update-time="2023-12-15"/>
+    <blogTitle title="BUAA-SE-Wonderful" post-time="2023-12-11" update-time="2023-12-15"/>
     <div class="content-container">
         <md-field class="content-left"></md-field>
     </div>
@@ -11,7 +11,7 @@ import blogTitle from "@/pages/blog/components/title/index.vue";
 
 export default {
     name: "article",
-    components: {blogTitle, mdField}
+    components: {blogTitle, mdField},
 }
 </script>
 

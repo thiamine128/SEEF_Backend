@@ -1,7 +1,7 @@
 <template>
     <div class="textSet">
         <div class="marginSet">
-            <markdown :source="content"/>
+            <markdown :source="content" :plugins="plugins"/>
         </div>
     </div>
 </template>
@@ -10,6 +10,7 @@
 import axios from "axios";
 import {inject} from "vue";
 import markdown from 'vue3-markdown-it'
+import MarkdownItKatex from 'markdown-it-katex'
 
 export default {
     name: "mdField",
@@ -24,7 +25,12 @@ export default {
     },
     data(){
       return{
-        content: ''
+        content: '',
+        plugins:[
+            {
+                plugin: MarkdownItKatex
+            }
+        ]
       }
     },
     components:{
@@ -38,8 +44,8 @@ export default {
 .textSet{
     background-color: rgba(255, 255, 255, 0.9);
     min-height: 0;
-    text-align: left;
     border-radius: 10px;
+    text-align: left;
 }
 .marginSet{
     margin: 70px;

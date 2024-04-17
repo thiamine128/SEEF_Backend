@@ -26,6 +26,8 @@ pre {
 
     border-radius: 6px;
 
+    text-align: left;
+
 }
 
 .hljs-tag,
@@ -113,8 +115,8 @@ pre {
     margin-top: 5px;
 }
 
-p{
-    color: #8e8e8e;
+blockquote p{
+    color: #b0b0b0;
     background: rgba(84, 84, 84, 0.03);
 }
 
@@ -122,9 +124,18 @@ code{
     color: #2b2b2b;
     font-family: 'consolas', sans-serif;
     background-color: #f1f2f2;
+    text-align: left;
 }
 
 p code{
     color: #8e8e8e;
     font-family: 'consolas', sans-serif;
+}
+
+.katex-html{
+    font-size: 0;
+}
+
+p, h1, h2, h3, h4, h5, h6{
+    text-align: left;
 }
