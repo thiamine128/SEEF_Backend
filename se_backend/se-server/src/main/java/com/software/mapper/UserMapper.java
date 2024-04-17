@@ -1,8 +1,10 @@
 package com.software.mapper;
 
 import com.software.entity.User;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Component;
 
 /**
  * @author

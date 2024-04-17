@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.7.3</version>
+    <version>3.2.4</version>
   </parent>
   <groupId>org.example</groupId>
   <artifactId>se_backend</artifactId>
@@ -78,12 +78,6 @@
       </dependency>
 
       <dependency>
-        <groupId>com.github.xiaoymin</groupId>
-        <artifactId>knife4j-spring-boot-starter</artifactId>
-        <version>${knife4j}</version>
-      </dependency>
-
-      <dependency>
         <groupId>org.aspectj</groupId>
         <artifactId>aspectjrt</artifactId>
         <version>${aspectj}</version>
@@ -112,7 +106,6 @@
         <artifactId>jaxb-api</artifactId>
         <version>${jaxb-api}</version>
       </dependency>
-
       <!-- poi -->
       <dependency>
         <groupId>org.apache.poi</groupId>
