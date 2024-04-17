@@ -13,7 +13,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 @EnableTransactionManagement //开启注解方式的事务管理
 @EnableCaching//开启缓存注解功能
 @Slf4j
-@ComponentScan(basePackages = {"com.software"})
+
 public class SoftWareApplication {
 
 

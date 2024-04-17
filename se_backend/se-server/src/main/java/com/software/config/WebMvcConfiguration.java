@@ -50,41 +50,41 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
      * @return
      */
 
-//    @Bean
-//    public Docket docket2() {
-//        ApiInfo apiInfo = new ApiInfoBuilder()
-//                .title("接口文档")
-//                .version("2.0")
-//                .description("接口文档")
-//                .build();
-//        Docket docket = new Docket(DocumentationType.SWAGGER_2)
-//                .groupName("用户端")
-//                .apiInfo(apiInfo)
-//                .select()
-//                .apis(RequestHandlerSelectors.basePackage("com.software.controller"))
-//                .paths(PathSelectors.any())
-//                .build();
-//        return docket;
-//    }
+    @Bean
+    public Docket docket2() {
+        ApiInfo apiInfo = new ApiInfoBuilder()
+                .title("接口文档")
+                .version("2.0")
+                .description("接口文档")
+                .build();
+        Docket docket = new Docket(DocumentationType.SWAGGER_2)
+                .groupName("用户端")
+                .apiInfo(apiInfo)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.software.controller"))
+                .paths(PathSelectors.any())
+                .build();
+        return docket;
+    }
 
     /**
      * 设置静态资源映射
      * @param registry
      */
-//    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
-//        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-//    }
-//    //扩展Spring MVC 的消息转换器，把日期转换为正确格式
-//    @Override
-//    protected void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-//        //创建一个消息转换器
-//        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-//        //需要为消息转换器设置一个对象转换器
-//        converter.setObjectMapper(new JacksonObjectMapper());
-//        //将自己的消息转换器加入容器中
-//        converters.add(0,converter);
-//    }
+    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
+    //扩展Spring MVC 的消息转换器，把日期转换为正确格式
+    @Override
+    protected void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+        //创建一个消息转换器
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        //需要为消息转换器设置一个对象转换器
+        converter.setObjectMapper(new JacksonObjectMapper());
+        //将自己的消息转换器加入容器中
+        converters.add(0,converter);
+    }
 
 
 }
