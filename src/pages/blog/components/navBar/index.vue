@@ -1,15 +1,18 @@
 <template>
     <nav class="mainTitleContainer">
         <div :class="{ customFont: true }">software and life</div>
-
-        <nav class="button-nav">
-            <nav-button v-for="item in buttonSet" :button-name="item.name"></nav-button>
-        </nav>
+        <div class="search-nav">
+            <search-bar/>
+            <nav class="button-nav">
+                <nav-button v-for="item in buttonSet" :button-name="item.name"></nav-button>
+            </nav>
+        </div>
     </nav>
 </template>
 
 <script>
 import navButton from "@/pages/blog/components/navButton/index.vue";
+import searchBar from "@/pages/blog/components/searchBar/index.vue";
 export default {
     name: "navBar",
     data(){
@@ -19,7 +22,7 @@ export default {
             ]
         }
     },
-    components: {navButton}
+    components: {navButton, searchBar}
 }
 </script>
 
@@ -27,7 +30,12 @@ export default {
 .mainTitleContainer{
     display: flex;
     justify-content: space-between;
-    /*background-color: rgba(0.3, 0.2, 0.3, 0.3);*/
+}
+.search-nav{
+    display: flex;
+    justify-content: right;
+    width: 800px;
+    align-items: center;
 }
 .button-nav {
     display: flex;
@@ -38,7 +46,8 @@ export default {
     font-family: 'rage', sans-serif;
     font-weight: bold;
     font-size: 32px;
-    margin: 25px 200px 25px 60px;
+    margin: 25px 0 25px 60px;
     color: white;
+
 }
 </style>
