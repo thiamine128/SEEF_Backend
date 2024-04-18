@@ -28,10 +28,12 @@ export default {
 <style scoped>
 .col{
     width: 100px;
-    height: 100%;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: rgba(0.34, 0.34, 0.34, 0.1);
     transition: background-color 0.5s ease ;
-
 }
 .col:hover{
     background-color: rgba(255, 255, 255, 0.35);
@@ -46,7 +48,6 @@ export default {
     font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
     font-weight: bold;
     font-size: 16px;
-    margin-top: 33px;
     color: white;
 }
 </style>
