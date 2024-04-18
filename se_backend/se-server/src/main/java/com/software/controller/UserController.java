@@ -4,6 +4,7 @@ import com.software.constant.JwtClaimsConstant;
 import com.software.dto.UserEmailDTO;
 import com.software.dto.UserEmailLoginDTO;
 import com.software.dto.UserLoginDTO;
+import com.software.dto.UserRegisterDTO;
 import com.software.entity.User;
 import com.software.properties.JwtProperties;
 import com.software.result.Result;
@@ -102,7 +103,7 @@ public class UserController {
         return Result.success(loginUserVO);
     }
     @PostMapping("/sendmail")
-    public Result sendMsg(@RequestBody UserEmailDTO userEmailDTO){
+    public Result SendMsg(@RequestBody UserEmailDTO userEmailDTO){
         String code = String.valueOf((int)((Math.random() * 9 + 1) * Math.pow(10,5)));
         redisTemplate.opsForValue().set(userEmailDTO.getEmail(), code,3, TimeUnit.MINUTES);
         try{
@@ -110,6 +111,13 @@ public class UserController {
         }catch (Exception e){
             log.error(e.getMessage());
         }
+
+
+        return Result.success();
+    }
+    @PostMapping("/register")
+    public Result Register(@RequestBody UserRegisterDTO userRegisterDTO){
+
 
 
         return Result.success();
