@@ -16,6 +16,17 @@ spring:
     url: jdbc:mysql://localhost:3306/se_db
     username: ${software.datasource.username}
     password: ${software.datasource.password}
+  redis:
+    host: ${software.redis.host}
+    port: ${software.redis.port}
+    password: ${software.redis.password}
+    database: ${software.redis.database}
+  mail:
+    host: smtp.qq.com
+    username: 2323428810@qq.com
+    password: ixsofyljvbendhhf
+    port: 587
+    default-encoding: UTF-8
 
 
 mybatis:

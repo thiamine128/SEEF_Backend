@@ -1,18 +1,23 @@
 package com.software.controller;
 
 import com.software.constant.JwtClaimsConstant;
+import com.software.dto.UserEmailDTO;
 import com.software.dto.UserEmailLoginDTO;
 import com.software.dto.UserLoginDTO;
 import com.software.entity.User;
 import com.software.properties.JwtProperties;
 import com.software.result.Result;
 import com.software.service.UserService;
+import com.software.service.impl.EmailUtil;
 import com.software.utils.JwtUtil;
 import com.software.vo.LoginUserVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import java.util.Timeunit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -32,6 +37,12 @@ public class UserController {
     private UserService userService;
     @Autowired
     private JwtProperties jwtProperties;
+
+    @Autowired
+    private EmailUtil emailUtil;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @PostMapping("/login")
     @Operation(summary = "用户登录")
@@ -90,6 +101,19 @@ public class UserController {
                 .build();
 
         return Result.success(loginUserVO);
+    }
+    @PostMapping("/sendmail")
+    public Result sendMsg(@RequestBody UserEmailDTO userEmailDTO){
+        String code = String.valueOf((int)((Math.random() * 9 + 1) * Math.pow(10,5)));
+        redisTemplate.opsForValue().set(userEmailDTO.getEmail(), code,3, TimeUnit.MINUTES);
+        try{
+            emailUtil.sendSimpleMail(userEmailDTO.getEmail(),"主题：验证码","内容："+code+"有效时间3分钟（非本人操作请忽略）");
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+
+
+        return Result.success();
     }
 
 
