@@ -17,5 +17,5 @@ public class UserRegisterDTO {
 
     private String userPassword;
 
-    private String confirmPassword;
+
 }
