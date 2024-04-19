@@ -1,28 +1,19 @@
 <template>
     <div class="textSet">
         <div class="marginSet">
-            <markdown :source="content" :plugins="plugins"/>
+            <markdown :source="inputContent" :plugins="plugins"/>
         </div>
     </div>
 </template>
 
 <script>
 import axios from "axios";
-import {inject} from "vue";
+import {inject, watch, defineProps} from "vue";
 import markdown from 'vue3-markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
-
 export default {
     name: "mdField",
-    async created(){
-        try {
-            const response = await axios.get(inject('webURL')+"testMarkdown.md");
-            this.content = response.data;
-            console.log(this.content)
-        } catch (error) {
-            console.error("Error fetching Markdown file:", error);
-        }
-    },
+    props: ['inputContent'],
     data(){
       return{
         content: '',

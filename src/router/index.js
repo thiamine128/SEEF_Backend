@@ -26,12 +26,17 @@ const router = createRouter({
             name: 'blog',
             component: defineAsyncComponent(() => import(`../pages/blog/index.vue`)),
             children:[
-
                 {
                     path: '/blog/article',
                     name: 'article',
                     component: defineAsyncComponent(() =>
                         import(`../pages/blog/subPages/article/index.vue`)),
+                },
+                {
+                    path: '/blog/editor',
+                    name: 'editor',
+                    component: defineAsyncComponent(() =>
+                        import(`../pages/blog/subPages/editor/index.vue`)),
                 },
                 {
                     path: '/blog/:catchAll(.*)',
