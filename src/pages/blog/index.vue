@@ -4,19 +4,21 @@
         <nav-bar :class="{navColorStyle: notHead, navColorStyleHead: !notHead}" ></nav-bar>
     </div>
     <div class="view-set-margin">
-        <router-view/>
+        <router-view ref="views"/>
+        <blog-bottom/>
     </div>
 
 </template>
 
 <script>
 import navBar from "@/pages/blog/components/navBar/index.vue";
+import blogBottom from "@/pages/blog/components/blogBottom/index.vue";
 import {reactive} from "vue";
 
 export default {
     name: "blog",
     components: {
-        navBar
+        navBar, blogBottom
     },
     data(){
         const data=reactive({
@@ -27,26 +29,23 @@ export default {
             let scrollTop =window.pageYOffset ||document.documentElement.scrollTop ||document.body.scrollTop;
             // 滚动条滚动的距离
             let scrollStep = scrollTop - data.oldScrollTop;
-            console.log("header 滚动距离 ", scrollTop);
+            //console.log("header 滚动距离 ", scrollTop);
             // 更新——滚动前，滚动条距文档顶部的距离
             data.oldScrollTop = scrollTop;
-
             //变量windowHeight是可视区的高度
             let windowHeight =
                 document.documentElement.clientHeight || document.body.clientHeight;
             //变量scrollHeight是滚动条的总高度
             let scrollHeight =
                 document.documentElement.scrollHeight || document.body.scrollHeight;
-
             //滚动条到底部的条件
             if (scrollTop + windowHeight === scrollHeight) {
-                //你想做的事情
-                console.log("header  你已经到底部了");
+                //到达底部
             }
             if (scrollStep < 0) {
-                console.log("header 滚动条向上滚动了！");
+                //向上滚动
             } else {
-                console.log("header  滚动条向下滚动了！");
+                //向下滚动
                 if (!this.notHead) this.notHead = true;
             }
             // 判断是否到了最顶部
