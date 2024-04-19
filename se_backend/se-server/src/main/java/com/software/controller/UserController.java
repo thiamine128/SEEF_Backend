@@ -1,5 +1,6 @@
 package com.software.controller;
 
+import com.software.config.WebConfig;
 import com.software.constant.JwtClaimsConstant;
 import com.software.dto.UserEmailDTO;
 import com.software.dto.UserEmailLoginDTO;
@@ -47,7 +48,7 @@ public class UserController {
     @PostMapping("/login")
     @Operation(summary = "用户登录")
     public Result<LoginUserVO> login(@RequestBody UserLoginDTO userLoginDTO) {
-        log.info("员工登录：{}", userLoginDTO);
+        log.info("用户登录：{}", userLoginDTO);
 
         User user = userService.login(userLoginDTO);
 
@@ -105,7 +106,13 @@ public class UserController {
     @PostMapping("/sendmail")
     public Result SendMsg(@RequestBody UserEmailDTO userEmailDTO){
         String code = String.valueOf((int)((Math.random() * 9 + 1) * Math.pow(10,5)));
-        redisTemplate.opsForValue().set(userEmailDTO.getEmail(), code,3, TimeUnit.MINUTES);
+        if (redisTemplate.hasKey(userEmailDTO.getEmail())) {
+            long remain = redisTemplate.getExpire(userEmailDTO.getEmail(), TimeUnit.SECONDS);
+            if (remain > WebConfig.VALIDATION_CODE_RESEND_SEC) {
+                return Result.error("请在" + (remain - WebConfig.VALIDATION_CODE_RESEND_SEC) + "秒后再次请求发送验证码");
+            }
+        }
+        redisTemplate.opsForValue().set(userEmailDTO.getEmail(), code, WebConfig.VALIDATION_EXPIRE_SEC, TimeUnit.SECONDS);
         try{
             emailUtil.sendSimpleMail(userEmailDTO.getEmail(),"主题：验证码","内容："+code+"有效时间3分钟（非本人操作请忽略）");
         }catch (Exception e){

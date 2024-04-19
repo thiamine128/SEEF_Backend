@@ -4,6 +4,7 @@ import com.software.constant.MessageConstant;
 import com.software.constant.StatusConstant;
 import com.software.dto.UserEmailLoginDTO;
 import com.software.dto.UserLoginDTO;
+import com.software.dto.UserRegisterDTO;
 import com.software.entity.User;
 import com.software.exception.AccountLockedException;
 import com.software.exception.AccountNotFoundException;
@@ -89,5 +90,10 @@ public class UserServiceImpl implements UserService {
         return user;
 
 
+    }
+
+    @Override
+    public User register(UserRegisterDTO userRegisterDTO) {
+        return null;
     }
 }
