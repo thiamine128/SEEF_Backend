@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Data
 public class UserEmailLoginDTO {
-    private String userEmail;
+    private String email;
     private String password;
 
 }

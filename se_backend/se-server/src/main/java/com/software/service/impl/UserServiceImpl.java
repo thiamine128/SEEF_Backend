@@ -8,11 +8,14 @@ import com.software.dto.UserRegisterDTO;
 import com.software.entity.User;
 import com.software.exception.AccountLockedException;
 import com.software.exception.AccountNotFoundException;
+import com.software.exception.IncorrectVerificationCode;
 import com.software.exception.PasswordErrorException;
 import com.software.mapper.UserMapper;
 import com.software.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -28,9 +31,13 @@ import java.util.Objects;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
+    @Qualifier("redisTemplate")
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @Override
     public User login(UserLoginDTO userLoginDTO) {
-        String userAccount = userLoginDTO.getUserAccount();
+        String userAccount = userLoginDTO.getName();
         String password = userLoginDTO.getPassword();
 
         //1、根据用户名查询数据库中的数据
@@ -44,13 +51,13 @@ public class UserServiceImpl implements UserService {
 
         //密码比对
         // 进行md5加密，然后再进行比对
-        //password = DigestUtils.md5DigestAsHex(password.getBytes());
-        if (!password.equals(user.getUserPassword())) {
+        password = DigestUtils.md5DigestAsHex(password.getBytes());
+        if (!password.equals(user.getPassword())) {
             //密码错误
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
         }
 
-        if (user.getUserRole().equals(StatusConstant.DISABLE)) {
+        if (user.getRole().equals(StatusConstant.DISABLE)) {
             //账号被锁定
             throw new AccountLockedException(MessageConstant.ACCOUNT_LOCKED);
         }
@@ -61,7 +68,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User eLogin(UserEmailLoginDTO userEmailLoginDTO) {
-        String userEmail = userEmailLoginDTO.getUserEmail();
+        String userEmail = userEmailLoginDTO.getEmail();
         String password = userEmailLoginDTO.getPassword();
 
         //1、根据用户名查询数据库中的数据
@@ -75,13 +82,13 @@ public class UserServiceImpl implements UserService {
 
         //密码比对
         // 进行md5加密，然后再进行比对
-        //password = DigestUtils.md5DigestAsHex(password.getBytes());
-        if (!password.equals(user.getUserPassword())) {
+        password = DigestUtils.md5DigestAsHex(password.getBytes());
+        if (!password.equals(user.getPassword())) {
             //密码错误
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
         }
 
-        if (user.getUserRole().equals(StatusConstant.DISABLE)) {
+        if (user.getRole().equals(StatusConstant.DISABLE)) {
             //账号被锁定
             throw new AccountLockedException(MessageConstant.ACCOUNT_LOCKED);
         }
@@ -94,6 +101,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(UserRegisterDTO userRegisterDTO) {
+        String code = (String) redisTemplate.opsForValue().get(userRegisterDTO.getEmail());
+        if (!code.equals(userRegisterDTO.getVerificationCode())) {
+            throw new IncorrectVerificationCode(MessageConstant.INVALID_CODE);
+        }
+        User user = new User();
+        user.setName(userRegisterDTO.getName());
+        user.setPassword(DigestUtils.md5DigestAsHex(userRegisterDTO.getPassword().getBytes()));
+        user.setEmail(userRegisterDTO.getEmail());
+        userMapper.insert(user);
         return null;
     }
 }

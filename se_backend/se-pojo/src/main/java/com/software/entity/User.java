@@ -20,16 +20,16 @@ public class User {
     /**
      * 用户账号
      */
-    private String userAccount;
+    private String name;
 
     /**
      * 用户密码
      */
-    private String userPassword;
+    private String password;
     /**
      * 用户昵称
      */
-    private String userName;
+    private String nickname;
     /**
      * 用户邮箱
      */
@@ -37,17 +37,17 @@ public class User {
     /**
      * 用户头像
      */
-    private String userAvatar;
+    private String avatar;
 
     /**
      * 用户简介
      */
-    private String userProfile;
+    private String profile;
 
     /**
      * 用户角色：user/admin/ban
      */
-    private String userRole;
+    private String role;
 
     /**
      * 创建时间
@@ -62,5 +62,5 @@ public class User {
     /**
      * 是否删除
      */
-    private Integer isDelete;
+    private Integer isDeleted;
 }

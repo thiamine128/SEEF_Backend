@@ -62,11 +62,11 @@ public class UserController {
 
        LoginUserVO loginUserVO = LoginUserVO.builder()
                 .id(user .getId())
-                .userAccount(user.getUserAccount())
-                .userName(user.getUserName())
-                .userAvatar(user.getUserAvatar())
-                .userProfile(user.getUserProfile())
-                .userRole(user.getUserRole())
+                .userAccount(user.getName())
+                .userName(user.getNickname())
+                .userAvatar(user.getAvatar())
+                .userProfile(user.getProfile())
+                .userRole(user.getRole())
                 .email(user.getEmail())
                 .token(token)
                 .build();
@@ -92,11 +92,11 @@ public class UserController {
 
         LoginUserVO loginUserVO = LoginUserVO.builder()
                 .id(user .getId())
-                .userAccount(user.getUserAccount())
-                .userName(user.getUserName())
-                .userAvatar(user.getUserAvatar())
-                .userProfile(user.getUserProfile())
-                .userRole(user.getUserRole())
+                .userAccount(user.getName())
+                .userName(user.getNickname())
+                .userAvatar(user.getAvatar())
+                .userProfile(user.getProfile())
+                .userRole(user.getRole())
                 .email(user.getEmail())
                 .token(token)
                 .build();
@@ -125,7 +125,7 @@ public class UserController {
     @PostMapping("/register")
     public Result Register(@RequestBody UserRegisterDTO userRegisterDTO){
 
-
+        userService.register(userRegisterDTO);
 
         return Result.success();
     }

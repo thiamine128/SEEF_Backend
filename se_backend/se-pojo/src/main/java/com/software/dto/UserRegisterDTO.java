@@ -9,13 +9,11 @@ import lombok.Data;
  */
 @Data
 public class UserRegisterDTO {
-    private String userAccount;
+    private String name;
 
-    private String userEmail;
+    private String email;
 
     private String verificationCode;
 
-    private String userPassword;
-
-    private String confirmPassword;
+    private String password;
 }
