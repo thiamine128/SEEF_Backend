@@ -118,8 +118,6 @@ public class UserController {
         }catch (Exception e){
             log.error(e.getMessage());
         }
-
-
         return Result.success();
     }
     @PostMapping("/register")
