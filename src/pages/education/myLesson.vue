@@ -1,5 +1,5 @@
 <template>
-    <h1>教学界面</h1>
+    <h1>我的课程</h1>
     <div id="daohanglan">
         <button @click="myClass">我的课程</button>
         <button >课程广场</button>
