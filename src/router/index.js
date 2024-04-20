@@ -22,6 +22,22 @@ const router = createRouter({
             },
         },
         {
+            path: '/education/myLesson',
+            name: 'myLesson',
+            component: defineAsyncComponent(() => import('@/pages/education/subPages/myLesson/index.vue')),
+            meta: {
+                title: '我的课程',
+            }
+        },
+        {
+            path: '/education/courseSquare',
+            name: 'courseSquare',
+            component: defineAsyncComponent(() => import('@/pages/education/subPages/courseSquare/index.vue')),
+            meta: {
+                title: '课程广场',
+            }
+        },
+        {
             path: '/blog',
             name: 'blog',
             component: defineAsyncComponent(() => import(`../pages/blog/index.vue`)),
