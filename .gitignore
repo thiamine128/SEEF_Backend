@@ -2,7 +2,7 @@
 node_modules
 /dist
 
-
+seproj.tar
 # local env files
 .env.local
 .env.*.local
