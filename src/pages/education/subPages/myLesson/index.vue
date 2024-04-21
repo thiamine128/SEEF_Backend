@@ -1,16 +1,20 @@
 <template>
-    <h1>我的课程</h1>
-    <div id="navigation">
-        <button id="myClass" @click="myClass">我的课程</button>
-        <button >课程广场</button>
-        <button>我的课表</button>
-    </div>
+    <div className="bg-container"/>
+    <navigation-bar/>
 </template>
 
 <script>
+import navigationBar from "@/pages/education/components/navigationBar/index.vue";
+import ddl from "@/pages/education/components/ddl/index.vue";
+import todayLesson from "@/pages/education/components/todayLesson/index.vue";
+import matter from "@/pages/education/components/ddl/matter.vue";
+
 export default {
-    name: "myLesson",
-    methods:{
+    name: "index",
+    components: {
+        todayLesson, navigationBar, ddl, matter
+    },
+    methods: {
         myClass() {
             console.log("Click");
         }
@@ -19,20 +23,27 @@ export default {
 </script>
 
 <style scoped>
-#navigation {
+.navigationBar {
     width: 100%;
-    height: 100px;
+    height: 90px;
     align-self: center;
-    background-color: rgb(102, 228, 228);
+    background-color: rgb(102, 152, 228);
 }
-#myClass {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 8px 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
+
+.main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 16px;
+}
+
+.bg-container {
+    background: url('@/assets/education/education_bg.jpg');
+    background-size: cover;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    z-index: -1;
+    top: 0;
+    left: 0;
 }
 </style>

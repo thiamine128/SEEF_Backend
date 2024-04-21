@@ -24,7 +24,7 @@ export default {
     width: 600px;
     height: 500px;
     margin-top: 80px;
-    margin-right: 100px;
+    margin-right: 10px;
     display: flex;
     justify-content: center;
     align-items: center;

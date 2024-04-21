@@ -38,6 +38,22 @@ const router = createRouter({
             }
         },
         {
+            path: '/education/personCenter',
+            name: 'personSquare',
+            component: defineAsyncComponent(() => import('@/pages/education/subPages/personCenter/index.vue')),
+            meta: {
+                title: '个人中心',
+            }
+        },
+        {
+            path: '/education/mySchedule',
+            name: 'mySchedule',
+            component: defineAsyncComponent(() => import('@/pages/education/subPages/mySchedule/index.vue')),
+            meta: {
+                title: '个人中心',
+            }
+        },
+        {
             path: '/blog',
             name: 'blog',
             component: defineAsyncComponent(() => import(`../pages/blog/index.vue`)),

@@ -21,9 +21,8 @@ export default {
 
 <style scoped>
 .matter{
-    width: 550px;
+    width: 500px;
     height: 100px;
-    margin-left: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
