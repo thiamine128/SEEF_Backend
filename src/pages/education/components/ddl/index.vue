@@ -1,5 +1,6 @@
 <template>
     <div class="ddl">
+        <slot></slot>
     </div>
 </template>
 

@@ -1,8 +1,10 @@
 <template>
     <div class="bg-container"/>
     <navigation-bar/>
-    <ddl><matter></matter></ddl>
-    <today-lesson/>
+    <div class="main">
+        <ddl/>
+        <today-lesson/>
+    </div>
 </template>
 
 <script>
@@ -30,15 +32,10 @@ export default {
     align-self: center;
     background-color: rgb(102, 152, 228);
 }
-#myClass {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 8px 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
+.main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 16px;
 }
 .bg-container {
     background: url('@/assets/education/education_bg.jpg');
@@ -51,3 +48,34 @@ export default {
     left: 0;
 }
 </style>
+<!--<template>-->
+<!--    <div class="parent-component">-->
+<!--        <ddl />-->
+<!--        <today-lesson />-->
+<!--    </div>-->
+<!--</template>-->
+
+<!--<script>-->
+<!--import navigationBar from "@/pages/education/components/navigationBar/index.vue";-->
+<!--import ddl from "@/pages/education/components/ddl/index.vue";-->
+<!--import todayLesson from "@/pages/education/components/todayLesson/index.vue";-->
+<!--import matter from "@/pages/education/components/ddl/matter.vue";-->
+
+<!--export default {-->
+<!--    name: 'index',-->
+<!--    components: {-->
+<!--        ddl,-->
+<!--        todayLesson-->
+<!--    }-->
+<!--    // 其他选项...-->
+<!--}-->
+<!--</script>-->
+
+<!--<style scoped>-->
+<!--.parent-component {-->
+<!--    /* 样式 */-->
+<!--    display: grid;-->
+<!--    grid-template-columns: 1fr 1fr;-->
+<!--    grid-gap: 16px;-->
+<!--}-->
+<!--</style>-->
