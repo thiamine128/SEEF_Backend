@@ -34,6 +34,7 @@ public class CommonController {
         log.info("文件上传 {}",file);
         try {
             String originalFilename = file.getOriginalFilename();
+            log.info(originalFilename);
             String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
             String objectName = UUID.randomUUID().toString()+extension;
             String filePath = aliOssUtil.upload(file.getBytes(),objectName);
