@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 已登录用户视图（脱敏）
@@ -23,26 +22,26 @@ public class LoginUserVO implements Serializable {
     /**
      * 用户账号
      */
-    private String userAccount;
+    private String name;
     /**
      * 用户昵称
      */
-    private String userName;
+    private String nickname;
 
     /**
      * 用户头像
      */
-    private String userAvatar;
+    private String avatar;
 
     /**
      * 用户简介
      */
-    private String userProfile;
+    private String profile;
 
     /**
      * 用户角色：user/admin/ban
      */
-    private String userRole;
+    private String role;
 
     /**
      * 用户昵称

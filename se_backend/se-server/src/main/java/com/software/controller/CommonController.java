@@ -29,7 +29,7 @@ public class CommonController {
     private AliOssUtil aliOssUtil;
 
     @PostMapping("/upload")
-    @Operation(summary = "文件上传（内部测试）")
+    @Operation(summary = "文件上传（内部测试，不要在前端中调用）")
     public Result<String> upload(MultipartFile file)  {
         log.info("文件上传 {}",file);
         try {

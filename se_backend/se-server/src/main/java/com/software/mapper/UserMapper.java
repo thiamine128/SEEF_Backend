@@ -25,4 +25,6 @@ public interface UserMapper {
     void insert(User user);
     @Update("update users set avatar=#{avatarUrl},update_time=now() where id=#{id}")
     void updateAvatar(String avatarUrl, Long id);
+    @Select("select avatar from users where id=#{id}")
+    String getAvatar(Long id);
 }
