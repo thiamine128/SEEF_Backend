@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(UserRegisterDTO userRegisterDTO) {
+    public void register(UserRegisterDTO userRegisterDTO) {
         String code = (String) redisTemplate.opsForValue().get(userRegisterDTO.getEmail());
         if (!code.equals(userRegisterDTO.getVerificationCode())) {
             throw new IncorrectVerificationCode(MessageConstant.INVALID_CODE);
@@ -110,6 +110,6 @@ public class UserServiceImpl implements UserService {
         user.setPassword(DigestUtils.md5DigestAsHex(userRegisterDTO.getPassword().getBytes()));
         user.setEmail(userRegisterDTO.getEmail());
         userMapper.insert(user);
-        return null;
+
     }
 }

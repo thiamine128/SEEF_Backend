@@ -15,5 +15,5 @@ public interface UserService {
 
     User eLogin(UserEmailLoginDTO userEmailLoginDTO);
 
-    User register(UserRegisterDTO userRegisterDTO);
+    void register(UserRegisterDTO userRegisterDTO);
 }
