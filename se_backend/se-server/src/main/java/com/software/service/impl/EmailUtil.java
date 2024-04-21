@@ -29,7 +29,7 @@ public class EmailUtil implements EmailService{
 
     // 配置文件中我的qq邮箱
 
-    private String from="2323428810@qq.com";
+    private String from="oop_travel@163.com";
 
     @Override
     public void sendSimpleMail(String to, String subject, String content) {
@@ -44,8 +44,6 @@ public class EmailUtil implements EmailService{
         message.setText(content);
         //发送邮件
         mailSender.send(message);
-
-
     }
 
     @Override

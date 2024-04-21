@@ -17,11 +17,12 @@ spring:
     username: ${software.datasource.username}
     password: ${software.datasource.password}
   mail:
-    host: smtp.qq.com
-    username: 2323428810@qq.com
-    password: ixsofyljvbendhhf
-    port: 587
+    host: smtp.163.com
+    username: oop_travel@163.com
+    password: KJQAYKLRNBZIQTBV
+    port: 25
     default-encoding: UTF-8
+    protocol: smtp
   data:
     redis:
       host: ${software.redis.host}

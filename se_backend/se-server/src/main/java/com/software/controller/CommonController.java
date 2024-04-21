@@ -29,7 +29,7 @@ public class CommonController {
     private AliOssUtil aliOssUtil;
 
     @PostMapping("/upload")
-    @Operation(summary = "文件上传")
+    @Operation(summary = "文件上传（内部测试）")
     public Result<String> upload(MultipartFile file)  {
         log.info("文件上传 {}",file);
         try {
@@ -42,7 +42,6 @@ public class CommonController {
         } catch (IOException e) {
            log.error("文件上传失败,{}",e);
         }
-
         return Result.error(MessageConstant.UPLOAD_FAILED);
     }
 }
