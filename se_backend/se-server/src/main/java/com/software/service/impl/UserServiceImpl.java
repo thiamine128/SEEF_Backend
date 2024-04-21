@@ -12,6 +12,7 @@ import com.software.exception.IncorrectVerificationCode;
 import com.software.exception.PasswordErrorException;
 import com.software.mapper.UserMapper;
 import com.software.service.UserService;
+import com.software.utils.BaseContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,6 +20,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -111,5 +113,11 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userRegisterDTO.getEmail());
         userMapper.insert(user);
 
+    }
+
+    @Override
+    public void updateAvatar(String avatarUrl) {
+        Long id = BaseContext.getCurrentId();
+        userMapper.updateAvatar(avatarUrl,id);
     }
 }

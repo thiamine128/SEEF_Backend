@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,4 +23,6 @@ public interface UserMapper {
 
     @Insert("insert into users (name, password, email) values (#{name}, #{password}, #{email})")
     void insert(User user);
+    @Update("update users set avatar=#{avatarUrl},update_time=now() where id=#{id}")
+    void updateAvatar(String avatarUrl, Long id);
 }

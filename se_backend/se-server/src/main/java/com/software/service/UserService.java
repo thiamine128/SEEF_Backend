@@ -16,4 +16,6 @@ public interface UserService {
     User eLogin(UserEmailLoginDTO userEmailLoginDTO);
 
     void register(UserRegisterDTO userRegisterDTO);
+
+    void updateAvatar(String avatarUrl);
 }
