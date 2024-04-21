@@ -1,6 +1,7 @@
 <template>
     <div class="bg-container"/>
     <navigation-bar/>
+    <person-info/>
 </template>
 
 <script>
@@ -8,9 +9,12 @@ import navigationBar from "@/pages/education/components/navigationBar/index.vue"
 import ddl from "@/pages/education/components/ddl/index.vue";
 import todayLesson from "@/pages/education/components/todayLesson/index.vue";
 import matter from "@/pages/education/components/ddl/matter.vue";
+import personInfo from "@/pages/education/components/personInfo/index.vue";
+import PersonInfo from "@/pages/education/components/personInfo/index.vue";
 export default {
     name: "index",
     components: {
+        PersonInfo,
         todayLesson,navigationBar,ddl,matter
     },
     methods:{
