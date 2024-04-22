@@ -35,7 +35,7 @@ export default {
 .textSet{
     background-color: rgba(255, 255, 255, 0.9);
     min-height: 0;
-    border-radius: 10px;
+    border-radius: 5px;
     text-align: left;
 }
 .marginSet{

@@ -71,6 +71,12 @@ const router = createRouter({
                         import(`../pages/blog/subPages/editor/index.vue`)),
                 },
                 {
+                    path: '/blog/section',
+                    name: 'section',
+                    component: defineAsyncComponent(() =>
+                        import(`../pages/blog/subPages/section/index.vue`)),
+                },
+                {
                     path: '/blog/:catchAll(.*)',
                     redirect: '/blog/article',
                 },

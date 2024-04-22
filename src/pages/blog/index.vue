@@ -5,8 +5,8 @@
     </div>
     <div class="view-set-margin">
         <router-view ref="views"/>
-        <blog-bottom/>
     </div>
+    <blog-bottom/>
 
 </template>
 
@@ -71,6 +71,7 @@ export default {
 <style scoped>
 .bg-container {
     background: url('@/assets/blog/blog_bg.png');
+    opacity: 0.7;
     background-size: cover;
     position: fixed;
     height: 100vh;
@@ -85,8 +86,12 @@ export default {
     z-index: 1;
 }
 .view-set-margin{
-    padding-top: 90px;
+    padding-top: 87.8px;
     z-index: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
 }
 .navColorStyle{
     background-color: rgba(11, 11, 11, 0.8);
