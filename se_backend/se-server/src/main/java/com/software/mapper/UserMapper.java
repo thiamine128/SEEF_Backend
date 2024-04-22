@@ -21,8 +21,9 @@ public interface UserMapper {
     @Select("select * from users where email= #{email}")
     User getByEmail(String email);
 
-    @Insert("insert into users (name, password, email) values (#{name}, #{password}, #{email})")
+    @Insert("insert into users (name, password, email, role) values (#{name}, #{password}, #{email}, #{role})")
     void insert(User user);
+
     @Update("update users set avatar=#{avatarUrl},update_time=now() where id=#{id}")
     void updateAvatar(String avatarUrl, Long id);
     @Select("select avatar from users where id=#{id}")

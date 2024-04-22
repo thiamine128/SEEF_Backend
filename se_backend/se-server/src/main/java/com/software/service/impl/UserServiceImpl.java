@@ -2,6 +2,7 @@ package com.software.service.impl;
 
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
+import com.software.constant.RoleConstant;
 import com.software.constant.StatusConstant;
 import com.software.dto.UserEmailLoginDTO;
 import com.software.dto.UserLoginDTO;
@@ -112,6 +113,7 @@ public class UserServiceImpl implements UserService {
         user.setName(userRegisterDTO.getName());
         user.setPassword(DigestUtils.md5DigestAsHex(userRegisterDTO.getPassword().getBytes()));
         user.setEmail(userRegisterDTO.getEmail());
+        user.setRole(RoleConstant.STUDENT);
         userMapper.insert(user);
 
     }
