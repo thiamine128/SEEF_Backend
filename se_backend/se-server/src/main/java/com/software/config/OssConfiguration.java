@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @Slf4j
 public class OssConfiguration {
+    public static final long EXPIRE_SEC = 60;
 
     @Bean
     @ConditionalOnMissingBean

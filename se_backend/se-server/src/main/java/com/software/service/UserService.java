@@ -17,5 +17,7 @@ public interface UserService {
 
     void register(UserRegisterDTO userRegisterDTO);
 
+    String getUsername(long id);
+
     void updateAvatar(String avatarUrl);
 }

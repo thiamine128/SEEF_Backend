@@ -27,4 +27,6 @@ public interface UserMapper {
     void updateAvatar(String avatarUrl, Long id);
     @Select("select avatar from users where id=#{id}")
     String getAvatar(Long id);
+    @Select("select name from users where id=#{id}")
+    String getName(Long id);
 }

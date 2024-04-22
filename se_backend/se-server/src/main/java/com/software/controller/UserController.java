@@ -1,6 +1,9 @@
 package com.software.controller;
 
-import com.software.config.WebConfig;
+import com.aliyun.oss.model.MatchMode;
+import com.aliyun.oss.model.PolicyConditions;
+import com.software.config.OssConfiguration;
+import com.software.config.WebConfiguration;
 import com.software.constant.JwtClaimsConstant;
 import com.software.dto.UserEmailDTO;
 import com.software.dto.UserEmailLoginDTO;
@@ -8,7 +11,6 @@ import com.software.dto.UserLoginDTO;
 import com.software.dto.UserRegisterDTO;
 import com.software.entity.User;
 import com.software.exception.IncorrectFileFormatException;
-import com.software.mapper.UserMapper;
 import com.software.properties.JwtProperties;
 import com.software.result.Result;
 import com.software.service.UserService;
@@ -17,6 +19,7 @@ import com.software.utils.AliOssUtil;
 import com.software.utils.BaseContext;
 import com.software.utils.JwtUtil;
 import com.software.vo.LoginUserVO;
+import com.software.vo.OSSPostSignatureVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +29,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -53,8 +58,6 @@ public class UserController {
     private RedisTemplate redisTemplate;
     @Autowired
     private AliOssUtil aliOssUtil;
-    @Autowired
-    private UserMapper userMapper;
 
     @PostMapping("/login")
     @Operation(summary = "用户登录")
@@ -120,11 +123,11 @@ public class UserController {
         String code = String.valueOf((int)((Math.random() * 9 + 1) * Math.pow(10,5)));
         if (redisTemplate.hasKey(userEmailDTO.getEmail())) {
             long remain = redisTemplate.getExpire(userEmailDTO.getEmail(), TimeUnit.SECONDS);
-            if (remain > WebConfig.VALIDATION_CODE_RESEND_SEC) {
-                return Result.error("请在" + (remain - WebConfig.VALIDATION_CODE_RESEND_SEC) + "秒后再次请求发送验证码");
+            if (remain > WebConfiguration.VALIDATION_CODE_RESEND_SEC) {
+                return Result.error("请在" + (remain - WebConfiguration.VALIDATION_CODE_RESEND_SEC) + "秒后再次请求发送验证码");
             }
         }
-        redisTemplate.opsForValue().set(userEmailDTO.getEmail(), code, WebConfig.VALIDATION_EXPIRE_SEC, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(userEmailDTO.getEmail(), code, WebConfiguration.VALIDATION_EXPIRE_SEC, TimeUnit.SECONDS);
         try{
             emailUtil.sendSimpleMail(userEmailDTO.getEmail(),"主题：验证码","内容："+code+"有效时间3分钟（非本人操作请忽略）");
         }catch (Exception e){
@@ -140,34 +143,21 @@ public class UserController {
 
         return Result.success();
     }
-    @PostMapping("/updateAvatar")
-    @Operation(summary = "暂时不要使用，后面会修改接口")
-    public Result updateAvatar(MultipartFile file){
-        log.info("文件上传 {}",file);
-        try {
-            if (!file.getContentType().startsWith("image")) throw new IncorrectFileFormatException("非图像文件");
-            String originalFilename = file.getOriginalFilename();
-            log.info(originalFilename);
-            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-            String objectName = UUID.randomUUID().toString()+extension;
-            String filePath = aliOssUtil.upload(file.getBytes(),objectName);
 
-            Long id = BaseContext.getCurrentId();
-            String previous = userMapper.getAvatar(id);
-            if (previous != null) {
-                String[] tokens = previous.split("/");
-                String objName = tokens[tokens.length - 1];
-                aliOssUtil.delete(objName);
-            }
-
-            userService.updateAvatar(filePath);
-
-            return Result.success(filePath);
-        } catch (IOException e) {
-            log.error("文件上传失败,{}",e);
-        }
-        return Result.success();
+    @PostMapping("/requestUploadAvatar")
+    @Operation(summary = "请求上传头像")
+    public Result requestUploadAvatar() throws UnsupportedEncodingException {
+        long id = BaseContext.getCurrentId();
+        String username = userService.getUsername(id);
+        String objectName = "avatar/" + username;
+        AliOssUtil.PostSignature postSignature = aliOssUtil.generatePostSignature(objectName, System.currentTimeMillis() + OssConfiguration.EXPIRE_SEC * 1000, 52428800);
+        OSSPostSignatureVO ossPostSignatureVO = OSSPostSignatureVO.builder()
+                .accessKeyId(postSignature.getAccessKeyId())
+                .objectName(postSignature.getObjectName())
+                .encodedPolicy(postSignature.getEncodedPolicy())
+                .postSignature(postSignature.getPostSignature())
+                .host(postSignature.getHost()).build();
+        userService.updateAvatar(aliOssUtil.buildPathFromObjectName(objectName));
+        return Result.success(ossPostSignatureVO);
     }
-
-
 }

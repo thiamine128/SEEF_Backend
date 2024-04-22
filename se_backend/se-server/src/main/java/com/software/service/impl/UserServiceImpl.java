@@ -18,10 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
-
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author
@@ -116,8 +114,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String getUsername(long id) {
+        return userMapper.getName(id);
+    }
+
+    @Override
     public void updateAvatar(String avatarUrl) {
         Long id = BaseContext.getCurrentId();
-        userMapper.updateAvatar(avatarUrl,id);
+        userMapper.updateAvatar(avatarUrl, id);
     }
 }
