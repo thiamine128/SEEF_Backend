@@ -1,6 +1,7 @@
 package com.software.controller.admin;
 
 import com.software.dto.AdminDTO;
+import com.software.dto.TeacherDTO;
 import com.software.result.Result;
 import com.software.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,11 +25,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
     @Autowired
     private AdminService adminService;
-    @PostMapping
+    @PostMapping("/addAdmin")
     @Operation(summary = "添加管理员")
     public Result addAdmin(@RequestBody AdminDTO adminDTO) {
         adminService.addAdmin(adminDTO);
         return Result.success();
     }
+
+    @PostMapping("/addTeacher")
+    @Operation(summary = "添加管理员")
+    public Result addTeacher(@RequestBody TeacherDTO teacherDTO) {
+        adminService.addTeacher(teacherDTO);
+        return Result.success();
+    }
+
 
 }

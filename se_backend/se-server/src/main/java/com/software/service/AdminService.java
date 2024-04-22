@@ -1,6 +1,7 @@
 package com.software.service;
 
 import com.software.dto.AdminDTO;
+import com.software.dto.TeacherDTO;
 
 /**
  * @author
@@ -9,4 +10,6 @@ import com.software.dto.AdminDTO;
  */
 public interface AdminService {
     void addAdmin(AdminDTO adminDTO);
+
+    void addTeacher(TeacherDTO teacherDTO);
 }
