@@ -4,7 +4,8 @@
         <div class="search-nav">
             <search-bar/>
             <nav class="button-nav">
-                <nav-button v-for="item in buttonSet" :button-name="item.name"></nav-button>
+                <nav-button v-for="item in buttonSet"
+                :button-name="item.name" :dest="item.dest"></nav-button>
             </nav>
         </div>
     </nav>
@@ -18,7 +19,10 @@ export default {
     data(){
         return{
             buttonSet: [
-                {name: '首页'}, {name: '专区'}, {name:'发布'}, {name:'个人界面'}
+                {name: '首页', dest: '/'},
+                {name: '专区', dest: '/blog/section'},
+                {name:'发布', dest:'/blog/editor'},
+                {name:'个人界面', dest: '/'}
             ]
         }
     },
