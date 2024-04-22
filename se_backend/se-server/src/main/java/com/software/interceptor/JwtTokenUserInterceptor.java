@@ -14,6 +14,9 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * jwt令牌校验的拦截器
  */
@@ -48,8 +51,13 @@ public class JwtTokenUserInterceptor implements HandlerInterceptor {
             log.info("jwt校验:{}", token);
             Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
             Long userId = Long.valueOf(claims.get(JwtClaimsConstant.USER_ID).toString());
+            String userRole = String.valueOf(claims.get(JwtClaimsConstant.USER_ROLE).toString());
             log.info("当前用户id：", userId);
-            BaseContext.setCurrentId(userId);
+            log.info("当前用户身份", userRole);
+            Map<String,Object> currentUser = new HashMap<String,Object>();
+            currentUser.put(JwtClaimsConstant.USER_ROLE,userRole);
+            currentUser.put(JwtClaimsConstant.USER_ID,userId);
+            BaseContext.setCurrentUser(currentUser);
             //3、通过，放行
             return true;
         } catch (Exception ex) {

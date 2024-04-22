@@ -1,14 +1,16 @@
 package com.software.utils;
 
+import java.util.Map;
+
 public class BaseContext {
 
-    public static ThreadLocal<Long> threadLocal = new ThreadLocal<>();
+    public static ThreadLocal<Map<String,Object>> threadLocal = new ThreadLocal<>();
 
-    public static void setCurrentId(Long id) {
-        threadLocal.set(id);
+    public static void setCurrentUser(Map<String,Object> currentUser) {
+        threadLocal.set(currentUser);
     }
 
-    public static Long getCurrentId() {
+    public static Map<String,Object> getCurrentUser() {
         return threadLocal.get();
     }
 

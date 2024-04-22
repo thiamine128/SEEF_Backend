@@ -69,6 +69,7 @@ public class UserController {
         //登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
         claims.put(JwtClaimsConstant.USER_ID, user.getId());
+        claims.put(JwtClaimsConstant.USER_ROLE,user.getRole());
         String token = JwtUtil.createJWT(
                 jwtProperties.getAdminSecretKey(),
                 jwtProperties.getAdminTtl(),
@@ -147,7 +148,8 @@ public class UserController {
     @PostMapping("/requestUploadAvatar")
     @Operation(summary = "请求上传头像")
     public Result requestUploadAvatar() throws UnsupportedEncodingException {
-        long id = BaseContext.getCurrentId();
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        long id = (long) currentUser.get(JwtClaimsConstant.USER_ID);
         String username = userService.getUsername(id);
         String objectName = "avatar/" + username;
         AliOssUtil.PostSignature postSignature = aliOssUtil.generatePostSignature(objectName, System.currentTimeMillis() + OssConfiguration.EXPIRE_SEC * 1000, 52428800);

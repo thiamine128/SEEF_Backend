@@ -1,5 +1,6 @@
 package com.software.service.impl;
 
+import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.StatusConstant;
 import com.software.dto.UserEmailLoginDTO;
@@ -20,6 +21,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
+
+import java.util.Map;
 
 /**
  * @author
@@ -120,7 +123,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateAvatar(String avatarUrl) {
-        Long id = BaseContext.getCurrentId();
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
         userMapper.updateAvatar(avatarUrl, id);
     }
 }
