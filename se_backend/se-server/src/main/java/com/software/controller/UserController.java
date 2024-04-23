@@ -5,10 +5,7 @@ import com.aliyun.oss.model.PolicyConditions;
 import com.software.config.OssConfiguration;
 import com.software.config.WebConfiguration;
 import com.software.constant.JwtClaimsConstant;
-import com.software.dto.UserEmailDTO;
-import com.software.dto.UserEmailLoginDTO;
-import com.software.dto.UserLoginDTO;
-import com.software.dto.UserRegisterDTO;
+import com.software.dto.*;
 import com.software.entity.User;
 import com.software.exception.IncorrectFileFormatException;
 import com.software.properties.JwtProperties;
@@ -161,5 +158,11 @@ public class UserController {
                 .host(postSignature.getHost()).build();
         userService.updateAvatar(aliOssUtil.buildPathFromObjectName(objectName));
         return Result.success(ossPostSignatureVO);
+    }
+    @PostMapping("/update")
+    @Operation(summary = "更新用户昵称/简介")
+    public Result updateUserMessage(@RequestBody UserUpdateDTO userUpdateDTO){
+        userService.updateUserMessage(userUpdateDTO);
+        return Result.success();
     }
 }

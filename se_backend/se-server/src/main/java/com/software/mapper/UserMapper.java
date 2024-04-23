@@ -1,5 +1,6 @@
 package com.software.mapper;
 
+import com.software.dto.UserUpdateDTO;
 import com.software.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.apache.ibatis.annotations.Insert;
@@ -30,4 +31,6 @@ public interface UserMapper {
     String getAvatar(Long id);
     @Select("select name from users where id=#{id}")
     String getName(Long id);
+
+    void update(UserUpdateDTO userUpdateDTO);
 }

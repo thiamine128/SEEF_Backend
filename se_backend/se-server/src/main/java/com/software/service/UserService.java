@@ -3,6 +3,7 @@ package com.software.service;
 import com.software.dto.UserEmailLoginDTO;
 import com.software.dto.UserLoginDTO;
 import com.software.dto.UserRegisterDTO;
+import com.software.dto.UserUpdateDTO;
 import com.software.entity.User;
 
 /**
@@ -20,4 +21,6 @@ public interface UserService {
     String getUsername(long id);
 
     void updateAvatar(String avatarUrl);
+
+    void updateUserMessage(UserUpdateDTO userUpdateDTO);
 }

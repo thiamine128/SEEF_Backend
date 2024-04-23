@@ -7,6 +7,7 @@ import com.software.constant.StatusConstant;
 import com.software.dto.UserEmailLoginDTO;
 import com.software.dto.UserLoginDTO;
 import com.software.dto.UserRegisterDTO;
+import com.software.dto.UserUpdateDTO;
 import com.software.entity.User;
 import com.software.exception.AccountLockedException;
 import com.software.exception.AccountNotFoundException;
@@ -128,5 +129,13 @@ public class UserServiceImpl implements UserService {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
         userMapper.updateAvatar(avatarUrl, id);
+    }
+
+    @Override
+    public void updateUserMessage(UserUpdateDTO userUpdateDTO) {
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
+        userUpdateDTO.setId(id);
+        userMapper.update(userUpdateDTO);
     }
 }
