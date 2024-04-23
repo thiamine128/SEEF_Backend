@@ -6,19 +6,35 @@
             </div>
             <hr>
             <div :style="listStyle">
-
+                <section-box title="软件工程" abstract="一个神奇的学科，我完全的不懂"></section-box>
             </div>
+            <el-pagination class="pagination-style"
+                           v-model:current-page="currentPos"
+                           ref="bottomPagination"
+                           layout="prev, pager, next, jumper"
+                           @current-change="test()"
+                           :total="100" />
         </div>
     </div>
 </template>
 
 <script>
+
+import articleBox from "@/pages/blog/components/articleBox/index.vue";
+import SectionBox from "@/pages/blog/components/sectionBox/index.vue";
+
 export default {
     name: "articleList",
     props: ['heightSet', 'rTitle'],
-    components:{ },
+    components:{SectionBox, articleBox},
+    methods:{
+        test(){
+            console.log(this.currentPos);
+        }
+    },
     data(){
         return{
+            currentPos: 1,
             frameStyle:{
                 width: '100%',
                 height: '1px',
@@ -67,5 +83,9 @@ export default {
 }
 hr{
     width: 100%;
+}
+.pagination-style{
+    margin-top: 5px;
+    justify-content: right;
 }
 </style>

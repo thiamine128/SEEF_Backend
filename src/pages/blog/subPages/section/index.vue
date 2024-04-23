@@ -1,6 +1,8 @@
 <template>
     <div class="content-container">
-        <article-list class="content-left" height-set="2000px" r-title="Wonderful Zone"></article-list>
+        <div class="content-left">
+            <article-list height-set="2000px" r-title="Wonderful Zone"></article-list>
+        </div>
         <div class="content-right">
         </div>
     </div>
@@ -23,9 +25,9 @@ export default {
     width: 1200px;
 }
 .content-left{
-    width: 60%;
+    width: 68%;
 }
 .content-right{
-    width: 38%;
+    width: 30%;
 }
 </style>
