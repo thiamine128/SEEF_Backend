@@ -1,7 +1,7 @@
 <template>
     <div class="box-container">
         <div class="titleSet">
-            <img src="/favicon.ico" alt="404 not found">
+            <img class="imgSet" src="/favicon.ico" alt="404 not found">
             <div :class="{ titleFont: true }">{{title}}</div>
             <div :class="{ abstractFont: true }">{{abstract}}</div>
         </div>
@@ -18,6 +18,10 @@ export default {
 </script>
 
 <style scoped>
+.imgSet{
+    width: 40px;
+    height: 100%;
+}
 .setHr{
     border-top-color: rgba(44, 44, 44, 0.1);
 }
@@ -25,6 +29,10 @@ export default {
     display: flex;
     justify-content: space-between;
     margin: 5px;
+    width: 100%;
+    height: 40px;
+    align-items: center;
+    cursor: pointer;
 }
 .titleFont {
     font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;

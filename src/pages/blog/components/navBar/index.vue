@@ -45,6 +45,7 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: right;
+    padding-right: 30px;
 }
 .customFont {
     font-family: 'rage', sans-serif;
