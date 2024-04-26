@@ -1,11 +1,12 @@
 <template>
     <blogTitle title="BUAA-SE-Wonderful" post-time="2023-12-11" update-time="2023-12-15"/>
     <div class="content-container">
-        <md-field class="content-left" :input-content="content"></md-field>
+        <md-field id="md-hook" class="content-left" :input-content="content"></md-field>
         <div class="content-right">
             <personal-box/>
             <recommend height-set="300px" r-title="今日推荐"/>
-            <right-pin r-title="关注列表"></right-pin>
+            <recommend height-set="400px" r-title="关注列表"/>
+            <right-pin r-title="null" container="#md-hook" content-name="catalog"></right-pin>
         </div>
     </div>
 </template>
@@ -18,9 +19,10 @@ import axios from "axios";
 import {inject, ref} from "vue";
 import recommend from "@/pages/blog/components/recommend/index.vue";
 import PersonalBox from "@/pages/blog/components/personalBox/index.vue";
+import Catalog from "@/pages/blog/components/catalog/index.vue";
 export default {
     name: "article",
-    components: {PersonalBox, recommend, blogTitle, mdField, rightPin},
+    components: {Catalog, PersonalBox, recommend, blogTitle, mdField, rightPin},
     async created() {
         try {
             const response = await axios.get(inject('webURL')+"testMarkdown.md");

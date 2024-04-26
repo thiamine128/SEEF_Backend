@@ -1,15 +1,17 @@
 <template>
     <div ref="pinComponent">
-        <recommend height-set="300px" :r-title="rTitle"/>
+        <recommend v-if="contentName==='recommend'" height-set="300px" :r-title="rTitle"/>
+        <catalog v-if="contentName==='catalog'" :container="container" />
     </div>
 </template>
 
 <script>
 import recommend from "@/pages/blog/components/recommend/index.vue";
+import Catalog from "@/pages/blog/components/catalog/index.vue";
 export default {
     name: "rightPin",
-    components:{recommend},
-    props:['rTitle'],
+    components:{Catalog, recommend},
+    props:['rTitle', 'contentName', 'container'],
     data(){
       return{
           offsetT : 0
