@@ -7,6 +7,8 @@
                 <nav-button v-for="item in buttonSet"
                 :button-name="item.name" :dest="item.dest"></nav-button>
             </nav>
+            <el-avatar class="avatarSet" :src="require('@/assets/blog/testPortrait.jpg')"
+            @mouseenter="hover=true" @mouseleave="hover=false"/>
         </div>
     </nav>
 </template>
@@ -21,9 +23,9 @@ export default {
             buttonSet: [
                 {name: '首页', dest: '/'},
                 {name: '专区', dest: '/blog/section'},
-                {name:'发布', dest:'/blog/editor'},
-                {name:'个人界面', dest: '/'}
-            ]
+                {name:'发布', dest:'/blog/editor'}
+            ],
+            hover: false
         }
     },
     components: {navButton, searchBar}
@@ -31,6 +33,20 @@ export default {
 </script>
 
 <style scoped>
+.avatarSet{
+    width: 50px;
+    height: 50px;
+    margin-right: 30px;
+    margin-left: 30px;
+    cursor: pointer;
+    transition: height 0.5s, width 0.5s, margin-right 0.5s, margin-left 0.5s;
+}
+.avatarSet:hover{
+    width: 54px;
+    height: 54px;
+    margin-right: 28px;
+    margin-left: 28px;
+}
 .mainTitleContainer{
     display: flex;
     justify-content: space-between;
@@ -45,7 +61,6 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: right;
-    padding-right: 30px;
 }
 .customFont {
     font-family: 'rage', sans-serif;
