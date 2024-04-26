@@ -204,7 +204,7 @@ export default {
     width: 100%;
     box-sizing: border-box;
     margin-bottom: 10px;
-    max-height: 400px;
+    max-height: 500px;
 }
 
 .catalog-card-header {
@@ -236,7 +236,7 @@ export default {
     overflow: auto;
     padding-right: 20px;
     text-align: left;
-    height: 300px;
+    height: 400px;
 }
 
 .catalog-item {
@@ -260,7 +260,7 @@ export default {
 
 .active {
     color: white;
-
+    background-color: #59acf5;
     &:hover {
         background-color: #0c82e9;
         color: white;
