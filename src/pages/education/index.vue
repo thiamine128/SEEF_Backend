@@ -11,11 +11,10 @@
 import navigationBar from "@/pages/education/components/navigationBar/index.vue";
 import ddl from "@/pages/education/components/ddl/index.vue";
 import todayLesson from "@/pages/education/components/todayLesson/index.vue";
-import matter from "@/pages/education/components/ddl/matter.vue";
 export default {
     name: "index",
     components: {
-        todayLesson,navigationBar,ddl,matter
+        todayLesson,navigationBar,ddl
     },
     methods:{
         myClass() {
