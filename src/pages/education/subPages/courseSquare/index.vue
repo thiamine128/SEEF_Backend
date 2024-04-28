@@ -1,22 +1,52 @@
 <template>
     <div class="bg-container"/>
     <navigation-bar/>
+    <div class="course-square">
+        <course v-for="(course, index) in courses" :key="index" :course="course" />
+    </div>
 </template>
 
 <script>
 import navigationBar from "@/pages/education/components/navigationBar/index.vue";
-import ddl from "@/pages/education/components/ddl/index.vue";
 import todayLesson from "@/pages/education/components/todayLesson/index.vue";
-import matter from "@/pages/education/components/ddlButton/index.vue";
+import course from "@/pages/education/components/course/index.vue";
+// import card
 export default {
-    name: "index",
+    name: "courseSquare",
     components: {
-        todayLesson,navigationBar,ddl,matter
+        todayLesson,navigationBar,course
+    },
+    data() {
+        return {
+            courses: [
+                {
+                    image: 'https://placehold.co/300x150',
+                    title: '数据库',
+                    teacher: '黄坚',
+                    credit: '4'
+                },
+                {
+                    image: 'https://placehold.co/300x150',
+                    title: '信号处理基础',
+                    teacher: '胡峻林',
+                    credit: '2'
+                },
+                {
+                    image: 'https://placehold.co/300x150',
+                    title: '互联网营销',
+                    teacher: '杨晴虹',
+                    credit: '2'
+                },
+                {
+                    image: 'https://placehold.co/300x150',
+                    title: '软件工程',
+                    teacher: '杨溢龙',
+                    credit: '4'
+                },
+            ]
+        }
     },
     methods:{
-        myClass() {
-            console.log("Click");
-        }
     }
 }
 </script>
@@ -42,5 +72,10 @@ export default {
     z-index: -1;
     top: 0;
     left: 0;
+}
+.course-square {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div className="bg-container"/>
+    <div class="bg-container"/>
     <navigation-bar/>
 </template>
 

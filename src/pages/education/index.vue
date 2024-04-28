@@ -3,7 +3,7 @@
     <navigation-bar/>
     <div class="content-container">
         <ddl r-title="ddl"/>
-        <today-lesson r-title="ddl"/>
+        <today-lesson r-title="今日课程"/>
 <!--        <today-lesson/>-->
 <!--        <div class="left-main">-->
 <!--        </div>-->
@@ -60,7 +60,7 @@ export default {
 .content-container{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     margin-top: 20px;
     width: 1200px;
 }
