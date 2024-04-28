@@ -3,12 +3,12 @@
         <div class="container">
             <div class="title-container">
                 <div :class="{ titleFont: true }">{{rTitle}}</div><a class="linkStyle">
-                    <div :class="{ moreFont: true }"> 更多ddl> </div>
+                    <div :class="{ moreFont: true }"> 更多课程> </div>
                 </a>
             </div>
             <hr>
             <div :style="listStyle">
-                <ddl-button v-for="item in lessonList" :r-name="item.name+' ddl：'+item.date+' 优先级: '+item.priority">
+                <ddl-button v-for="item in lessonList" :r-name="item.name+' 时间：'+item.date+' 教室: '+item.classroom">
                 </ddl-button>
             </div>
         </div>
@@ -40,8 +40,8 @@ export default {
                 flexGrow: '1'
             },
             lessonList: [
-                {name: '软件工程', date: '2024.05.14', priority: 2}, {name: '软件工程文档', date: '2024.05.05', priority: 2},
-                {name: '人工智障', date: '2024.05.02', priority: 3}, {name: '操作系统第四次作业', date: '2024.05.09', priority: 1},
+                {name: '软件工程', date: '09:50', classroom: '主南405'}, {name: '科研课堂', date: '14:00', classroom: 'G1128'},
+                {name: '工程伦理与沟通技巧', date: '15:50', classroom: '(三)203'}, {name: '软工上机', date: '19:00', classroom: '新北机房'},
             ],
         }
     },
