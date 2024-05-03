@@ -20,11 +20,6 @@ export default {
 
     }
   },
-  // created: function(){
-  //   axios.get("http://localhost:8088/city").then(function(response){
-  //
-  //   })
-  // },
   components: {
 
   }

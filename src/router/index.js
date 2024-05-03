@@ -1,5 +1,6 @@
 import { createRouter,createWebHashHistory, createWebHistory } from "vue-router";
-import { defineAsyncComponent } from 'vue'
+import {computed, defineAsyncComponent} from 'vue'
+import store from "@/store/store";
 
 const router = createRouter({
     // history: createWebHashHistory(),  // hash 模式
@@ -77,6 +78,12 @@ const router = createRouter({
                         import(`../pages/blog/subPages/section/index.vue`)),
                 },
                 {
+                    path: '/blog/personal',
+                    name: 'section',
+                    component: defineAsyncComponent(() =>
+                        import(`../pages/blog/subPages/personal/index.vue`)),
+                },
+                {
                     path: '/blog/:catchAll(.*)',
                     redirect: '/blog/article',
                 },
@@ -101,14 +108,34 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next)=>{
-    if (to.meta.title) {
-        document.title = `${to.meta.title}`;
+
+    const hasToken = store.state.token;
+
+    if (hasToken != null){
+        console.log('现在存在token：'+hasToken);
+        if (to.path === '/login') {
+            next({ path: '/education' })
+        }else{
+            if (to.meta.title) {
+                document.title = `${to.meta.title}`;
+            }
+            next();
+        }
+
+    }else{
+        if (to.path === '/login'){
+            next();
+        }else{
+            window.alert('未检测到token，请重新登录');
+            console.log('未检测到token，请重新登录');
+            next('/login');
+        }
     }
-    next()
+
 })
 
 router.afterEach((to, from)=>{
-    console.log('afterEach')
+    console.log('change page succeed')
 })
 
 export default router
