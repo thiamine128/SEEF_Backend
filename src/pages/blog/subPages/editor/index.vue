@@ -82,7 +82,7 @@ export default {
 
 .left-column{
     width: 4%;
-    height: 600px;
+    height: 700px;
     justify-content: center;
     align-items: center;
     background-color: #eaeaea;
@@ -98,7 +98,7 @@ export default {
 
 .inputStyle{
     width: 48%;
-    height: 600px;
+    height: 700px;
     display: flex;
     flex-direction: column;
 }
@@ -113,7 +113,7 @@ export default {
 }
 .textarea-content{
     /*width: 100%;*/
-    height: 560px;
+    height: 660px;
     font-family: 'consolas', sans-serif;
     font-size: 18px;
     padding: 40px;
@@ -122,7 +122,7 @@ export default {
 
 .mdStyle{
     width: 48%;
-    height: 600px;
+    height: 700px;
     overflow-y: auto;
 }
 :deep(.marginSet){

@@ -126,7 +126,6 @@ export default {
                 if (k === 1) loadKey = false;
             }
 
-
             progress.value =
                 (
                     Math.floor((window.scrollY / document.documentElement.scrollHeight) *
@@ -175,7 +174,7 @@ export default {
 
         // 滚动到指定的位置
         function scrollToView(scrollTop) {
-            window.scrollTo({ top: scrollTop, behavior: "smooth" });
+            window.scrollTo({ top: scrollTop-100, behavior: "smooth" });
         }
 
         return { titles, currentTitle, progress, scrollToView, setChildrenVisible, getTitles };

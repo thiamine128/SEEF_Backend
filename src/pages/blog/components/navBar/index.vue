@@ -8,7 +8,7 @@
                 :button-name="item.name" :dest="item.dest"></nav-button>
             </nav>
             <el-avatar class="avatarSet" :src="require('@/assets/blog/testPortrait.jpg')"
-            @mouseenter="hover=true" @mouseleave="hover=false"/>
+            @mouseenter="hover=true" @mouseleave="hover=false" @click="toPersonal" />
         </div>
     </nav>
 </template>
@@ -28,6 +28,11 @@ export default {
             hover: false
         }
     },
+    methods:{
+        toPersonal(){
+            this.$router.push('/blog/personal');
+        }
+    },
     components: {navButton, searchBar}
 }
 </script>
@@ -39,7 +44,7 @@ export default {
     margin-right: 30px;
     margin-left: 30px;
     cursor: pointer;
-    transition: height 0.5s, width 0.5s, margin-right 0.5s, margin-left 0.5s;
+    transition: height 0.2s, width 0.2s, margin-right 0.2s, margin-left 0.2s;
 }
 .avatarSet:hover{
     width: 54px;
