@@ -38,7 +38,8 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
                 .excludePathPatterns("/webjars/**")
                 .excludePathPatterns("/api/user/sendmail")
                 .excludePathPatterns("/api/common/upload")
-                .excludePathPatterns("/api/user/register");
+                .excludePathPatterns("/api/user/register")
+                .excludePathPatterns("/api/user/resetPassword");
     }
 
     /**

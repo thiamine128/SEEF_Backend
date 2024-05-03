@@ -32,5 +32,7 @@ public interface UserMapper {
     @Select("select name from users where id=#{id}")
     String getName(Long id);
 
+    @Update("update users set password=#{password}, update_time=now() where email=#{email}")
+    void updatePassword(String email, String password);
     void update(UserUpdateDTO userUpdateDTO);
 }

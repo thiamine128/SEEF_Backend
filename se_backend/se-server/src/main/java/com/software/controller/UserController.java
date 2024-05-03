@@ -1,14 +1,11 @@
 package com.software.controller;
 
-import com.aliyun.oss.model.MatchMode;
-import com.aliyun.oss.model.PolicyConditions;
 import com.software.config.OssConfiguration;
 import com.software.config.WebConfiguration;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.dto.*;
 import com.software.entity.User;
-import com.software.exception.IncorrectFileFormatException;
 import com.software.properties.JwtProperties;
 import com.software.result.Result;
 import com.software.service.UserService;
@@ -24,14 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -118,7 +111,7 @@ public class UserController {
     }
     @PostMapping("/sendmail")
     @Operation(summary = "请求验证码")
-    public Result SendMsg(@RequestBody UserEmailDTO userEmailDTO){
+    public Result sendMsg(@RequestBody UserEmailDTO userEmailDTO){
         String code = String.valueOf((int)((Math.random() * 9 + 1) * Math.pow(10,5)));
         if (redisTemplate.hasKey(userEmailDTO.getEmail())) {
             long remain = redisTemplate.getExpire(userEmailDTO.getEmail(), TimeUnit.SECONDS);
@@ -137,9 +130,17 @@ public class UserController {
     }
     @PostMapping("/register")
     @Operation(summary = "注册")
-    public Result Register(@RequestBody UserRegisterDTO userRegisterDTO){
+    public Result register(@RequestBody UserRegisterDTO userRegisterDTO){
 
         userService.register(userRegisterDTO);
+
+        return Result.success();
+    }
+
+    @PostMapping("/resetPassword")
+    @Operation(summary = "邮箱找回密码")
+    public Result resetEmailPassword(@RequestBody ResetPasswordDto resetPasswordDto) {
+        userService.resetPassword(resetPasswordDto);
 
         return Result.success();
     }

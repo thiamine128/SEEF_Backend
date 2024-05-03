@@ -4,10 +4,7 @@ import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
 import com.software.constant.StatusConstant;
-import com.software.dto.UserEmailLoginDTO;
-import com.software.dto.UserLoginDTO;
-import com.software.dto.UserRegisterDTO;
-import com.software.dto.UserUpdateDTO;
+import com.software.dto.*;
 import com.software.entity.User;
 import com.software.exception.AccountLockedException;
 import com.software.exception.AccountNotFoundException;
@@ -21,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import java.util.Map;
@@ -106,18 +102,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void register(UserRegisterDTO userRegisterDTO) {
-        if (Boolean.FALSE.equals(redisTemplate.hasKey(userRegisterDTO.getEmail())))
-            throw new IncorrectVerificationCode(MessageConstant.INVALID_CODE);
-        String code = (String) redisTemplate.opsForValue().get(userRegisterDTO.getEmail());
-        if (!code.equals(userRegisterDTO.getVerificationCode())) {
-            throw new IncorrectVerificationCode(MessageConstant.INVALID_CODE);
-        }
+        verifyCodeOrThrow(userRegisterDTO.getEmail(), userRegisterDTO.getVerificationCode());
         User user = new User();
         user.setName(userRegisterDTO.getName());
         user.setPassword(DigestUtils.md5DigestAsHex(userRegisterDTO.getPassword().getBytes()));
         user.setEmail(userRegisterDTO.getEmail());
         user.setRole(RoleConstant.STUDENT);
         userMapper.insert(user);
+        redisTemplate.delete(userRegisterDTO.getEmail());
     }
 
     @Override
@@ -138,5 +130,24 @@ public class UserServiceImpl implements UserService {
         Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
         userUpdateDTO.setId(id);
         userMapper.update(userUpdateDTO);
+    }
+
+    @Override
+    public void resetPassword(ResetPasswordDto resetPasswordDto) {
+        User user = userMapper.getByEmail(resetPasswordDto.getEmail());
+        if (user == null)
+            throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
+        verifyCodeOrThrow(user.getEmail(), resetPasswordDto.getVerificationCode());
+        userMapper.updatePassword(user.getEmail(), DigestUtils.md5DigestAsHex(resetPasswordDto.getPassword().getBytes()));
+        redisTemplate.delete(user.getEmail());
+    }
+
+    private void verifyCodeOrThrow(String email, String code) {
+        if (Boolean.FALSE.equals(redisTemplate.hasKey(email)))
+            throw new IncorrectVerificationCode(MessageConstant.INVALID_CODE);
+        String correctCode = (String) redisTemplate.opsForValue().get(email);
+        if (!code.equals(correctCode)) {
+            throw new IncorrectVerificationCode(MessageConstant.INVALID_CODE);
+        }
     }
 }
