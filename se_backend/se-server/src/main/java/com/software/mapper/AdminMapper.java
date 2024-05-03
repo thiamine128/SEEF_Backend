@@ -8,6 +8,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @date
  */
 @Mapper
-public class AdminMapper {
+public interface AdminMapper {
 
 }

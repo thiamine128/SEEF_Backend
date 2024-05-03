@@ -106,6 +106,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void register(UserRegisterDTO userRegisterDTO) {
+        if (Boolean.FALSE.equals(redisTemplate.hasKey(userRegisterDTO.getEmail())))
+            throw new IncorrectVerificationCode(MessageConstant.INVALID_CODE);
         String code = (String) redisTemplate.opsForValue().get(userRegisterDTO.getEmail());
         if (!code.equals(userRegisterDTO.getVerificationCode())) {
             throw new IncorrectVerificationCode(MessageConstant.INVALID_CODE);
@@ -116,7 +118,6 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userRegisterDTO.getEmail());
         user.setRole(RoleConstant.STUDENT);
         userMapper.insert(user);
-
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.aliyun.oss.model.PolicyConditions;
 import com.software.config.OssConfiguration;
 import com.software.config.WebConfiguration;
 import com.software.constant.JwtClaimsConstant;
+import com.software.constant.MessageConstant;
 import com.software.dto.*;
 import com.software.entity.User;
 import com.software.exception.IncorrectFileFormatException;
@@ -130,6 +131,7 @@ public class UserController {
             emailUtil.sendSimpleMail(userEmailDTO.getEmail(),"主题：验证码","内容："+code+"有效时间3分钟（非本人操作请忽略）");
         }catch (Exception e){
             log.error(e.getMessage());
+            return Result.error(MessageConstant.SEND_CODE_FAIL);
         }
         return Result.success();
     }
