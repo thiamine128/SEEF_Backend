@@ -1,6 +1,6 @@
 <template>
     <div class="bg-container"/>
-    <div class="set-nav-bar" >
+    <div :class="{setNavBar: step, setNavBarOp: !step}" >
         <nav-bar :class="{navColorStyle: notHead, navColorStyleHead: !notHead}" ></nav-bar>
     </div>
     <div class="view-set-margin">
@@ -44,8 +44,10 @@ export default {
             }
             if (scrollStep < 0) {
                 //向上滚动
+                this.step = true;
             } else {
                 //向下滚动
+                this.step = false;
                 if (!this.notHead) this.notHead = true;
             }
             // 判断是否到了最顶部
@@ -55,7 +57,7 @@ export default {
             }
         };
       return{
-          data, scrolling, notHead: false
+          data, scrolling, notHead: false, step: true
       }
     },
     mounted() {
@@ -71,7 +73,7 @@ export default {
 <style scoped>
 .bg-container {
     background: url('@/assets/blog/blog_bg.png');
-    opacity: 0.7;
+    opacity: 0.4;
     background-size: cover;
     position: fixed;
     height: 100vh;
@@ -80,10 +82,19 @@ export default {
     top: 0;
     left: 0;
 }
-.set-nav-bar{
+.setNavBar{
     width: 100%;
     position: fixed;
     z-index: 1;
+    opacity: 1.0;
+    transition: opacity 1s;
+}
+.setNavBarOp{
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 1s;
 }
 .view-set-margin{
     padding-top: 87.8px;
@@ -94,7 +105,7 @@ export default {
 
 }
 .navColorStyle{
-    background-color: rgba(11, 11, 11, 0.8);
+    background-color: rgba(0.34, 0.22, 0.28, 0.6);
     transition: background-color 1s ease ;
 }
 .navColorStyleHead{

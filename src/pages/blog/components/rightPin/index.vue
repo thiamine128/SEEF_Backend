@@ -32,6 +32,7 @@ export default {
             // console.log('距离顶部的距离：', distanceFromTop);
             // console.log('鼠标滚动的距离：', window.scrollY);
             this.offsetT = this.calcOffset();
+
             element.style.marginTop = `${
                 window.scrollY-this.offsetT+90 > 0 ? window.scrollY-this.offsetT+90 : 0
             }px`;
