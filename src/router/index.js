@@ -109,7 +109,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next)=>{
 
-    const hasToken = store.state.token;
+    const hasToken = store.getters.getToken;
 
     if (hasToken != null){
         console.log('现在存在token：'+hasToken);

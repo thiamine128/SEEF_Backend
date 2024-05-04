@@ -15,9 +15,17 @@
         </div>
         <div class="navStyle">
             <div class="select">
-
+                操作系统是计算机系统中软件与硬件联系的纽带，课程内容丰富，既包含操作系统的基础理论，又涉及实际操作系统的设计与实现。操作系统实验设计是操作系统课程实践环节的集中表现，旨在巩固学生理论课学习的概念和原理，同时培养学生的工程实践能力。
             </div>
             <div class="show">
+                <div class="like" >
+                    <div :class="{ contentFont: true }"> 点赞 </div>
+                    <div :class="{ contentFont: true }"> 0 </div>
+                </div>
+                <div class="like" >
+                    <div :class="{ contentFont: true }"> 关注 </div>
+                    <div :class="{ contentFont: true }"> 0 </div>
+                </div>
                 <div class="like" >
                     <div :class="{ contentFont: true }"> 文章 </div>
                     <div :class="{ contentFont: true }"> 0 </div>
@@ -27,7 +35,8 @@
         </div>
         <div class="infoStyle">
 
-            <personal-card  class="cardSet" height-set="500px"/>
+            <div  class="cardSet40"/>
+            <personal-card  class="cardSet60" height-set="500px"/>
 
         </div>
     </div>
@@ -78,21 +87,28 @@ export default {
     width: 50px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-right: 30px;
 }
 .show{
-    width: 150px;
+    width: 400px;
     height: 100%;
     display: flex;
     flex-direction: row;
     justify-content: right;
 }
 .select{
-    width: 100px;
+    width: 800px;
     height: 100%;
-
+    margin-left: 30px;
+    text-align: left;
 }
-.cardSet{
+.cardSet40{
     width: 40%;
+}
+.cardSet60{
+    width: 60%;
 }
 .nameSet{
     display: flex;

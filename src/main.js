@@ -10,8 +10,8 @@ import store from "@/store/store";
 axios.defaults.baseURL = '/api' //axios网络配置
 axios.interceptors.request.use(config => {
     config.headers['token'] = store.getters.getToken; //有效
-    config.headers.Authorization = `Bearer ${store.state.token}`; //无效
-    console.log('请求头携带token：'+`${store.state.token}`);
+    config.headers.Authorization = `Bearer ${store.getters.getToken}`; //无效
+    console.log('请求头携带token：'+`${store.getters.getToken}`);
     return config;
 }, error => {
     return Promise.reject(error);

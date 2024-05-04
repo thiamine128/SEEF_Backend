@@ -66,7 +66,7 @@
 <script>
 import {useStore} from "vuex";
 import {getPositionDataWithUnit} from "element-plus";
-import {register, sendEmail} from "@/pages/login/api/api";
+import {register, resetPassword, sendEmail} from "@/pages/login/api/api";
 import {ref} from "vue";
 
 export default {
@@ -90,7 +90,7 @@ export default {
     methods:{
         setSituation(num){
             this.situation = num;
-            if (num === 4) this.buttonName = '找回密码';
+            if (num === 4) this.buttonName = '设置新密码';
             else if (num === 3) this.buttonName = '注册';
             else this.buttonName = '登录';
             if (num === 4) this.passwordPlaceHolder = '请输入新密码';
@@ -102,6 +102,7 @@ export default {
                     case 1: this.login(); break;
                     case 2: this.eLogin(); break;
                     case 3: this.registerFunc(); break;
+                    case 4: this.reset(); break;
                 }
                 this.clickSet = false;
                 setTimeout(()=>{
@@ -110,6 +111,14 @@ export default {
                 }, 5000);
             }
 
+        },
+        reset(){
+            let data = {
+                email: this.email,
+                verificationCode: this.code,
+                password: this.password
+            };
+            resetPassword(data);
         },
         async login(){
             let credential = {"name": this.username, "password": this.password};

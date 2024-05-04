@@ -32,7 +32,6 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0.34, 0.34, 0.34, 0.1);
     transition: background-color 0.5s ease ;
 }
 .col:hover{
