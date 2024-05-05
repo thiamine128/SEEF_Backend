@@ -1,6 +1,9 @@
 package com.software.mapper;
 
+import com.github.pagehelper.Page;
+import com.software.dto.TopicPageQueryDTO;
 import com.software.entity.Topic;
+import com.software.vo.TopicVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -12,4 +15,6 @@ public interface TopicMapper {
 
     @Insert("insert into topics (name) values (#{name})")
     void createTopic(String name);
+
+    Page<TopicVO> pageQuery(TopicPageQueryDTO topicPageQueryDTO);
 }
