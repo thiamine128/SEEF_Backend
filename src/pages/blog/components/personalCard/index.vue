@@ -1,9 +1,10 @@
 <template>
     <div :style="frameStyle">
         <div class="container">
+            <div :class="{ titleFont: true }">发布文章</div>
             <div :style="listStyle">
-                <recommend-button v-for="item in testList" :r-name="item.name">
-                </recommend-button>
+                <article-box v-for="item in testList" :title="item.name">
+                </article-box>
             </div>
             <el-pagination class="pagination-style"
                            v-model:current-page="currentPos"
@@ -17,10 +18,11 @@
 
 <script>
 import recommendButton from "@/pages/blog/components/recommendButton/index.vue";
+import ArticleBox from "@/pages/blog/components/articleBox/index.vue";
 export default {
     name: "personalCard",
     props: ['heightSet', 'rTitle'],
-    components:{recommendButton},
+    components:{ArticleBox, recommendButton},
     data(){
         return{
             frameStyle:{
@@ -36,7 +38,8 @@ export default {
                 borderRadius: '2px',
                 backgroundColor: 'rgba(205, 205, 205, 0.2)',
                 overflowY: 'auto',
-                flexGrow: '1'
+                flexGrow: '1',
+                overflowX: 'hidden'
             },
             testList: [
                 {name: '数据管理技术'}, {name: '软件工程'},
@@ -57,6 +60,13 @@ export default {
 </script>
 
 <style scoped>
+.titleFont {
+    font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
+    font-weight: bold;
+    font-size: 17px;
+    text-align: center;
+    margin-bottom: 12px;
+}
 .pagination-style{
     margin-top: 5px;
     justify-content: right;

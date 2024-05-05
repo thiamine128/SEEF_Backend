@@ -73,7 +73,7 @@ export default {
 <style scoped>
 .bg-container {
     background: url('@/assets/blog/blog_bg.png');
-    opacity: 0.4;
+    opacity: 0.8;
     background-size: cover;
     position: fixed;
     height: 100vh;
