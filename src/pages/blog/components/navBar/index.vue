@@ -21,7 +21,7 @@ export default {
     data(){
         return{
             buttonSet: [
-                {name: '首页', dest: '/'},
+                {name: '首页', dest: '/blog/homepage'},
                 {name: '专区', dest: '/blog/section'},
                 {name:'发布', dest:'/blog/editor'}
             ],

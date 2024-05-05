@@ -54,11 +54,19 @@ const router = createRouter({
                 title: '个人中心',
             }
         },
+
+
         {
             path: '/blog',
             name: 'blog',
             component: defineAsyncComponent(() => import(`../pages/blog/index.vue`)),
             children:[
+                {
+                    path: '/blog/homepage',
+                    name: 'homepage',
+                    component: defineAsyncComponent(() =>
+                        import(`../pages/blog/subPages/homepage/index.vue`)),
+                },
                 {
                     path: '/blog/article',
                     name: 'article',
@@ -79,7 +87,7 @@ const router = createRouter({
                 },
                 {
                     path: '/blog/personal',
-                    name: 'section',
+                    name: 'personal',
                     component: defineAsyncComponent(() =>
                         import(`../pages/blog/subPages/personal/index.vue`)),
                 },
@@ -96,6 +104,8 @@ const router = createRouter({
                 title: '学业论坛',
             },
         },
+
+
         {
             path: '/:catchAll(.*)',
             redirect: '/login',
@@ -104,6 +114,8 @@ const router = createRouter({
             path: '/',
             redirect: '/login',
         }
+
+
     ]
 })
 

@@ -55,6 +55,8 @@ export default {
     },
     mounted() {
         this.frameStyle.height = this.heightSet;
+        const numbers = this.heightSet.split("").filter((char) => !isNaN(Number(char))).join("");
+        this.listStyle.height = `${numbers-170}px`;
     }
 }
 </script>

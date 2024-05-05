@@ -35,7 +35,7 @@
         </div>
         <div class="infoStyle">
 
-            <div  class="cardSet40"/>
+            <div ref="pieChart" style="width: 40%; height: 400px; margin: auto;"></div>
             <personal-card  class="cardSet60" height-set="500px"/>
 
         </div>
@@ -46,10 +46,13 @@
 
 import personalButton from "@/pages/blog/components/personalButton/index.vue";
 import PersonalCard from "@/pages/blog/components/personalCard/index.vue";
+import * as echarts from 'echarts';
 
 export default {
+
     name: "personal",
     components: {PersonalCard, personalButton},
+
     methods:{
 
         uploadImage(){
@@ -76,8 +79,42 @@ export default {
                 console.error(error);
             }
         }
+    },
 
-    }
+    mounted() {
+        const myChart = echarts.init(this.$refs.pieChart);
+        const pieData = [
+            { value: 1, name: '开发' },
+            { value: 2, name: '维护' },
+            { value: 3, name: '测试' },
+            { value: 4, name: 'BUG修复' },
+            { value: 5, name: '其他' },
+        ];
+
+        // 配置项
+        const option = {
+            title: {
+                text: '文章贡献数据统计', // 设置标题文本
+                left: 'center', // 标题位置
+                textStyle: {
+                    color: '#333', // 标题颜色
+                    fontSize: 18, // 标题字体大小
+                },
+            },
+            series: [
+                {
+                    type: 'pie',
+                    radius: '55%',
+                    data: pieData,
+                },
+            ],
+            legend: {
+                show: true, // 显示图例
+                bottom: '0', //图例位置
+            }
+        };
+        myChart.setOption(option);
+    },
 }
 </script>
 
