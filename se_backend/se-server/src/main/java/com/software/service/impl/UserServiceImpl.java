@@ -18,8 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -142,6 +144,8 @@ public class UserServiceImpl implements UserService {
         redisTemplate.delete(user.getEmail());
     }
 
+
+
     private void verifyCodeOrThrow(String email, String code) {
         if (Boolean.FALSE.equals(redisTemplate.hasKey(email)))
             throw new IncorrectVerificationCode(MessageConstant.INVALID_CODE);
@@ -150,4 +154,6 @@ public class UserServiceImpl implements UserService {
             throw new IncorrectVerificationCode(MessageConstant.INVALID_CODE);
         }
     }
+
+
 }

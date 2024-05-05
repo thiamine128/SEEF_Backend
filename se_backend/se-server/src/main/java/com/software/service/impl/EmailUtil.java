@@ -82,7 +82,6 @@ public class EmailUtil implements EmailService{
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(content, true);
-
             FileSystemResource file = new FileSystemResource(new File(filePath));
             String fileName = filePath.substring(filePath.lastIndexOf(File.separator));
             helper.addAttachment(fileName, file);

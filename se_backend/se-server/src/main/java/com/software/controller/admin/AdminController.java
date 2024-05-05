@@ -1,17 +1,32 @@
 package com.software.controller.admin;
 
+import com.alibaba.druid.util.StringUtils;
+import com.software.constant.PasswordConstant;
+import com.software.constant.RoleConstant;
 import com.software.dto.AdminDTO;
 import com.software.dto.TeacherDTO;
+import com.software.entity.User;
 import com.software.result.Result;
 import com.software.service.AdminService;
+import com.software.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author
@@ -37,6 +52,152 @@ public class AdminController {
     public Result addTeacher(@RequestBody TeacherDTO teacherDTO) {
         adminService.addTeacher(teacherDTO);
         return Result.success();
+    }
+
+    @PostMapping("/addButchTeacher")
+    public Result addButchTeacher(MultipartFile file) throws IOException {
+        if(file == null){
+            return Result.error("File cannot be null");
+        }
+        InputStream is = file.getInputStream();
+
+        String fileName=file.getOriginalFilename();
+
+        boolean notNull = false;
+        if (!fileName.matches("^.+\\.(?i)(xls)$") && !fileName.matches("^.+\\.(?i)(xlsx)$")) {
+            return Result.error("文件格式不正确");
+        }
+
+        Workbook wb = null;
+        if (fileName.matches("^.+\\.(?i)(xlsx)$")) {
+            //xlsx格式
+            wb = new XSSFWorkbook(is);
+        } else {
+            //xls格式
+            wb = new HSSFWorkbook(is);
+        }
+        List<User> teacherList = new ArrayList<>();
+        if (wb != null) {
+            //默认读取第一个sheet
+            Sheet sheet = wb.getSheetAt(0);
+            if (sheet != null) {
+                boolean firstRow = true;
+
+                boolean isThrow = false;
+                //判断是否重复
+                List<String> emailList=new ArrayList<>();
+                List<String> nameList=new ArrayList<>();
+                try {
+                    if (sheet.getLastRowNum() > 0) {
+                        for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
+                            //循环行
+                            User teacher = new User();
+                            teacher.setRole(RoleConstant.TEACHER);
+                            Row row = sheet.getRow(i);
+                            //首行  提取注解
+                            if (firstRow) {
+                                if (row.getCell(0).getStringCellValue().equals("name")
+                                        && row.getCell(1).getStringCellValue().equals("email")
+                                       )
+                                {} else {
+                                    return Result.error("格式不正确，请下载模板进行参考");
+                                }
+                                firstRow = false;
+                            } else {
+                                //忽略空白行
+                                if (row == null || isRowEmpty(row)) {
+                                    continue;
+                                }
+                                int theRow = i + 1;
+                                if (row.getCell(0) != null) {
+                                    row.getCell(0).setCellType(CellType.STRING);
+                                    String name = row.getCell(0).getStringCellValue();
+                                    if (StringUtils.isEmpty(name)) {
+                                        isThrow = true;
+                                        return Result.error("导入失败(第" + theRow + "行,姓名不能为空)");
+
+                                    } else {
+                                        if (!nameList.isEmpty() && nameList.size() > 0) {
+                                            //判断是否重复
+                                            if (nameList.contains(name)) {
+                                                isThrow = true;
+                                                return Result.error("导入失败(第" + theRow + "行,name" + name + "有重复)");
+
+                                            } else {
+                                                nameList.add(name);
+                                                teacher.setName(name);
+                                            }
+                                        } else {
+                                            teacher.setName(name);
+                                        }
+                                    }
+                                } else {
+                                    isThrow = true;
+                                    return Result.error("导入失败(第" + theRow + "行,姓名不能为空)");
+
+                                }
+
+                                if (row.getCell(1) != null) {
+                                    row.getCell(1).setCellType(CellType.STRING);
+                                    String email = row.getCell(1).getStringCellValue();
+                                    if (StringUtils.isEmpty(email)) {
+                                        isThrow = true;
+                                        return Result.error("导入失败(第" + theRow + "行,邮箱不能为空)");
+                                    } else {
+                                        if (!emailList.isEmpty() && emailList.size() > 0) {
+                                            //判断是否重复
+                                            if (emailList.contains(email)) {
+                                                isThrow = true;
+                                                return Result.error("导入失败(第" + theRow + "行,email" + email + "有重复)");
+
+                                            } else {
+                                                emailList.add(email);
+                                                teacher.setEmail(email);
+                                            }
+                                        } else {
+                                            teacher.setEmail(email);
+                                        }
+                                    }
+                                } else {
+                                    isThrow = true;
+                                    return Result.error("导入失败(第" + theRow + "行,邮箱不能为空)");
+                                }
+                                teacher.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
+                                teacherList.add(teacher);
+                            }
+                            if (isThrow) {
+                                break;
+                            }
+                        }
+                    } else {
+                        isThrow = true;
+                        return Result.error("导入失败,数据为空");
+                    }
+
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+
+
+            }
+
+
+        }
+        if(teacherList.size()>500){
+            return Result.error("表格过大");
+        }
+
+        adminService.addButchUser(teacherList);
+        return Result.success();
+    }
+    public static boolean isRowEmpty(Row row) {
+        for (int c = row.getFirstCellNum(); c < row.getLastCellNum(); c++) {
+            Cell cell = row.getCell(c);
+            if (cell != null && cell.getCachedFormulaResultTypeEnum()!=CellType.BLANK)
+                return false;
+        }
+        return true;
     }
 
 

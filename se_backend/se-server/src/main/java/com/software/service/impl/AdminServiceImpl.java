@@ -11,7 +11,10 @@ import com.software.service.AdminService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
+
+import java.util.List;
 
 /**
  * @author
@@ -40,5 +43,10 @@ public class AdminServiceImpl implements AdminService {
         user.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
         user.setRole(RoleConstant.TEACHER);
         userMapper.insert(user);
+    }
+    @Transactional
+    @Override
+    public void addButchUser(List<User> userList) {
+        userMapper.addButchUser(userList);
     }
 }

@@ -9,6 +9,8 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * @author
  * @Description：
@@ -35,4 +37,6 @@ public interface UserMapper {
     @Update("update users set password=#{password}, update_time=now() where email=#{email}")
     void updatePassword(String email, String password);
     void update(UserUpdateDTO userUpdateDTO);
+
+    void addButchUser(List<User> users);
 }

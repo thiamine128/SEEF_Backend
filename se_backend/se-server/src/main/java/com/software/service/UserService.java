@@ -3,6 +3,8 @@ package com.software.service;
 import com.software.dto.*;
 import com.software.entity.User;
 
+import java.util.List;
+
 /**
  * @author
  * @Description：
@@ -23,4 +25,6 @@ public interface UserService {
 
 
     void resetPassword(ResetPasswordDto resetPasswordDto);
+
+
 }

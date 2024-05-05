@@ -14,4 +14,12 @@
         </set>
         where id=#{id}
     </update>
+
+    <insert id="addButchUser" >
+        insert into users (name, email, role, password) Values
+        <foreach collection="users" item="u" separator=",">
+            (#{u.name}, #{u.email}, #{u.role}, #{u.password})
+        </foreach>
+    </insert>
+
 </mapper>
