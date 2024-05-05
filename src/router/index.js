@@ -93,11 +93,11 @@ const router = createRouter({
                 },
                 {
                     path: '/blog/:catchAll(.*)',
-                    redirect: '/blog/article',
+                    redirect: '/blog/homepage',
                 },
                 {
                     path: '/blog/',
-                    redirect: '/blog/article'
+                    redirect: '/blog/homepage'
                 }
             ],
             meta: {
