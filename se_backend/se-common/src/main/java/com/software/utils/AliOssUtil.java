@@ -101,7 +101,7 @@ public class AliOssUtil {
         PolicyConditions policyConds = new PolicyConditions();
         policyConds.addConditionItem(PolicyConditions.COND_CONTENT_LENGTH_RANGE, 0, maxSize);
         policyConds.addConditionItem(MatchMode.Exact, PolicyConditions.COND_KEY, objectName);
-        policyConds.addConditionItem(MatchMode.StartWith, PolicyConditions.COND_CONTENT_DISPOSITION, objectName.substring(objectName.lastIndexOf('/') + 1));
+        policyConds.addConditionItem(MatchMode.StartWith, PolicyConditions.COND_CONTENT_DISPOSITION, "attachment; filename=" + objectName.substring(objectName.lastIndexOf('/') + 1));
         String postPolicy = ossClient.generatePostPolicy(expiration, policyConds);
 
         byte[] binaryData = postPolicy.getBytes("utf-8");

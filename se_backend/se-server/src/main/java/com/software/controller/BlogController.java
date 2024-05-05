@@ -1,7 +1,9 @@
 package com.software.controller;
 
+import com.software.constant.MessageConstant;
+import com.software.exception.NoSuchTopicException;
 import com.software.result.Result;
-import com.software.service.TopicService;
+import com.software.service.BlogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -11,18 +13,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "板块相关接口")
+@Tag(name = "博客接口")
 @RestController
-@RequestMapping("/api/topic")
+@RequestMapping("/api/blog")
 @Slf4j
-public class TopicController {
+public class BlogController {
     @Autowired
-    private TopicService topicService;
+    private BlogService blogService;
 
     @PostMapping("/create")
-    @Operation(summary = "创建板块")
-    public Result createTopic(@RequestBody String name) {
-        topicService.createTopic(name);
+    @Operation(summary = "创建博客")
+    public Result createBlog(@RequestBody String title, @RequestBody String content, @RequestBody Long topicId) {
+        blogService.create(title, content, topicId);
         return Result.success();
     }
 }
