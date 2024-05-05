@@ -9,6 +9,7 @@
             <article-list height-set="1800px" r-title="热门文章"></article-list>
         </div>
         <div class="content-right">
+            <img alt="404" src="@/assets/blog/advertisement.png" style="width: 100%;">
             <recommend height-set="300px" r-title="今日推荐"/>
             <recommend height-set="400px" r-title="关注列表"/>
             <right-pin r-title="热门博主" content-name="recommend"></right-pin>
