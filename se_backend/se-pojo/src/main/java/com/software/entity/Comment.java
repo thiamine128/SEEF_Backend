@@ -4,10 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Topic {
+public class Comment {
     private Long id;
-    private String name;
+    private String content;
+    private Date createTime;
+    private Date updateTime;
+    private Long blogId;
+    private Long userId;
 }

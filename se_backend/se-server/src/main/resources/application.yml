@@ -30,6 +30,11 @@ spring:
       password: ${software.redis.password}
       database: ${software.redis.database}
 
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml

@@ -16,5 +16,5 @@ public class MessageConstant {
     public static final String PASSWORD_EDIT_FAILED = "密码修改失败";
     public static final String INVALID_CODE = "验证码错误";
     public static final String SEND_CODE_FAIL = "请求验证码失败";
-    public static final String NO_SUCH_TOPIC = "错误的板块";
+    public static final String NOT_EXISTS = "不存在";
 }

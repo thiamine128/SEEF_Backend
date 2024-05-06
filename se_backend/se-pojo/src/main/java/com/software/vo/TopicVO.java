@@ -9,6 +9,6 @@ import lombok.Data;
  */
 @Data
 public class TopicVO {
-    private Long topicId;
+    private Long id;
     private String name;
 }
