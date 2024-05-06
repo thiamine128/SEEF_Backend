@@ -48,7 +48,7 @@ public class AdminController {
     }
 
     @PostMapping("/addTeacher")
-    @Operation(summary = "添加管理员")
+    @Operation(summary = "添加教师")
     public Result addTeacher(@RequestBody TeacherDTO teacherDTO) {
         adminService.addTeacher(teacherDTO);
         return Result.success();

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class CommentSummaryVO {
+public class CommentVO {
     private Long id;
     private String content;
     private Date createTime;
@@ -19,8 +19,8 @@ public class CommentSummaryVO {
     private Long userId;
     private List<Reply> replies;
 
-    public static CommentSummaryVO fromComment(Comment comment, List<Reply> replies) {
-        return new CommentSummaryVOBuilder().id(comment.getId())
+    public static CommentVO fromComment(Comment comment, List<Reply> replies) {
+        return new CommentVOBuilder().id(comment.getId())
                 .content(comment.getContent())
                 .createTime(comment.getCreateTime())
                 .updateTime(comment.getCreateTime())

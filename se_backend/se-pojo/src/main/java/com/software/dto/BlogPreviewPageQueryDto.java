@@ -5,11 +5,11 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class BlogSummaryPageQueryDto implements Serializable {
+public class BlogPreviewPageQueryDto implements Serializable {
     private int page;
 
     private int pageSize;
 
     private Long topicId;
-    private int summaryLength;
+    private int previewLength;
 }

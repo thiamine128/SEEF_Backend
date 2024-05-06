@@ -8,10 +8,10 @@ import com.software.entity.Blog;
 
 @Data
 @Builder
-public class BlogSummaryVO {
+public class BlogPreviewVO {
     private Long id;
     private String title;
-    private String summary;
+    private String preview;
     private String tags;
     private String thumbNum;
     private String favourNum;
@@ -21,12 +21,12 @@ public class BlogSummaryVO {
     private boolean isDeleted;
     private Long topicId;
 
-    public static BlogSummaryVO fromBlog(Blog blog, int len) {
+    public static BlogPreviewVO fromBlog(Blog blog, int len) {
         int sub = Math.min(blog.getContent().length(), len);
-        return new BlogSummaryVOBuilder()
+        return new BlogPreviewVOBuilder()
                 .id(blog.getId())
                 .title(blog.getTitle())
-                .summary(blog.getContent().substring(0, sub))
+                .preview(blog.getContent().substring(0, sub))
                 .tags(blog.getTags())
                 .thumbNum(blog.getThumbNum())
                 .favourNum(blog.getFavourNum())

@@ -1,6 +1,6 @@
 package com.software.controller;
 
-import com.software.dto.BlogSummaryPageQueryDto;
+import com.software.dto.BlogPreviewPageQueryDto;
 import com.software.dto.TopicCreateDto;
 import com.software.dto.TopicPageQueryDTO;
 import com.software.result.PageResult;
@@ -39,7 +39,7 @@ public class TopicController {
 
     @GetMapping("/viewBlogs")
     @Operation(summary = "板块博客")
-    public Result<PageResult> viewBlogs(@ParameterObject BlogSummaryPageQueryDto blogPageQueryDto) {
+    public Result<PageResult> viewBlogs(@ParameterObject BlogPreviewPageQueryDto blogPageQueryDto) {
         PageResult pageResult = topicService.getBlogs(blogPageQueryDto);
         return Result.success(pageResult);
     }

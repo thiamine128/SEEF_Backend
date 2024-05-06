@@ -13,7 +13,7 @@ import com.software.mapper.ReplyMapper;
 import com.software.result.PageResult;
 import com.software.service.BlogService;
 import com.software.utils.BaseContext;
-import com.software.vo.CommentSummaryVO;
+import com.software.vo.CommentVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,7 +47,7 @@ public class BlogServiceImpl implements BlogService {
     public PageResult viewComments(CommentPageQueryDto commentPageQueryDto) {
         PageHelper.startPage(commentPageQueryDto.getPage(), commentPageQueryDto.getPageSize());
         Page page = (Page) commentMapper.getComments(commentPageQueryDto.getBlogId());
-        List list = page.getResult().stream().map(comment -> CommentSummaryVO.fromComment((Comment) comment, replyMapper.getReplies(((Comment) comment).getId()))).toList();
+        List list = page.getResult().stream().map(comment -> CommentVO.fromComment((Comment) comment, replyMapper.getReplies(((Comment) comment).getId()))).toList();
         return new PageResult(page.getTotal(), list);
     }
 }
