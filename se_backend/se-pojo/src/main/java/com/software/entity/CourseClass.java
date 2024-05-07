@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Topic {
+public class CourseClass {
     private Long id;
+    private Long courseId;
     private String name;
-    private String introduction;
 }

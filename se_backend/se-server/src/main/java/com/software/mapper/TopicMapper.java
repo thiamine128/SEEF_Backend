@@ -14,7 +14,7 @@ public interface TopicMapper {
     @Select("select * from topics where id=#{id}")
     Topic getById(Long id);
 
-    @Insert("insert into topics (name) values (#{name})")
+    @Insert("insert into topics (name, introduction) values (#{name}, #{introduction})")
     void createTopic(TopicCreateDto topicCreateDto);
 
     Page<TopicVO> pageQuery(TopicPageQueryDTO topicPageQueryDTO);

@@ -17,4 +17,5 @@ public class MessageConstant {
     public static final String INVALID_CODE = "验证码错误";
     public static final String SEND_CODE_FAIL = "请求验证码失败";
     public static final String NOT_EXISTS = "不存在";
+    public static final String PERMISSION_DENIED = "权限不足";
 }

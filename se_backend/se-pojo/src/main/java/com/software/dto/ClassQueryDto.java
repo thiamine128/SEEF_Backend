@@ -2,10 +2,7 @@ package com.software.dto;
 
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class ClassCreateDto {
-    private String name;
+public class ClassQueryDto {
     private Long courseId;
 }
