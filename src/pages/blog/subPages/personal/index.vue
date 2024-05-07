@@ -33,12 +33,21 @@
             </div>
 
         </div>
+
         <div class="infoStyle">
 
             <div ref="pieChart" style="width: 40%; height: 400px; margin: auto;"></div>
-            <personal-card  class="cardSet60" height-set="500px"/>
+            <personal-card  class="cardSet60" height-set="500px" r-title="发布文章"/>
 
         </div>
+
+        <div class="infoStyle" style="height: 400px">
+
+            <personal-card  style="width: 50%" height-set="400px" r-title="关注列表"/>
+            <personal-card  style="width: 50%" height-set="400px" r-title="收藏列表"/>
+
+        </div>
+
     </div>
 </template>
 

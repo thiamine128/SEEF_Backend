@@ -6,7 +6,10 @@
             </div>
             <hr>
             <div :style="listStyle">
-                <section-box title="软件工程" abstract="一个神奇的学科，我完全的不懂"></section-box>
+
+<!--                <section-box title="软件工程" abstract="一个神奇的学科，我完全的不懂"></section-box>-->
+                <space-box></space-box>
+
             </div>
             <el-pagination class="pagination-style"
                            v-model:current-page="currentPos"
@@ -22,11 +25,12 @@
 
 import articleBox from "@/pages/blog/components/articleBox/index.vue";
 import SectionBox from "@/pages/blog/components/sectionBox/index.vue";
+import SpaceBox from "@/pages/blog/components/spaceBox/index.vue";
 
 export default {
     name: "articleList",
     props: ['heightSet', 'rTitle'],
-    components:{SectionBox, articleBox},
+    components:{SpaceBox, SectionBox, articleBox},
     methods:{
         test(){
             console.log(this.currentPos);

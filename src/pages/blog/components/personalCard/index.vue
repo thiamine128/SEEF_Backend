@@ -1,17 +1,26 @@
 <template>
     <div :style="frameStyle">
         <div class="container">
-            <div :class="{ titleFont: true }">发布文章</div>
+
+            <div :class="{ titleFont: true }"> {{rTitle}} </div>
+
+            <div class="card-nav">
+                <div class="nav-button"> 返回主列表 </div>
+                <div class="nav-button"> 添加文件夹 </div>
+            </div>
+
             <div :style="listStyle">
                 <article-box v-for="item in testList" :title="item.name">
                 </article-box>
             </div>
+
             <el-pagination class="pagination-style"
                            v-model:current-page="currentPos"
                            ref="bottomPagination"
                            layout="prev, pager, next"
                            @current-change="test()"
                            :total="100" />
+
         </div>
     </div>
 </template>
@@ -28,8 +37,7 @@ export default {
             frameStyle:{
                 height: '1px',
                 backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                borderRadius: '5px',
-                border: '1px solid rgba(155, 155, 155, 0.7)',
+                border: '1px solid rgba(155, 155, 155, 0.2)',
                 display: 'flex',
                 marginBottom: '10px'
             },
@@ -60,6 +68,22 @@ export default {
 </script>
 
 <style scoped>
+.nav-button{
+    font-family: 'consolas', sans-serif;
+    font-size: 15px;
+    color: #8e8e8e;
+    cursor: pointer;
+}
+.card-nav{
+    width: 100%;
+    height: 22px;
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 5px;
+}
 .titleFont {
     font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
     font-weight: bold;

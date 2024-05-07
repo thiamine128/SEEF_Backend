@@ -5,25 +5,18 @@
             <div class="personInfo">
                 <div>
                     <img class="portraitSet" src="@/assets/blog/testPortrait.jpg" alt="404 not found">
-                    <div :class="{ nameFont: true }"> 阮阳栋 </div>
+                    <div :class="{ nameFont: true }"> {{name}} </div>
                 </div>
 
                 <div class="textSet">
-                    <div :class="{ contentFont: true }"> init.c:	mips_init() is called
-                        Memory size: 65536 KiB, number of pages: 16384
-                        to memory 80430000 for struct Pages.
-                        pmap.c:	 mips vm init success
-                        envid2env() work well! </div>
-                    <div :class="{ dateFont: true }"> 发布于2024年4月23日 </div>
+                    <div :class="{ contentFont: true }"> {{content}} </div>
+                    <div :class="{ dateFont: true }"> 发布于{{postTime}} </div>
                 </div>
             </div>
 
             <div class="bottom-style">
 
-                <reply-box/>
-                <reply-box/>
-                <reply-box/>
-                <reply-box/>
+
 
             </div>
 
@@ -37,6 +30,7 @@ import ReplyBox from "@/pages/blog/components/replyBox/index.vue";
 export default {
     name: "commentBox",
     components: {ReplyBox},
+    props: ['name', 'content', 'postTime', 'replyList'],
 }
 </script>
 

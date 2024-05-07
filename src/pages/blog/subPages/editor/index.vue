@@ -13,6 +13,16 @@
 
         </div>
         <div class="inputStyle">
+            <div class="tagLine">
+                <el-input class="textarea-tag" style="width: 150px" v-model="sectionName" placeholder="专区名称"/>
+                <el-input class="textarea-tag" v-model="tagName" placeholder="添加标签"/>
+                <el-button style="width: 30px; height: 100%; margin-right: 10px" type="info" plain @click="createTag()"> + </el-button>
+
+                <div v-for="item in tags" class="tagSet" @click="removeTag(item)">
+                    {{item}}
+                </div>
+
+            </div>
             <input class="textarea-title" v-model="mdTitle" placeholder="在此处输入标题">
             <textarea class="textarea-content" v-model="content" ref="left_s" placeholder="在此处编辑Markdown"></textarea>
         </div>
@@ -31,7 +41,8 @@ export default {
     data(){
         const content = ref('');
         return{
-            content, mdTitle: ''
+            content, mdTitle: '', tagName: '', sectionName: '',
+            tags: []
         }
     },
     computed:{
@@ -40,6 +51,29 @@ export default {
         }
     },
     methods:{
+
+        createTag(){
+
+            if (this.tagName.length == 0){
+                window.alert('标签不可为空');
+                return;
+            }
+            if (this.tags.includes(this.tagName)){
+                window.alert('标签不可重复');
+                return;
+            }
+            if (this.tags.length > 3){
+                window.alert('标签过多');
+                return;
+            }
+
+            this.tags.push(this.tagName);
+
+        },
+        removeTag(item){
+            this.tags.pop(item);
+        },
+
         addCode(){
             this.content += "\n```your language\n\n```";
         },
@@ -79,7 +113,21 @@ export default {
 </script>
 
 <style scoped>
-
+.tagSet{
+    padding-left: 3px;
+    padding-right: 3px;
+    margin-left: 3px;
+    height: 90%;
+    min-width: 70px;
+    display: flex;
+    flex-direction: row;
+    background-color: #e8fbff;
+    border-radius: 6px;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    cursor: pointer;
+}
 .left-column{
     width: 4%;
     height: 700px;
@@ -102,7 +150,13 @@ export default {
     display: flex;
     flex-direction: column;
 }
-
+.tagLine{
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    background-color: #eaeaea;
+    align-items: center;
+}
 .textarea-title{
     /*width: 100%;*/
     height: 40px;
@@ -111,9 +165,20 @@ export default {
     resize: none;
     padding-left: 40px;
 }
+.textarea-tag{
+    /*width: 100%;*/
+    height: 40px;
+    font-family: 'consolas', sans-serif;
+    font-size: 18px;
+    resize: none;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
 .textarea-content{
     /*width: 100%;*/
-    height: 660px;
+    height: 620px;
     font-family: 'consolas', sans-serif;
     font-size: 18px;
     padding: 40px;
