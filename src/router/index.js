@@ -62,6 +62,12 @@ const router = createRouter({
             component: defineAsyncComponent(() => import(`../pages/blog/index.vue`)),
             children:[
                 {
+                    path: '/blog/space',
+                    name: 'space',
+                    component: defineAsyncComponent(() =>
+                        import(`../pages/blog/subPages/space/index.vue`)),
+                },
+                {
                     path: '/blog/homepage',
                     name: 'homepage',
                     component: defineAsyncComponent(() =>
@@ -72,6 +78,12 @@ const router = createRouter({
                     name: 'article',
                     component: defineAsyncComponent(() =>
                         import(`../pages/blog/subPages/article/index.vue`)),
+                },
+                {
+                    path: '/blog/articles',
+                    name: 'articles',
+                    component: defineAsyncComponent(() =>
+                        import(`../pages/blog/subPages/articles/index.vue`)),
                 },
                 {
                     path: '/blog/editor',
