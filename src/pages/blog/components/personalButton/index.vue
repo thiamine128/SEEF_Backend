@@ -14,6 +14,8 @@ export default {
         return{
             hover: false
         }
+    },
+    methods:{
     }
 }
 </script>

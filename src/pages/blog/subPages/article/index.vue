@@ -5,20 +5,25 @@
             <md-field id="md-hook" :input-content="content"></md-field>
 
             <div class="comment-head">
-                <div style="margin: auto">
-                    Comment
+
+                <div style="cursor: default; margin-left: 10px">
+                    0 comments
+                </div>
+
+                <div style="cursor: pointer; margin-right: 10px; color: #0c82e9">
+                    Add Comment
                 </div>
             </div>
 
-            <comment-box />
-
-
         </div>
+
         <div class="content-right">
+
             <personal-box/>
             <recommend height-set="300px" r-title="今日推荐"/>
             <recommend height-set="400px" r-title="关注列表"/>
             <right-pin r-title="null" container="#md-hook" content-name="catalog"></right-pin>
+
         </div>
     </div>
 </template>
@@ -49,6 +54,9 @@ export default {
         return{
             content: '',
         }
+    },
+    methods:{
+
     }
 }
 </script>
@@ -56,12 +64,15 @@ export default {
 <style scoped>
 .comment-head{
     margin-top: 30px;
-    height: 30px;
+    height: 50px;
     font-family: 'rage', sans-serif;
-    font-size: 20px;
+    font-size: 30px;
     background-color: rgba(255, 255, 255, 0.9);
     width: 100%;
     display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
 .content-container{
     display: flex;
