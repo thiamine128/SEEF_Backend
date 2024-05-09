@@ -21,6 +21,7 @@ export default {
             courses: [
                 {
                     image: 'https://placehold.co/300x150',
+                    // image: '@/assets/education/course/数据库.png',
                     title: '数据库',
                     teacher: '黄坚',
                     credit: '4'

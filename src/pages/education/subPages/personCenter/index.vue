@@ -9,8 +9,8 @@ import navigationBar from "@/pages/education/components/navigationBar/index.vue"
 import ddl from "@/pages/education/components/ddl/index.vue";
 import todayLesson from "@/pages/education/components/todayLesson/index.vue";
 import matter from "@/pages/education/components/ddlButton/index.vue";
-import personInfo from "@/pages/education/components/personInfo/index.vue";
-import PersonInfo from "@/pages/education/components/personInfo/index.vue";
+import personInfo from "@/pages/education/components/personCenter/index.vue";
+import PersonInfo from "@/pages/education/components/personCenter/index.vue";
 export default {
     name: "index",
     components: {

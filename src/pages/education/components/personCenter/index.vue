@@ -8,7 +8,7 @@
 <!--            </nav>-->
 <!--        </div>-->
 <!--    </nav>-->
-    <div class="personInfo">
+    <div class="personCenter">
         <p class="title">个人信息：</p>
         <p class="detail">
             姓名：{{name}}<br>
@@ -29,14 +29,11 @@
     </div>
 </template>
 
-<!--<script setup>-->
-<!--    let name="张三",gender="男",id=21377777,grade="大二"-->
-<!--</script>-->
-
 <script>
 import axios from 'axios';
 
 export default {
+    name: "personCenter",
     data() {
         return {
             imageUrl: null,
@@ -74,7 +71,7 @@ export default {
 </script>
 
 <style scoped>
-.personInfo {
+.personCenter {
     width: 800px;
     height: 500px;
     background-color: lightblue;
