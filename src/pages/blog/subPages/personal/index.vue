@@ -1,7 +1,7 @@
 <template>
     <div class="content-container">
         <div class="personal-container">
-            <img @click="uploadImage" class="portraitSet" src="@/assets/blog/testPortrait.jpg" alt="404 not found">
+            <img class="portraitSet" src="@/assets/blog/testPortrait.jpg" alt="404 not found">
             <div class="textSet">
                 <div class="nameSet">
                     <div :class="{ nameFont: true }"> 阮阳栋 </div>

@@ -60,7 +60,7 @@ export default {
 .search-nav{
     display: flex;
     justify-content: right;
-    width: 800px;
+    width: 1000px;
     align-items: center;
 }
 .button-nav {

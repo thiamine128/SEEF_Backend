@@ -1,10 +1,18 @@
 <template>
     <div class="bg-container"/>
+
+    <div v-if="floatComment" class="float-set">
+        <comment-textarea style="margin: auto"
+          @cancelFloat="cancelFloatWindow" :holder-content="holderText"/>
+    </div>
+
     <div :class="{setNavBar: step, setNavBarOp: !step}" >
         <nav-bar :class="{navColorStyle: notHead, navColorStyleHead: !notHead}" ></nav-bar>
     </div>
     <div class="view-set-margin">
-        <router-view ref="views"/>
+
+        <router-view @callFloat="callFloatWindow" ref="views"/>
+
     </div>
     <blog-bottom/>
 
@@ -14,10 +22,12 @@
 import navBar from "@/pages/blog/components/navBar/index.vue";
 import blogBottom from "@/pages/blog/components/blogBottom/index.vue";
 import {reactive} from "vue";
+import CommentTextarea from "@/pages/blog/components/commentTextarea/index.vue";
 
 export default {
     name: "blog",
     components: {
+        CommentTextarea,
         navBar, blogBottom
     },
     data(){
@@ -57,7 +67,8 @@ export default {
             }
         };
       return{
-          data, scrolling, notHead: false, step: true
+          data, scrolling, notHead: false, step: true,
+          floatComment: false, holderText: ''
       }
     },
     mounted() {
@@ -65,12 +76,22 @@ export default {
     },
     unmounted() {
         window.removeEventListener("scroll", this.scrolling);
+    },
+    methods:{
+        callFloatWindow(holder){
+            this.holderText = holder;
+            this.floatComment = true;
+        },
+        cancelFloatWindow(){
+            this.floatComment = false;
+        }
     }
 }
 
 </script>
 
 <style scoped>
+
 .bg-container {
     background: url('@/assets/blog/blog_bg.png');
     opacity: 0.8;
@@ -82,6 +103,20 @@ export default {
     top: 0;
     left: 0;
 }
+
+.float-set{
+    background-color: rgba(33, 33, 33, 0.1);
+    opacity: 1.0;
+    background-size: cover;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    z-index: 5;
+    top: 0;
+    left: 0;
+    display: flex;
+}
+
 .setNavBar{
     width: 100%;
     position: fixed;

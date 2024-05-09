@@ -1,7 +1,10 @@
 <template>
     <div class="content-container">
         <div class="content-left">
-            <article-list height-set="1000px" r-title="Wonderful Zone"></article-list>
+
+            <article-list height-set="1000px" r-title="Topic ~Wonderful Zone~"
+                  :list-set="sectionList" select="section"></article-list>
+
         </div>
         <div class="content-right">
 
@@ -31,13 +34,47 @@ export default {
     data(){
         return{
             sectionInput: '',
-            sectionAbstract: ''
+            sectionAbstract: '',
+            sectionList: []
         }
     },
+    mounted() {
+        this.getSections();
+    },
     methods:{
-        createSection(){
 
+        async createSection(){
+            if (this.sectionInput.length == 0 || this.sectionAbstract.length == 0){
+                window.alert('内容不可为空');
+            }else{
+                const response = await this.$http.post('/topic/create', {
+                    "name": this.sectionInput,
+                    "introduction": this.sectionAbstract
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (response.status === 200) {
+                    if (response.data.code == 1) window.alert('板块创建成功');
+                    else window.alert(response.data.msg);
+                } else window.alert('网络错误');
+            }
+        },
+
+        async getSections(){ //获取全部板块信息
+            try{
+                const response = await this.$http.get('topic/pagedList?page=1&pageSize=10');
+                console.log(response);
+                if (response.status === 200) {
+                    this.sectionList = response.data.data.records;
+                } else window.alert('网络错误');
+            }catch (error){
+                window.alert(error);
+            }
         }
+
     }
 }
 </script>

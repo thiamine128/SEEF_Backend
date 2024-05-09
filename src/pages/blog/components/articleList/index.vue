@@ -8,7 +8,8 @@
             <div :style="listStyle">
 
 <!--                <section-box title="软件工程" abstract="一个神奇的学科，我完全的不懂"></section-box>-->
-                <space-box></space-box>
+                <section-box v-if="select == 'section'" v-for="item in listSet"
+                :title="item.name" :abstract="item.introduction" />
 
             </div>
             <el-pagination class="pagination-style"
@@ -29,7 +30,7 @@ import SpaceBox from "@/pages/blog/components/spaceBox/index.vue";
 
 export default {
     name: "articleList",
-    props: ['heightSet', 'rTitle'],
+    props: ['heightSet', 'rTitle', 'listSet', 'select'],
     components:{SpaceBox, SectionBox, articleBox},
     methods:{
         test(){
