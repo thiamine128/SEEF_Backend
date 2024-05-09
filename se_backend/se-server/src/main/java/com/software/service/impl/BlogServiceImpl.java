@@ -3,10 +3,12 @@ package com.software.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.software.constant.JwtClaimsConstant;
+import com.software.constant.MessageConstant;
 import com.software.dto.BlogCreateDTO;
 import com.software.dto.CommentPageQueryDto;
 import com.software.entity.Blog;
 import com.software.entity.Comment;
+import com.software.exception.PermissionDeniedException;
 import com.software.mapper.BlogMapper;
 import com.software.mapper.CommentMapper;
 import com.software.mapper.ReplyMapper;
@@ -49,5 +51,19 @@ public class BlogServiceImpl implements BlogService {
         Page page = (Page) commentMapper.getComments(commentPageQueryDto.getBlogId());
         List list = page.getResult().stream().map(comment -> CommentVO.fromComment((Comment) comment, replyMapper.getReplies(((Comment) comment).getId()))).toList();
         return new PageResult(page.getTotal(), list);
+    }
+
+    @Override
+    public void deleteblog(Long blogId) {
+        blogMapper.deleteBlog(blogId);
+    }
+
+    @Override
+    public void deleteMyBlog(Long blogId, Long uid) {
+        Blog blog = blogMapper.getBlog(blogId);
+        if(uid != blog.getUserId()) {
+            throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+        }
+        blogMapper.deleteBlog(blogId);
     }
 }

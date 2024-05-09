@@ -1,9 +1,7 @@
 package com.software.mapper;
 
 import com.software.entity.Blog;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -15,6 +13,10 @@ public interface BlogMapper {
     @Select("select * from blogs where topic_id=#{topicId}")
     List<Blog> getBlogsInTopic(Long topicId);
 
-    @Select("select * from blogs where id=#{blogId}")
+    @Select("select * from blogs where id=#{blogId} ")
     Blog getBlog(Long blogId);
+    @Update("update blogs set is_deleted=true where id=#{blogId}")
+    void deleteBlog(Long blogId);
+
+
 }

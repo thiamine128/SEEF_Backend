@@ -11,4 +11,6 @@ public interface TopicService {
     PageResult pageQuery(TopicPageQueryDTO topicPageQueryDTO);
 
     PageResult getBlogs(BlogPreviewPageQueryDto blogPageQueryDto);
+
+    void deleteTopic(Integer topicId);
 }

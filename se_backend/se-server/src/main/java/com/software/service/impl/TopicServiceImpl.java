@@ -43,4 +43,9 @@ public class TopicServiceImpl implements TopicService {
         Page page = (Page) blogMapper.getBlogsInTopic(blogPageQueryDto.getTopicId());
         return new PageResult(page.getTotal(), page.getResult().stream().map(blog -> BlogPreviewVO.fromBlog((Blog) blog, blogPageQueryDto.getPreviewLength())).toList());
     }
+
+    @Override
+    public void deleteTopic(Integer topicId) {
+        topicMapper.deleteTopic(topicId);
+    }
 }

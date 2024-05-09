@@ -10,4 +10,8 @@ public interface BlogService {
     void create(BlogCreateDTO blogCreateDTO);
     Blog getDetail(Long blogId);
     PageResult viewComments(CommentPageQueryDto commentPageQueryDto);
+
+    void deleteblog(Long blogId);
+
+    void deleteMyBlog(Long blogId, Long uid);
 }

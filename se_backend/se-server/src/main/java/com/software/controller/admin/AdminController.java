@@ -1,14 +1,18 @@
 package com.software.controller.admin;
 
 import com.alibaba.druid.util.StringUtils;
+import com.software.constant.JwtClaimsConstant;
+import com.software.constant.MessageConstant;
 import com.software.constant.PasswordConstant;
 import com.software.constant.RoleConstant;
 import com.software.dto.AdminDTO;
 import com.software.dto.TeacherDTO;
 import com.software.entity.User;
+import com.software.exception.PermissionDeniedException;
 import com.software.result.Result;
 import com.software.service.AdminService;
 import com.software.service.UserService;
+import com.software.utils.BaseContext;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author
@@ -43,6 +48,9 @@ public class AdminController {
     @PostMapping("/addAdmin")
     @Operation(summary = "添加管理员")
     public Result addAdmin(@RequestBody AdminDTO adminDTO) {
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
+        if (!role.equals(RoleConstant.ADMIN)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         adminService.addAdmin(adminDTO);
         return Result.success();
     }
@@ -50,6 +58,9 @@ public class AdminController {
     @PostMapping("/addTeacher")
     @Operation(summary = "添加教师")
     public Result addTeacher(@RequestBody TeacherDTO teacherDTO) {
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
+        if (!role.equals(RoleConstant.ADMIN)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         adminService.addTeacher(teacherDTO);
         return Result.success();
     }
@@ -62,7 +73,9 @@ public class AdminController {
         InputStream is = file.getInputStream();
 
         String fileName=file.getOriginalFilename();
-
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
+        if (!role.equals(RoleConstant.ADMIN)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         boolean notNull = false;
         if (!fileName.matches("^.+\\.(?i)(xls)$") && !fileName.matches("^.+\\.(?i)(xlsx)$")) {
             return Result.error("文件格式不正确");

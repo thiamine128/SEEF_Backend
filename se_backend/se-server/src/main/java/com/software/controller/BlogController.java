@@ -1,17 +1,23 @@
 package com.software.controller;
 
+import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
+import com.software.constant.RoleConstant;
 import com.software.dto.BlogCreateDTO;
 import com.software.dto.CommentPageQueryDto;
 import com.software.exception.NoSuchTopicException;
+import com.software.exception.PermissionDeniedException;
 import com.software.result.Result;
 import com.software.service.BlogService;
+import com.software.utils.BaseContext;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @Tag(name = "博客接口")
 @RestController
@@ -38,5 +44,25 @@ public class BlogController {
     @Operation(summary = "获取评论")
     public Result getComments(@ParameterObject CommentPageQueryDto commentPageQueryDto) {
         return Result.success(blogService.viewComments(commentPageQueryDto));
+    }
+
+    @DeleteMapping("/deleteBlog")
+    @Operation(summary = "删除博客")
+    public Result deleteBlogs(@RequestParam  Long blogId){
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
+        if ((!role.equals(RoleConstant.ADMIN))&&(!role.equals(RoleConstant.TEACHER)))throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+        blogService.deleteblog(blogId);
+        return Result.success();
+    }
+    @DeleteMapping("/deleteMyBlog")
+    @Operation(summary = "删除我的博客")
+    public Result deleteMyBlogs(@RequestParam  Long blogId){
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
+        String userId = currentUser.get(JwtClaimsConstant.USER_ID).toString();
+        Long uid =Long.parseLong(userId);
+        blogService.deleteMyBlog(blogId,uid);
+        return Result.success();
     }
 }
