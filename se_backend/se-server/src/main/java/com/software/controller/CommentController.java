@@ -25,4 +25,5 @@ public class CommentController {
         commentService.makeComment(commentCreateDto);
         return Result.success();
     }
+
 }
