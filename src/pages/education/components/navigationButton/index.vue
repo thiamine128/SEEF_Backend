@@ -3,7 +3,7 @@
          @mouseenter="hover = true"
          @mouseleave="hover = false"
          @mouseover="hover = true">
-        <a  href="/login" class="linkStyle">
+        <a  :href="dest" class="linkStyle">
             <div :class="{ customFont: true }">{{buttonName}}</div>
         </a>
     </div>
@@ -13,7 +13,7 @@
 
 export default {
     name: "navigationButton",
-    props: ['buttonName'],
+    props: ['buttonName', 'dest'],
     data(){
         return{
             hover: false
