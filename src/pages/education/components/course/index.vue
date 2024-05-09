@@ -7,12 +7,16 @@
             <div class="course-title">课程名称：{{ course.title }}</div>
             <div class="course-teacher">任课教师：{{ course.teacher }}</div>
             <div class="course-credit">学分：{{ course.credit }}</div>
+            <course-button r-name="更多信息"/>
+            <course-button r-name="选择课程"/>
         </div>
     </div>
 </template>
-
 <script>
+import CourseButton from "@/pages/education/components/courseButton/index.vue";
+
 export default {
+    components: {CourseButton},
     props: {
         course: Object
     }
@@ -22,6 +26,7 @@ export default {
 <style scoped>
 .course-card {
     width: 25%;
+    height: 30%;
     margin-bottom: 20px;
     padding: 20px;
     border: 1px solid #ccc;
