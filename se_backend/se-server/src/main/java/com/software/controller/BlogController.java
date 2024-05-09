@@ -42,7 +42,8 @@ public class BlogController {
 
     @GetMapping("/viewComments")
     @Operation(summary = "获取评论")
-    public Result getComments(@ParameterObject CommentPageQueryDto commentPageQueryDto) {
+    public Result getComments(@RequestParam int page,@RequestParam int pageSize, @RequestParam Long blogId) {
+        CommentPageQueryDto commentPageQueryDto = new CommentPageQueryDto(page, pageSize, blogId);
         return Result.success(blogService.viewComments(commentPageQueryDto));
     }
 

@@ -13,6 +13,7 @@ import com.software.service.TopicService;
 import com.software.utils.BaseContext;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Null;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,8 @@ public class TopicController {
 
     @GetMapping("/pagedList")
     @Operation(summary = "板块分页查询")
-    public Result<PageResult> getPagedList(@ParameterObject TopicPageQueryDTO topicPageQueryDTO){
+    public Result<PageResult> getPagedList(@RequestParam int page, @RequestParam int pageSize, @RequestParam(required = false) String name){
+        TopicPageQueryDTO topicPageQueryDTO = new TopicPageQueryDTO(page, pageSize, name);
         log.info("topic分页查询:{}", topicPageQueryDTO);
         PageResult pageResult = topicService.pageQuery(topicPageQueryDTO);//后绪步骤定义
         return Result.success(pageResult);
@@ -46,7 +48,8 @@ public class TopicController {
 
     @GetMapping("/viewBlogs")
     @Operation(summary = "板块博客")
-    public Result<PageResult> viewBlogs(@ParameterObject BlogPreviewPageQueryDto blogPageQueryDto) {
+    public Result<PageResult> viewBlogs(@RequestParam int page, @RequestParam int pageSize, @RequestParam Long topicId, @RequestParam int previewLength) {
+        BlogPreviewPageQueryDto blogPageQueryDto = new BlogPreviewPageQueryDto(page, pageSize, topicId, previewLength);
         PageResult pageResult = topicService.getBlogs(blogPageQueryDto);
         return Result.success(pageResult);
     }

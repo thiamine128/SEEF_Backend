@@ -61,4 +61,5 @@ public class CourseController {
         PageResult pageResult = courseService.pageQuery(coursePageQueryDto);//后绪步骤定义
         return Result.success(pageResult);
     }
+
 }

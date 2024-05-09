@@ -71,7 +71,6 @@ public class AdminController {
             return Result.error("File cannot be null");
         }
         InputStream is = file.getInputStream();
-
         String fileName=file.getOriginalFilename();
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
@@ -200,12 +199,7 @@ public class AdminController {
                     log.info(e.getMessage());
                     throw new RuntimeException(e);
                 }
-
-
-
             }
-
-
         }
         if(teacherList.size()>500){
             return Result.error("表格过大");

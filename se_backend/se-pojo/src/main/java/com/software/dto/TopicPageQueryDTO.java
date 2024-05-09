@@ -1,5 +1,6 @@
 package com.software.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import java.io.Serializable;
  * @date
  */
 @Data
+@AllArgsConstructor
 public class TopicPageQueryDTO implements Serializable {
     private int page;
 
