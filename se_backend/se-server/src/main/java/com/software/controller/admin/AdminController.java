@@ -99,18 +99,26 @@ public class AdminController {
                                 if (row.getCell(0).getStringCellValue().equals("name")
                                         && row.getCell(1).getStringCellValue().equals("email")
                                        )
-                                {} else {
+                                {log.info("success");} else {
                                     return Result.error("格式不正确，请下载模板进行参考");
                                 }
                                 firstRow = false;
+                                log.info("SUCCESSFUL");
                             } else {
+                                Cell cell = row.getCell(0);
+                                log.info("11SUCCESSFUL");
                                 //忽略空白行
                                 if (row == null || isRowEmpty(row)) {
+                                    log.info("3");
                                     continue;
                                 }
+                                log.info("11SUCCESSFUL");
                                 int theRow = i + 1;
+                                log.info("value:{}",theRow);
                                 if (row.getCell(0) != null) {
+                                    log.info("1");
                                     row.getCell(0).setCellType(CellType.STRING);
+
                                     String name = row.getCell(0).getStringCellValue();
                                     if (StringUtils.isEmpty(name)) {
                                         isThrow = true;
@@ -132,6 +140,7 @@ public class AdminController {
                                         }
                                     }
                                 } else {
+                                    log.info("2");
                                     isThrow = true;
                                     return Result.error("导入失败(第" + theRow + "行,姓名不能为空)");
 
@@ -175,6 +184,7 @@ public class AdminController {
                     }
 
                 } catch (Exception e) {
+                    log.info(e.getMessage());
                     throw new RuntimeException(e);
                 }
 
@@ -187,14 +197,14 @@ public class AdminController {
         if(teacherList.size()>500){
             return Result.error("表格过大");
         }
-
+        log.info("SUCCESSFUL");
         adminService.addButchUser(teacherList);
         return Result.success();
     }
     public static boolean isRowEmpty(Row row) {
         for (int c = row.getFirstCellNum(); c < row.getLastCellNum(); c++) {
             Cell cell = row.getCell(c);
-            if (cell != null && cell.getCachedFormulaResultTypeEnum()!=CellType.BLANK)
+            if (cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK)
                 return false;
         }
         return true;
