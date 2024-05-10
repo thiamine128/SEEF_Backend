@@ -38,8 +38,8 @@ public class TopicController {
 
     @GetMapping("/pagedList")
     @Operation(summary = "板块分页查询")
-    public Result<PageResult> getPagedList(@RequestParam int page, @RequestParam int pageSize, @RequestParam(required = false) String name){
-        TopicPageQueryDTO topicPageQueryDTO = new TopicPageQueryDTO(page, pageSize, name);
+    public Result<PageResult> getPagedList(@ParameterObject TopicPageQueryDTO topicPageQueryDTO){
+        //TopicPageQueryDTO topicPageQueryDTO = new TopicPageQueryDTO(page, pageSize, name);
         log.info("topic分页查询:{}", topicPageQueryDTO);
         PageResult pageResult = topicService.pageQuery(topicPageQueryDTO);//后绪步骤定义
         return Result.success(pageResult);
