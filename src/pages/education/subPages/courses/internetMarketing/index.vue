@@ -1,16 +1,31 @@
 <template>
     <div class="bg-container"/>
     <navigation-bar/>
-
+    <course-info :course="course"/>
 
 </template>
 
 <script>
 import navigationBar from "@/pages/education/components/navigationBar/index.vue";
+import courseInfo from "@/pages/education/components/courseInfo/index.vue";
 export default {
     name: "internetMarketing",
     components: {
-        navigationBar
+        navigationBar, courseInfo
+    },
+    data(){
+        return {
+            course: {
+                name: "互联网营销",
+                teacher: "杨晴虹",
+                schedule: "1~16周周一，89节",
+                location: "主南303",
+                credits: 2,
+                assessment: "平时作业+课堂展示",
+                image: "../../../../assets/education/course/互联网营销.png"
+                // image: "@/assets/education/course/数据库.jpg"
+            }
+        }
     }
 }
 </script>

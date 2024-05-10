@@ -1,16 +1,31 @@
 <template>
     <div class="bg-container"/>
     <navigation-bar/>
-
+    <course-info :course="course"/>
 
 </template>
 
 <script>
 import navigationBar from "@/pages/education/components/navigationBar/index.vue";
+import courseInfo from "@/pages/education/components/courseInfo/index.vue";
 export default {
     name: "DBMS",
     components: {
-        navigationBar
+        navigationBar, courseInfo
+    },
+    data(){
+        return {
+            course: {
+                name: "DBMS",
+                teacher: "黄坚",
+                schedule: "1~16周周一，345节",
+                location: "主南205",
+                credits: 4,
+                assessment: "平时作业+上机+期中大作业+期末",
+                image: "../../../../assets/education/course/数据库.jpg"
+                // image: "@/assets/education/course/数据库.jpg"
+            }
+        }
     }
 }
 </script>
