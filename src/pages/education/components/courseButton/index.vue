@@ -2,14 +2,17 @@
     <div class="title-container"
          @mouseenter="hover = true"
          @mouseleave="hover = false">
-        <div class="text">{{rName}}</div>
+
+        <a :href="dest" class="linkStyle">
+            <div class="text">{{rName}}</div>
+        </a>
     </div>
 </template>
 
 <script>
 export default {
     name: "courseButton",
-    props: ['rName'],
+    props: ['rName', 'dest'],
     data(){
         return{
             hover: false
@@ -34,6 +37,11 @@ export default {
     cursor: pointer;
     background-color: rgba(0, 0, 0, 0);
     transition: background-color 0.5s ease;
+}
+.linkStyle{
+    text-decoration: none;
+    color: #000;
+    cursor: pointer;
 }
 .title-container:hover{
     background-color: rgba(147, 63, 63, 0.1);
