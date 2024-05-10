@@ -10,7 +10,6 @@
 import navigationBar from "@/pages/education/components/navigationBar/index.vue";
 import todayLesson from "@/pages/education/components/todayLesson/index.vue";
 import course from "@/pages/education/components/course/index.vue";
-// import card
 export default {
     name: "courseSquare",
     components: {
@@ -24,25 +23,29 @@ export default {
                     // image: '@/assets/education/course/数据库.png',
                     title: '数据库',
                     teacher: '黄坚',
-                    credit: '4'
+                    credit: '4',
+                    dest: '/education/courses/DBMS'
                 },
                 {
                     image: 'https://placehold.co/300x150',
                     title: '信号处理基础',
                     teacher: '胡峻林',
-                    credit: '2'
+                    credit: '2',
+                    dest: '/education/courses/signal'
                 },
                 {
                     image: 'https://placehold.co/300x150',
                     title: '互联网营销',
                     teacher: '杨晴虹',
-                    credit: '2'
+                    credit: '2',
+                    dest: '/education/courses/internetMarketing'
                 },
                 {
                     image: 'https://placehold.co/300x150',
                     title: '软件工程',
                     teacher: '杨溢龙',
-                    credit: '4'
+                    credit: '4',
+                    dest: '/education/courses/softwareEngineer'
                 },
             ]
         }

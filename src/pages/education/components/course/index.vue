@@ -7,7 +7,7 @@
             <div class="course-title">课程名称：{{ course.title }}</div>
             <div class="course-teacher">任课教师：{{ course.teacher }}</div>
             <div class="course-credit">学分：{{ course.credit }}</div>
-            <course-button r-name="更多信息"/>
+            <course-button r-name="更多信息" :dest="course.dest"/>
             <course-button r-name="选择课程"/>
         </div>
     </div>

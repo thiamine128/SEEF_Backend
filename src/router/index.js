@@ -39,6 +39,38 @@ const router = createRouter({
             }
         },
         {
+            path: '/education/courses/DBMS',
+            name: 'DBMS',
+            component: defineAsyncComponent(() => import(`../pages/education/subPages/courses/DBMS/index.vue`)),
+            meta: {
+                title: '数据管理技术',
+            }
+        },
+        {
+            path: '/education/courses/signal',
+            name: 'signal',
+            component: defineAsyncComponent(() => import(`../pages/education/subPages/courses/signal/index.vue`)),
+            meta: {
+                title: '信号处理基础',
+            }
+        },
+        {
+            path: '/education/courses/softwareEngineer',
+            name: 'softwareEngineer',
+            component: defineAsyncComponent(() => import(`../pages/education/subPages/courses/softwareEngineer/index.vue`)),
+            meta: {
+                title: '软件工程',
+            }
+        },
+        {
+            path: '/education/courses/internetMarketing',
+            name: 'internetMarketing',
+            component: defineAsyncComponent(() => import(`../pages/education/subPages/courses/internetMarketing/index.vue`)),
+            meta: {
+                title: '互联网营销',
+            }
+        },
+        {
             path: '/education/personCenter',
             name: 'personSquare',
             component: defineAsyncComponent(() => import('@/pages/education/subPages/personCenter/index.vue')),
