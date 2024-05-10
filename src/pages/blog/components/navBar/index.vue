@@ -1,6 +1,6 @@
 <template>
     <nav class="mainTitleContainer">
-        <div :class="{ customFont: true }">software and life</div>
+        <div :class="{ customFont: true }" @click="toHome">software and life</div>
         <div class="search-nav">
             <search-bar/>
             <nav class="button-nav">
@@ -22,7 +22,7 @@ export default {
         return{
             buttonSet: [
                 {name: '首页', dest: '/blog/homepage'},
-                {name: '专区', dest: '/blog/section'},
+                {name: '专区', dest: '/blog/section/'},
                 {name: '发布', dest:'/blog/editor'},
                 {name: '动态', dest: '/blog/space'}
             ],
@@ -32,6 +32,9 @@ export default {
     methods:{
         toPersonal(){
             this.$router.push('/blog/personal');
+        },
+        toHome(){
+            this.$router.push('/blog/');
         }
     },
     components: {navButton, searchBar}
@@ -74,6 +77,6 @@ export default {
     font-size: 32px;
     margin: 25px 0 25px 60px;
     color: white;
-
+    cursor: pointer;
 }
 </style>

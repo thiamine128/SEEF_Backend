@@ -1,9 +1,14 @@
 <template>
-    <div class="box-container">
+    <div class="box-container" @click="callArticles">
         <div class="titleSet">
-            <img class="imgSet" src="/favicon.ico" alt="404 not found">
-            <div :class="{ titleFont: true }">{{title}}</div>
-            <div :class="{ abstractFont: true }">{{abstract}}</div>
+
+            <img style="width: 35px" alt="404" :src="srcImg">
+
+            <div class="titleAbs">
+                <div :class="{ titleFont: true }">{{title}}</div>
+                <div :class="{ abstractFont: true }">{{abstract}}</div>
+            </div>
+
         </div>
         <div :class="{ moreSet: true }"> > </div>
     </div>
@@ -11,9 +16,27 @@
 </template>
 
 <script>
+import {provide, ref} from "vue";
+
 export default {
     name: "sectionBox",
-    props: ['title', 'abstract']
+    methods: {
+        callArticles(){
+            this.$router.push(`/blog/articles/${this.topicId}`);
+        }
+    },
+    props: ['topicId', 'title', 'abstract'],
+    computed:{
+        srcImg(){
+            if (this.title == null || this.title.length < 5){
+                return require('@/assets/blog/black-book.png');
+            }else if (this.title.length < 10){
+                return require('@/assets/blog/white-book.png');
+            }else{
+                return require('@/assets/blog/evil-book.png');
+            }
+        }
+    },
 }
 </script>
 
@@ -44,14 +67,14 @@ export default {
 .moreSet{
     font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
     font-size: 25px;
-    margin-right: 5px;
+    margin-right: 15px;
     text-align: right;
-    color: #8e8e8e;
+    color: #d1d1d1;
 }
 .abstractFont {
     font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
     font-size: 12px;
-    margin-left: 5px;
+    margin-left: 10px;
     color: #8e8e8e;
     text-align: left;
 }
@@ -59,6 +82,12 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: left;
-    align-items: center;
 }
+
+.titleAbs{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
 </style>

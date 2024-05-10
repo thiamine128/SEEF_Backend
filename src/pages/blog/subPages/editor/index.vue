@@ -58,6 +58,10 @@ export default {
                 window.alert('标签不可为空');
                 return;
             }
+            if (this.tagName.length > 3){
+                window.alert('标签过长');
+                return;
+            }
             if (this.tags.includes(this.tagName)){
                 window.alert('标签不可重复');
                 return;
@@ -188,6 +192,7 @@ export default {
 .mdStyle{
     width: 48%;
     height: 700px;
+    min-height: 700px;
     overflow-y: auto;
 }
 :deep(.marginSet){
