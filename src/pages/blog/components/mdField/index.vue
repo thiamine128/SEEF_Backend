@@ -34,7 +34,7 @@ export default {
 @import "mdStyle.css";
 .textSet{
     background-color: rgba(255, 255, 255, 0.9);
-    min-height: 0;
+    min-height: 1700px;
     border-radius: 5px;
     text-align: left;
 }

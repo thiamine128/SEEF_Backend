@@ -242,6 +242,7 @@ export default {
     background-color: rgba(255, 255, 255, 0.9);
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     border-left: 1px solid rgba(22, 22, 22, 0.2);
 }

@@ -2,8 +2,9 @@
     <div class="content-container">
         <div class="content-left">
 
-            <article-list height-set="1000px" r-title="Topic ~Wonderful Zone~"
-                  :list-set="sectionList" select="section"></article-list>
+            <article-list height-set="1030px" r-title="Topic ~Wonderful Zone~"
+                  :list-set="sectionList" select="section" :total-page="totalPage"
+                  @page-change="getSections"></article-list>
 
         </div>
         <div class="content-right">
@@ -35,18 +36,23 @@ export default {
         return{
             sectionInput: '',
             sectionAbstract: '',
-            sectionList: []
+            sectionList: [],
+            totalPage: 10
         }
     },
     mounted() {
-        this.getSections();
+        this.getSections(1);
     },
     methods:{
 
         async createSection(){
             if (this.sectionInput.length == 0 || this.sectionAbstract.length == 0){
                 window.alert('内容不可为空');
-            }else{
+            }else if (this.sectionAbstract.length > 20){
+                window.alert('简介过长');
+            }else if (this.sectionInput.length > 16){
+                window.alert('标题过长');
+            } else{
                 const response = await this.$http.post('/topic/create', {
                     "name": this.sectionInput,
                     "introduction": this.sectionAbstract
@@ -57,18 +63,22 @@ export default {
                 });
 
                 if (response.status === 200) {
-                    if (response.data.code == 1) window.alert('板块创建成功');
+                    if (response.data.code == 1) {
+                        window.alert('板块创建成功');
+                        location.reload();
+                    }
                     else window.alert(response.data.msg);
                 } else window.alert('网络错误');
             }
         },
 
-        async getSections(){ //获取全部板块信息
+        async getSections(pageNum){ //获取全部板块信息
             try{
-                const response = await this.$http.get('topic/pagedList?page=1&pageSize=10');
+                const response = await this.$http.get(`topic/pagedList?page=${pageNum}&pageSize=15`);
                 console.log(response);
                 if (response.status === 200) {
                     this.sectionList = response.data.data.records;
+                    this.totalPage = Math.ceil(response.data.data.total / 15);
                 } else window.alert('网络错误');
             }catch (error){
                 window.alert(error);

@@ -9,15 +9,15 @@
 
 <!--                <section-box title="软件工程" abstract="一个神奇的学科，我完全的不懂"></section-box>-->
                 <section-box v-if="select == 'section'" v-for="item in listSet"
-                :title="item.name" :abstract="item.introduction" />
+                :title="item.name" :abstract="item.introduction" :topic-id="item.id" />
 
             </div>
             <el-pagination class="pagination-style"
                            v-model:current-page="currentPos"
                            ref="bottomPagination"
                            layout="prev, pager, next, jumper"
-                           @current-change="test()"
-                           :total="100" />
+                           @current-change="pageChange()"
+                           :total="10*totalPage" />
         </div>
     </div>
 </template>
@@ -30,11 +30,11 @@ import SpaceBox from "@/pages/blog/components/spaceBox/index.vue";
 
 export default {
     name: "articleList",
-    props: ['heightSet', 'rTitle', 'listSet', 'select'],
+    props: ['heightSet', 'rTitle', 'listSet', 'select', 'totalPage'],
     components:{SpaceBox, SectionBox, articleBox},
     methods:{
-        test(){
-            console.log(this.currentPos);
+        pageChange(){
+            this.$emit('page-change', this.currentPos);
         }
     },
     data(){
