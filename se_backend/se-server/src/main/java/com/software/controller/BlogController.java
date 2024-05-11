@@ -1,5 +1,6 @@
 package com.software.controller;
 
+import com.software.annotation.AuthCheck;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
@@ -49,6 +50,7 @@ public class BlogController {
 
     @DeleteMapping("/deleteBlog")
     @Operation(summary = "删除博客")
+    @AuthCheck(mustRole = {RoleConstant.ADMIN,RoleConstant.TEACHER})
     public Result deleteBlogs(@RequestParam  Long blogId){
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();

@@ -1,5 +1,6 @@
 package com.software.controller;
 
+import com.software.annotation.AuthCheck;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
@@ -55,10 +56,11 @@ public class TopicController {
 
     @DeleteMapping("/deleteTopic")
     @Operation(summary = "删除板块")
+    @AuthCheck(mustRole = {RoleConstant.ADMIN,RoleConstant.TEACHER})
     public Result deleteBlogs(@RequestParam  Integer topicId){
-        Map<String,Object> currentUser = BaseContext.getCurrentUser();
-        String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
-        if ((!role.equals(RoleConstant.ADMIN))&&(!role.equals(RoleConstant.TEACHER)))throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+//        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+//        String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
+//        if ((!role.equals(RoleConstant.ADMIN))&&(!role.equals(RoleConstant.TEACHER)))throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         topicService.deleteTopic(topicId);
         return Result.success();
     }

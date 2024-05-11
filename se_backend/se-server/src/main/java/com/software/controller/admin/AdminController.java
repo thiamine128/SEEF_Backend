@@ -1,6 +1,7 @@
 package com.software.controller.admin;
 
 import com.alibaba.druid.util.StringUtils;
+import com.software.annotation.AuthCheck;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.PasswordConstant;
@@ -47,25 +48,28 @@ public class AdminController {
     private AdminService adminService;
     @PostMapping("/addAdmin")
     @Operation(summary = "添加管理员")
+    @AuthCheck(mustRole = {RoleConstant.ADMIN})
     public Result addAdmin(@RequestBody AdminDTO adminDTO) {
-        Map<String,Object> currentUser = BaseContext.getCurrentUser();
-        String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
-        if (!role.equals(RoleConstant.ADMIN)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+        //Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        //String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
+        //if (!role.equals(RoleConstant.ADMIN)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         adminService.addAdmin(adminDTO);
         return Result.success();
     }
 
     @PostMapping("/addTeacher")
     @Operation(summary = "添加教师")
+    @AuthCheck(mustRole = {RoleConstant.ADMIN})
     public Result addTeacher(@RequestBody TeacherDTO teacherDTO) {
-        Map<String,Object> currentUser = BaseContext.getCurrentUser();
-        String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
-        if (!role.equals(RoleConstant.ADMIN)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+//        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+//        String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
+//        if (!role.equals(RoleConstant.ADMIN)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         adminService.addTeacher(teacherDTO);
         return Result.success();
     }
 
     @PostMapping("/addButchTeacher")
+    @AuthCheck(mustRole = {RoleConstant.ADMIN})
     public Result addButchTeacher(MultipartFile file) throws IOException {
         if(file == null){
             return Result.error("File cannot be null");

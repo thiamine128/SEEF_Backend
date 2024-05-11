@@ -26,5 +26,8 @@ public interface UserService {
 
     void resetPassword(ResetPasswordDto resetPasswordDto);
 
+    User getTA(Long studentId,Long courseId);
+
+    User checkTeacher(Long teacherId,Long courseId);
 
 }

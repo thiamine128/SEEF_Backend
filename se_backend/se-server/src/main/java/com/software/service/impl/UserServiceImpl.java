@@ -144,6 +144,13 @@ public class UserServiceImpl implements UserService {
         redisTemplate.delete(user.getEmail());
     }
 
+    @Override
+    public User getTA(Long studentId, Long courseId) {
+        return userMapper.getTA(studentId, courseId);
+    }
+
+    @Override
+    public User checkTeacher(Long teacherId, Long courseId) {return userMapper.checkTeacher(teacherId, courseId);}
 
 
     private void verifyCodeOrThrow(String email, String code) {

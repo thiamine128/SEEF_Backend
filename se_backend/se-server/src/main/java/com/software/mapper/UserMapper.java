@@ -39,4 +39,8 @@ public interface UserMapper {
     void update(UserUpdateDTO userUpdateDTO);
 
     void addButchUser(List<User> users);
+    @Select("select * from student_class_management where student_id =#{studentId} and course_id =#{courseId}")
+    User getTA(Long studentId,Long courseId);
+    @Select("select * from student_class_management where teacher_id =#{teacherId} and course_id =#{courseId}")
+    User checkTeacher(Long teacherId, Long courseId);
 }
