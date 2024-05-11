@@ -1,9 +1,17 @@
 <template>
     <div class="bg-container"/>
 
-    <div v-if="floatComment" class="float-set">
-        <comment-textarea style="margin: auto"
+    <div v-if="floatComment" class="float-set" >
+
+        <comment-textarea v-if="floatSelect == 1" style="margin: auto"
           @cancelFloat="cancelFloatWindow" :holder-content="holderText"/>
+
+        <article-list v-if="floatSelect == 2" style="width: 50%; margin: auto"
+              height-set="510px" r-title="选择专区"
+              :list-set="sectionList" select="section" :total-page="totalPage"
+              @page-change="getSections" @cancelFloat="cancelFloatWindow"
+              @sel="selectTopic" :editor-set="true"></article-list>
+
     </div>
 
     <div :class="{setNavBar: step, setNavBarOp: !step}" >
@@ -11,7 +19,7 @@
     </div>
     <div class="view-set-margin">
 
-        <router-view @callFloat="callFloatWindow" ref="views"/>
+        <router-view @callFloat="callFloatWindow" :section-name="sectionName" :topic-id="topicId" ref="views"/>
 
     </div>
     <blog-bottom/>
@@ -23,10 +31,12 @@ import navBar from "@/pages/blog/components/navBar/index.vue";
 import blogBottom from "@/pages/blog/components/blogBottom/index.vue";
 import {reactive} from "vue";
 import CommentTextarea from "@/pages/blog/components/commentTextarea/index.vue";
+import articleList from "@/pages/blog/components/articleList/index.vue";
 
 export default {
     name: "blog",
     components: {
+        articleList,
         CommentTextarea,
         navBar, blogBottom
     },
@@ -68,7 +78,11 @@ export default {
         };
       return{
           data, scrolling, notHead: false, step: true,
-          floatComment: false, holderText: ''
+          floatComment: false, holderText: '', floatSelect: 1,
+          sectionList: [],
+          totalPage: 10,
+          sectionName: '选择专区',
+          topicId: -1
       }
     },
     mounted() {
@@ -78,13 +92,38 @@ export default {
         window.removeEventListener("scroll", this.scrolling);
     },
     methods:{
-        callFloatWindow(holder){
+
+        callFloatWindow(holder, sel){
+            this.floatSelect = sel;
             this.holderText = holder;
             this.floatComment = true;
+            if (sel == 2) this.getSections(1);
         },
+
+        selectTopic(id, topicName){
+            this.sectionName = topicName;
+            this.topicId = id;
+            console.log('topic: '+id+ " "+topicName);
+            this.cancelFloatWindow();
+        },
+
         cancelFloatWindow(){
             this.floatComment = false;
+        },
+
+        async getSections(pageNum){
+            try{
+                const response = await this.$http.get(`topic/pagedList?page=${pageNum}&pageSize=6`);
+                console.log(response);
+                if (response.status === 200) {
+                    this.sectionList = response.data.data.records;
+                    this.totalPage = Math.ceil(response.data.data.total / 6);
+                } else window.alert('网络错误');
+            }catch (error){
+                window.alert(error);
+            }
         }
+
     }
 }
 

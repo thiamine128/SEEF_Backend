@@ -22,10 +22,11 @@ export default {
     name: "sectionBox",
     methods: {
         callArticles(){
-            this.$router.push(`/blog/articles/${this.topicId}`);
+            if (!this.editorSet) this.$router.push(`/blog/articles/${this.topicId}`);
+            else this.$emit('modifyClick');
         }
     },
-    props: ['topicId', 'title', 'abstract'],
+    props: ['topicId', 'title', 'abstract', 'editorSet'],
     computed:{
         srcImg(){
             if (this.title == null || this.title.length < 5){

@@ -14,7 +14,9 @@
         </div>
         <div class="inputStyle">
             <div class="tagLine">
-                <el-input class="textarea-tag" style="width: 150px" v-model="sectionName" placeholder="专区名称"/>
+                <el-button style="width: 100px; height: 100%"
+                   type="info" plain @click="callSection()"> {{sectionName}} </el-button>
+
                 <el-input class="textarea-tag" v-model="tagName" placeholder="添加标签"/>
                 <el-button style="width: 30px; height: 100%; margin-right: 10px" type="info" plain @click="createTag()"> + </el-button>
 
@@ -38,10 +40,11 @@ import LeftButton from "@/pages/blog/components/leftButton/index.vue";
 export default {
     name: "editor",
     components: {LeftButton, MdField},
+    props: ['sectionName', 'topicId'],
     data(){
         const content = ref('');
         return{
-            content, mdTitle: '', tagName: '', sectionName: '',
+            content, mdTitle: '', tagName: '',
             tags: []
         }
     },
@@ -51,6 +54,10 @@ export default {
         }
     },
     methods:{
+
+        callSection(){
+            this.$emit('callFloat', '', 2);
+        },
 
         createTag(){
 
@@ -111,6 +118,8 @@ export default {
         },
         post(){
 
+
+
         }
     }
 }
@@ -158,7 +167,7 @@ export default {
     height: 40px;
     display: flex;
     flex-direction: row;
-    background-color: #eaeaea;
+    background-color: #f1f1f1;
     align-items: center;
 }
 .textarea-title{

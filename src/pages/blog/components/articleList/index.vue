@@ -3,13 +3,15 @@
         <div class="container">
             <div class="title-container">
                 <div :class="{ titleFont: true }">{{rTitle}}</div>
+                <el-button v-if="editorSet == true" style="width: 65px; height: 30px; margin-left: 5px"
+                           type="info" plain @click="this.$emit('cancelFloat')"> 取消选择 </el-button>
             </div>
             <hr>
             <div :style="listStyle">
 
-<!--                <section-box title="软件工程" abstract="一个神奇的学科，我完全的不懂"></section-box>-->
                 <section-box v-if="select == 'section'" v-for="item in listSet"
-                :title="item.name" :abstract="item.introduction" :topic-id="item.id" />
+                :title="item.name" :abstract="item.introduction"
+                :topic-id="item.id" :editor-set="editorSet" @modifyClick="selectSection(item.id, item.name)"/>
 
             </div>
             <el-pagination class="pagination-style"
@@ -30,11 +32,14 @@ import SpaceBox from "@/pages/blog/components/spaceBox/index.vue";
 
 export default {
     name: "articleList",
-    props: ['heightSet', 'rTitle', 'listSet', 'select', 'totalPage'],
+    props: ['heightSet', 'rTitle', 'listSet', 'select', 'totalPage', 'editorSet'],
     components:{SpaceBox, SectionBox, articleBox},
     methods:{
         pageChange(){
             this.$emit('page-change', this.currentPos);
+        },
+        selectSection(topicId, name){
+            this.$emit('sel', topicId, name);
         }
     },
     data(){
