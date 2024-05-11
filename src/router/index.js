@@ -31,6 +31,14 @@ const router = createRouter({
             }
         },
         {
+            path: '/education/mySchoolTimeTable',
+            name: 'mySchoolTimeTable',
+            component: defineAsyncComponent(() => import('@/pages/education/subPages/mySchoolTimeTable/index.vue')),
+            meta: {
+                title: '我的课表',
+            }
+        },
+        {
             path: '/education/courseSquare',
             name: 'courseSquare',
             component: defineAsyncComponent(() => import('@/pages/education/subPages/courseSquare/index.vue')),
@@ -74,14 +82,6 @@ const router = createRouter({
             path: '/education/personCenter',
             name: 'personSquare',
             component: defineAsyncComponent(() => import('@/pages/education/subPages/personCenter/index.vue')),
-            meta: {
-                title: '个人中心',
-            }
-        },
-        {
-            path: '/education/mySchedule',
-            name: 'mySchedule',
-            component: defineAsyncComponent(() => import('@/pages/education/subPages/mySchedule/index.vue')),
             meta: {
                 title: '个人中心',
             }

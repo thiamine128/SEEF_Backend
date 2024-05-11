@@ -14,15 +14,26 @@
                 <p><b>上课地点：</b> {{ course.location }}</p>
                 <p><b>学分：</b> {{ course.credits }}</p>
                 <p><b>考核方式：</b> {{ course.assessment }}</p>
-                <p><b>大纲:</b> <a :href="course.syllabus" target="_blank">View Syllabus</a></p>
+                <div @click="showChild = true"><b>大纲:</b><button @click="showChild = true">点击此处查看详情</button></div>
+                <syllabus v-if="showChild" @close="showChild = false" :detailed-content="course.detailedContent"></syllabus>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import syllabus from "@/pages/education/components/syllabus/index.vue";
 export default {
     name: "courseInfo",
+    components: {
+        syllabus
+    },
+    data() {
+        return{
+            showChild: false,
+            detailContent: String,
+        }
+    },
     props: {
         course: {
             type: Object,
@@ -66,7 +77,18 @@ h2 {
     font-weight: bold;
 }
 
+button {
+    height: 25px;
+    margin: 5px 0;
+
+}
+
 p {
+    margin: 5px 0;
+    font-size: 25px;
+}
+
+div {
     margin: 5px 0;
     font-size: 25px;
 }

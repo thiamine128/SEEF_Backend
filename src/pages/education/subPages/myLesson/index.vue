@@ -5,19 +5,14 @@
 
 <script>
 import navigationBar from "@/pages/education/components/navigationBar/index.vue";
-import ddl from "@/pages/education/components/ddl/index.vue";
-import todayLesson from "@/pages/education/components/todayLesson/index.vue";
-import matter from "@/pages/education/components/ddlButton/index.vue";
 
 export default {
-    name: "index",
+    name: "myLesson",
     components: {
-        todayLesson, navigationBar, ddl, matter
+        navigationBar
     },
     methods: {
-        myClass() {
-            console.log("Click");
-        }
+
     }
 }
 </script>
