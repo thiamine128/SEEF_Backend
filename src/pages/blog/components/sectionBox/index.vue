@@ -22,7 +22,7 @@ export default {
     name: "sectionBox",
     methods: {
         callArticles(){
-            if (!this.editorSet) this.$router.push(`/blog/articles/${this.topicId}`);
+            if (!this.editorSet) this.$router.push(`/blog/articles/${this.topicId}/${this.title}`);
             else this.$emit('modifyClick');
         }
     },

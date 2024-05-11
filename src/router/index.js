@@ -112,7 +112,7 @@ const router = createRouter({
                         import(`../pages/blog/subPages/article/index.vue`)),
                 },
                 {
-                    path: '/blog/articles/:topicId',
+                    path: '/blog/articles/:topicId/:sectionName',
                     name: 'articles',
                     component: defineAsyncComponent(() =>
                         import(`../pages/blog/subPages/articles/index.vue`)),

@@ -2,7 +2,9 @@
     <div class="content-container">
         <div class="content-left">
 
-            <article-list height-set="2000px" r-title="Wonderful Zone"></article-list>
+            <article-list height-set="2000px" r-title="Blogs ~Wonderful Zone~"
+            :list-set="artiList" select="article" :total-page="totalPage"
+            @page-change="pullArticles"></article-list>
 
 
         </div>
@@ -21,16 +23,35 @@
 import articleList from "@/pages/blog/components/articleList/index.vue";
 import recommend from "@/pages/blog/components/recommend/index.vue";
 import rightPin from "@/pages/blog/components/rightPin/index.vue";
+import {useRouter} from "vue-router";
 export default {
     name: "articles",
     components: {rightPin, recommend, articleList},
+    props: ['sectionName'],
     data(){
         return{
-
+            artiList : [],
+            totalPage : 10
         }
     },
     methods:{
-
+        async pullArticles(pageNum){
+            try{
+                const response = await this.$http.get(
+                    `topic/viewBlogs?page=${pageNum}&pageSize=10&topicId=${this.$route.params.topicId}&previewLength=50`
+                );
+                console.log(response);
+                if (response.status === 200) {
+                    this.artiList = response.data.data.records;
+                    this.totalPage = Math.ceil(response.data.data.total / 10);
+                } else window.alert('网络错误');
+            }catch (error){
+                window.alert(error);
+            }
+        }
+    },
+    mounted() {
+        this.pullArticles(1);
     }
 }
 </script>
