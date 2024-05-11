@@ -1,9 +1,6 @@
 package com.software.service;
 
-import com.software.dto.ClassCreateDto;
-import com.software.dto.ClassQueryDto;
-import com.software.dto.CourseCreateDto;
-import com.software.dto.CoursePageQueryDto;
+import com.software.dto.*;
 import com.software.entity.CourseClass;
 import com.software.result.PageResult;
 
@@ -14,4 +11,7 @@ public interface CourseService {
     void addClass(ClassCreateDto classCreateDto);
     PageResult pageQuery(CoursePageQueryDto coursePageQueryDto);
     List<CourseClass> getClasses(ClassQueryDto classQueryDto);
+    boolean hasPermission(Long courseId);
+    Long getCourse(Long classId);
+    PageResult getUserClasses(UserClassesPageQueryDto userClassesPageQueryDto, Long userId);
 }

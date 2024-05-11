@@ -4,10 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
-import com.software.dto.ClassCreateDto;
-import com.software.dto.ClassQueryDto;
-import com.software.dto.CourseCreateDto;
-import com.software.dto.CoursePageQueryDto;
+import com.software.dto.*;
 import com.software.entity.Course;
 import com.software.entity.CourseClass;
 import com.software.exception.PermissionDeniedException;
@@ -40,9 +37,6 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void addClass(ClassCreateDto classCreateDto) {
-        Map<String,Object> currentUser = BaseContext.getCurrentUser();
-        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
-        if (courseMapper.checkTeacher(id, classCreateDto.getCourseId()) == null) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         classMapper.addClass(classCreateDto.getCourseId(), classCreateDto.getName());
     }
 
@@ -57,5 +51,24 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<CourseClass> getClasses(ClassQueryDto classQueryDto) {
         return courseMapper.getClasses(classQueryDto.getCourseId());
+    }
+
+    @Override
+    public boolean hasPermission(Long courseId) {
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
+        return courseMapper.checkTeacher(id, courseId) != null;
+    }
+
+    @Override
+    public Long getCourse(Long classId) {
+        return classMapper.getCourse(classId);
+    }
+
+    @Override
+    public PageResult getUserClasses(UserClassesPageQueryDto userClassesPageQueryDto, Long userId) {
+        PageHelper.startPage(userClassesPageQueryDto.getPage(), userClassesPageQueryDto.getPageSize());
+        Page page = (Page) classMapper.getUserCourses(userId);//后绪步骤实现
+        return new PageResult(page.getTotal(), page.getResult());
     }
 }
