@@ -13,6 +13,10 @@
                 :title="item.name" :abstract="item.introduction"
                 :topic-id="item.id" :editor-set="editorSet" @modifyClick="selectSection(item.id, item.name)"/>
 
+                <article-box v-if="select == 'article'" v-for="item in listSet"
+                :abstract="item.preview" :title="item.title" :likes="item.favourNum"
+                :post-time="dateF(item.createTime)"/>
+
             </div>
             <el-pagination class="pagination-style"
                            v-model:current-page="currentPos"
@@ -29,12 +33,18 @@
 import articleBox from "@/pages/blog/components/articleBox/index.vue";
 import SectionBox from "@/pages/blog/components/sectionBox/index.vue";
 import SpaceBox from "@/pages/blog/components/spaceBox/index.vue";
-
+import dayjs from "dayjs";
 export default {
     name: "articleList",
+    computed: {
+
+    },
     props: ['heightSet', 'rTitle', 'listSet', 'select', 'totalPage', 'editorSet'],
     components:{SpaceBox, SectionBox, articleBox},
     methods:{
+        dateF(num) {
+            return dayjs(num).format('YYYY-MM-DD');
+        },
         pageChange(){
             this.$emit('page-change', this.currentPos);
         },

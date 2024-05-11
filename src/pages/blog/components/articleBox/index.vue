@@ -1,6 +1,10 @@
 <template>
     <div class="box-container">
+
+
         <img class="img-adjust" src="@/assets/blog/testArticleImg.png" alt="404 not found">
+
+
         <div class="msg">
             <div :class="{ titleFont: true }">{{title}}</div>
             <div :class="{ abstractFont: true }">{{abstract}}</div>

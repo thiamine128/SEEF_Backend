@@ -116,10 +116,23 @@ export default {
         save(){
 
         },
-        post(){
-
-
-
+        async post(){
+            if (this.topicId != -1){
+                try{
+                    const response = await this.$http.post(`blog/create`, {
+                        "title": this.mdTitle,
+                        "context": this.content,
+                        "tags": "", //暂时没有实现
+                        "topicId": this.topicId
+                    });
+                    if (response.status === 200) {
+                        window.alert('发表成功');
+                        this.$router.push(`/blog/articles/${this.topicId}/${this.sectionName}`);
+                    } else window.alert('网络错误');
+                }catch (error){
+                    window.alert(error);
+                }
+            }else window.alert('请选择专区');
         }
     }
 }
