@@ -3,7 +3,7 @@ package com.software.controller;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
-import com.software.dto.BlogPreviewPageQueryDto;
+import com.software.dto.BlogPreviewPageQueryDTO;
 import com.software.dto.TopicCreateDto;
 import com.software.dto.TopicPageQueryDTO;
 import com.software.exception.PermissionDeniedException;
@@ -13,7 +13,6 @@ import com.software.service.TopicService;
 import com.software.utils.BaseContext;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Null;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,7 @@ public class TopicController {
     @GetMapping("/viewBlogs")
     @Operation(summary = "板块博客")
     public Result<PageResult> viewBlogs(@RequestParam int page, @RequestParam int pageSize, @RequestParam Long topicId, @RequestParam int previewLength) {
-        BlogPreviewPageQueryDto blogPageQueryDto = new BlogPreviewPageQueryDto(page, pageSize, topicId, previewLength);
+        BlogPreviewPageQueryDTO blogPageQueryDto = new BlogPreviewPageQueryDTO(page, pageSize, topicId, previewLength);
         PageResult pageResult = topicService.getBlogs(blogPageQueryDto);
         return Result.success(pageResult);
     }

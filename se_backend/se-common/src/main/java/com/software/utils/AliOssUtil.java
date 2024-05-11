@@ -4,9 +4,7 @@ import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.OSSException;
-import com.aliyun.oss.model.MatchMode;
-import com.aliyun.oss.model.ObjectMetadata;
-import com.aliyun.oss.model.PolicyConditions;
+import com.aliyun.oss.model.*;
 import com.aliyuncs.utils.Base64Helper;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -63,11 +63,36 @@ public class AliOssUtil {
         }
 
         //文件访问路径规则 https://BucketName.Endpoint/ObjectName
-
         String path = buildPathFromObjectName(objectName);
         log.info("文件上传到:{}", path);
 
         return path;
+    }
+    public void mkdir(String path){
+        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+        try {
+            String content = "";
+            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, path, new ByteArrayInputStream(content.getBytes()));
+            ossClient.putObject(putObjectRequest);
+        } catch(OSSException oe){
+            System.out.println("Caught an OSSException, which means your request made it to OSS, "
+                    + "but was rejected with an error response for some reason.");
+            System.out.println("Error Message:" + oe.getErrorMessage());
+            System.out.println("Error Code:" + oe.getErrorCode());
+            System.out.println("Request ID:" + oe.getRequestId());
+            System.out.println("Host ID:" + oe.getHostId());
+        }catch (ClientException ce) {
+            System.out.println("Caught an ClientException, which means the client encountered "
+                    + "a serious internal problem while trying to communicate with OSS, "
+                    + "such as not being able to access the network.");
+            System.out.println("Error Message:" + ce.getMessage());
+        } finally {
+            if (ossClient != null) {
+                ossClient.shutdown();
+            }
+        }
+
+
     }
 
     public void delete(String objectName){
@@ -93,6 +118,55 @@ public class AliOssUtil {
                 ossClient.shutdown();
             }
         }
+    }
+
+    public List<String> getDocument(String path){
+        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+        List<String> result = new ArrayList<String>();
+
+        try {
+            ListObjectsRequest listObjectsRequest = new ListObjectsRequest(bucketName);
+
+            // 设置正斜线（/）为文件夹的分隔符。
+            listObjectsRequest.setDelimiter("/");
+
+            // 列出fun目录下的所有文件和文件夹。
+            listObjectsRequest.setPrefix(path);
+            ObjectListing listing = ossClient.listObjects(listObjectsRequest);
+            // 遍历所有文件。
+            // objectSummaries的列表中给出的是fun目录下的文件。
+            for (OSSObjectSummary objectSummary : listing.getObjectSummaries()) {
+                String url = buildPathFromObjectName(objectSummary.getKey());
+                System.out.println(objectSummary.getKey());
+                result.add(url);
+            }
+
+            // 遍历所有commonPrefix。
+            // commonPrefixs列表中显示的是fun目录下的所有子文件夹。由于fun/movie/001.avi和fun/movie/007.avi属于fun文件夹下的movie目录，因此这两个文件未在列表中。
+            for (String commonPrefix : listing.getCommonPrefixes()) {
+                System.out.println(commonPrefix);
+                String url = buildPathFromObjectName(commonPrefix);
+                result.add(url);
+            }
+
+        }catch (OSSException oe) {
+            System.out.println("Caught an OSSException, which means your request made it to OSS, "
+                    + "but was rejected with an error response for some reason.");
+            System.out.println("Error Message:" + oe.getErrorMessage());
+            System.out.println("Error Code:" + oe.getErrorCode());
+            System.out.println("Request ID:" + oe.getRequestId());
+            System.out.println("Host ID:" + oe.getHostId());
+        } catch (ClientException ce) {
+            System.out.println("Caught an ClientException, which means the client encountered "
+                    + "a serious internal problem while trying to communicate with OSS, "
+                    + "such as not being able to access the network.");
+            System.out.println("Error Message:" + ce.getMessage());
+        } finally {
+            if (ossClient != null) {
+                ossClient.shutdown();
+            }
+        }
+        return  result;
     }
 
     public PostSignature generatePostSignature(String objectName, long expireEndTime, long maxSize) throws UnsupportedEncodingException {

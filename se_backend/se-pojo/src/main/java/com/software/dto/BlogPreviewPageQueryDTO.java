@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
-public class BlogPreviewPageQueryDto implements Serializable {
+public class BlogPreviewPageQueryDTO implements Serializable {
     private int page;
 
     private int pageSize;

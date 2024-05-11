@@ -2,7 +2,7 @@ package com.software.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.software.dto.BlogPreviewPageQueryDto;
+import com.software.dto.BlogPreviewPageQueryDTO;
 import com.software.dto.TopicCreateDto;
 import com.software.dto.TopicPageQueryDTO;
 import com.software.entity.Blog;
@@ -38,7 +38,7 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public PageResult getBlogs(BlogPreviewPageQueryDto blogPageQueryDto) {
+    public PageResult getBlogs(BlogPreviewPageQueryDTO blogPageQueryDto) {
         PageHelper.startPage(blogPageQueryDto.getPage(), blogPageQueryDto.getPageSize());
         Page page = (Page) blogMapper.getBlogsInTopic(blogPageQueryDto.getTopicId());
         return new PageResult(page.getTotal(), page.getResult().stream().map(blog -> BlogPreviewVO.fromBlog((Blog) blog, blogPageQueryDto.getPreviewLength())).toList());
