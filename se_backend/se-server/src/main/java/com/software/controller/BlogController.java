@@ -11,6 +11,7 @@ import com.software.exception.PermissionDeniedException;
 import com.software.result.Result;
 import com.software.service.BlogService;
 import com.software.utils.BaseContext;
+import com.software.vo.BlogVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ public class BlogController {
     @GetMapping("/detail")
     @Operation(summary = "浏览博客")
     public Result getBlog(Long blogId) {
-        return Result.success(blogService.getDetail(blogId));
+        return Result.success(BlogVO.fromBlog(blogService.getDetail(blogId)));
     }
 
     @GetMapping("/viewComments")
@@ -56,16 +57,6 @@ public class BlogController {
         String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
         if ((!role.equals(RoleConstant.ADMIN))&&(!role.equals(RoleConstant.TEACHER)))throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         blogService.deleteblog(blogId);
-        return Result.success();
-    }
-    @DeleteMapping("/deleteMyBlog")
-    @Operation(summary = "删除我的博客")
-    public Result deleteMyBlogs(@RequestParam  Long blogId){
-        Map<String,Object> currentUser = BaseContext.getCurrentUser();
-        String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
-        String userId = currentUser.get(JwtClaimsConstant.USER_ID).toString();
-        Long uid =Long.parseLong(userId);
-        blogService.deleteMyBlog(blogId,uid);
         return Result.success();
     }
 }

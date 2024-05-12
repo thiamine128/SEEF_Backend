@@ -30,13 +30,4 @@ public class ReplyServiceImpl implements ReplyService {
     public void deleteReply(Long replyId) {
         replyMapper.deleteReply(replyId);
     }
-
-    @Override
-    public void deleteMyReply(Long replyId, Long uid) {
-       Reply reply = replyMapper.getReplieById(replyId);
-       if(uid != reply.getUserId()) {
-           throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
-       }
-       replyMapper.deleteReply(replyId);
-    }
 }

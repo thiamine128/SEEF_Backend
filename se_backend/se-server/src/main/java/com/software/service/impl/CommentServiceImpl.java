@@ -23,4 +23,9 @@ public class CommentServiceImpl implements CommentService {
         Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
         commentMapper.makeComment(commentCreateDto.getContent(), commentCreateDto.getBlogId(), id);
     }
+
+    @Override
+    public void deleteComment(Long id) {
+        commentMapper.deleteComment(id);
+    }
 }

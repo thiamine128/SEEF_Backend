@@ -12,6 +12,4 @@ public interface BlogService {
     PageResult viewComments(CommentPageQueryDto commentPageQueryDto);
 
     void deleteblog(Long blogId);
-
-    void deleteMyBlog(Long blogId, Long uid);
 }

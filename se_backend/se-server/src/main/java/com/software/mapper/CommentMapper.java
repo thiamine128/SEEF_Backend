@@ -1,6 +1,7 @@
 package com.software.mapper;
 
 import com.software.entity.Comment;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -14,4 +15,7 @@ public interface CommentMapper {
 
     @Select("select * from comments where blog_id=#{blogId}")
     List<Comment> getComments(Long blogId);
+
+    @Delete("delete from comments where id=#{id}")
+    void deleteComment(Long id);
 }

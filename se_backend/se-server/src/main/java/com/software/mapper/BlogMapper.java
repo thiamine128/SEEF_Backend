@@ -7,8 +7,8 @@ import java.util.List;
 
 @Mapper
 public interface BlogMapper {
-    @Insert("insert into blogs (title, content, user_id, topic_id) values (#{title}, #{content}, #{userId}, #{topicId})")
-    void createBlog(String title, String content, Long userId, Long topicId);
+    @Insert("insert into blogs (title, content, user_id, topic_id, tags) values (#{title}, #{content}, #{userId}, #{topicId}, #{tags})")
+    void createBlog(String title, String content, Long userId, Long topicId, String tags);
 
     @Select("select * from blogs where topic_id=#{topicId}")
     List<Blog> getBlogsInTopic(Long topicId);

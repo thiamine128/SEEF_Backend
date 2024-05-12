@@ -8,6 +8,8 @@ import com.software.dto.BlogCreateDTO;
 import com.software.dto.CommentPageQueryDto;
 import com.software.entity.Blog;
 import com.software.entity.Comment;
+import com.software.exception.EmptyTagException;
+import com.software.exception.InvalidCharacterException;
 import com.software.exception.PermissionDeniedException;
 import com.software.mapper.BlogMapper;
 import com.software.mapper.CommentMapper;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -37,7 +40,16 @@ public class BlogServiceImpl implements BlogService {
     public void create(BlogCreateDTO blogCreateDTO) {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
-        blogMapper.createBlog(blogCreateDTO.getTitle(), blogCreateDTO.getContext(), id, blogCreateDTO.getTopicId());
+        blogCreateDTO.getTags().forEach(str -> {
+            if (str.contains(";")) {
+                throw new InvalidCharacterException(";", str);
+            }
+            if (str.isEmpty()) {
+                throw new EmptyTagException(MessageConstant.EMPTY_TAG);
+            }
+        });
+        String tags = blogCreateDTO.getTags().stream().map(str -> str + ";").collect(Collectors.joining());
+        blogMapper.createBlog(blogCreateDTO.getTitle(), blogCreateDTO.getContext(), id, blogCreateDTO.getTopicId(), tags);
     }
 
     @Override
@@ -55,15 +67,6 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public void deleteblog(Long blogId) {
-        blogMapper.deleteBlog(blogId);
-    }
-
-    @Override
-    public void deleteMyBlog(Long blogId, Long uid) {
-        Blog blog = blogMapper.getBlog(blogId);
-        if(uid != blog.getUserId()) {
-            throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
-        }
         blogMapper.deleteBlog(blogId);
     }
 }

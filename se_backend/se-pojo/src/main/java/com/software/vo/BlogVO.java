@@ -11,10 +11,10 @@ import com.software.entity.Blog;
 
 @Data
 @Builder
-public class BlogPreviewVO {
+public class BlogVO {
     private Long id;
     private String title;
-    private String preview;
+    private String context;
     private List<String> tags;
     private String thumbNum;
     private String favourNum;
@@ -24,12 +24,11 @@ public class BlogPreviewVO {
     private boolean isDeleted;
     private Long topicId;
 
-    public static BlogPreviewVO fromBlog(Blog blog, int len) {
-        int sub = Math.min(blog.getContent().length(), len);
-        return new BlogPreviewVOBuilder()
+    public static BlogVO fromBlog(Blog blog) {
+        return new BlogVOBuilder()
                 .id(blog.getId())
                 .title(blog.getTitle())
-                .preview(blog.getContent().substring(0, sub))
+                .context(blog.getContent())
                 .tags(blog.getTags() == null ? List.of() : Arrays.stream(blog.getTags().split(";")).toList())
                 .thumbNum(blog.getThumbNum())
                 .favourNum(blog.getFavourNum())
