@@ -2,6 +2,7 @@ import { createStore } from 'vuex';
 import axios from "axios";
 import router from "@/router";
 import VuexPersistence from "vuex-persist";
+import {callError, callSuccess} from "@/callMessage";
 
 const vuexLocal = new VuexPersistence({
     storage: window.localStorage
@@ -20,10 +21,18 @@ export default createStore({
         profile: null,
         role: null,
         email: null,
+        tempTitle: '',
+        tempContent: ''
     },
 
 
     getters:{
+        getContent(state){
+            return{
+                title: state.tempTitle,
+                content: state.tempContent
+            }
+        },
         getData(state){
             return {
                 id: state.id,
@@ -64,7 +73,13 @@ export default createStore({
             state.profile = data.profile;
             state.role = data.role;
             state.email = data.email;
+        },
+
+        setContent(state, content){
+            state.tempContent = content.content;
+            state.tempTitle = content.title;
         }
+
     },
 
 
@@ -78,13 +93,13 @@ export default createStore({
                     if (response.data.code == 1){
                         commit('setToken', response.data.data.token);
                         commit('setData', response.data.data);
-                        window.alert('登录成功');
+                        callSuccess('登录成功');
                         router.push('/education');
-                    }else window.alert(response.data.msg);
-                }else window.alert('网络错误');
+                    }else callError(response.data.msg);
+                }else callError('网络错误');
             } catch (error) {
                 console.log('there are some errors in login');
-                window.alert('密码错误或用户不存在');
+                callError('密码错误或用户不存在');
             }
             return 1;
         },
@@ -98,13 +113,13 @@ export default createStore({
                     if (response.data.code == 1){
                         commit('setToken', response.data.data.token);
                         commit('setData', response.data.data);
-                        window.alert('登录成功');
+                        callSuccess('登录成功');
                         router.push('/education');
-                    }else window.alert(response.data.msg);
-                }else window.alert('网络错误');
+                    }else callError(response.data.msg);
+                }else callError('网络错误');
             } catch (error) {
                 console.log('there are some errors in login');
-                window.alert('密码错误或用户不存在');
+                callError('密码错误或用户不存在');
             }
         },
 

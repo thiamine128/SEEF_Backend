@@ -1,5 +1,5 @@
 <template>
-    <div :style="frameStyle">
+    <div :style="frameStyle" >
         <div class="container">
             <div class="title-container">
                 <div :class="{ titleFont: true }">{{rTitle}}</div>
@@ -15,7 +15,7 @@
 
                 <article-box v-if="select == 'article'" v-for="item in listSet"
                 :abstract="item.preview" :title="item.title" :likes="item.favourNum"
-                :post-time="dateF(item.createTime)"/>
+                :post-time="dateF(item.createTime)" :article-id="item.id"/>
 
             </div>
             <el-pagination class="pagination-style"
@@ -62,8 +62,7 @@ export default {
                 borderRadius: '5px',
                 border: '1px solid rgba(155, 155, 155, 0.7)',
                 display: 'flex',
-                marginBottom: '10px',
-
+                marginBottom: '10px'
             },
             listStyle:{
                 width: '100%',

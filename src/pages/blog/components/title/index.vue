@@ -11,16 +11,13 @@ import titleGroup from "@/pages/blog/components/titleGroup/index.vue";
 export default {
     name: "blogTitle",
     props: ['title', 'postTime', 'updateTime'],
-    mounted() {
-        this.dateString = '发表日期：'+this.postTime+" | "+"更新日期："+this.updateTime
-    },
-    data(){
-      return{
-          dateString: ''
-      }
-    },
     components: {
         titleGroup
+    },
+    computed: {
+        dateString(){
+            return '发表日期：'+this.postTime+" | "+"更新日期："+this.updateTime;
+        }
     }
 }
 </script>

@@ -36,6 +36,8 @@
 import {ref} from "vue";
 import MdField from "@/pages/blog/components/mdField/index.vue";
 import LeftButton from "@/pages/blog/components/leftButton/index.vue";
+import store from "@/store/store";
+import {callSuccess, callError} from "@/callMessage";
 
 export default {
     name: "editor",
@@ -46,6 +48,13 @@ export default {
         return{
             content, mdTitle: '', tagName: '',
             tags: []
+        }
+    },
+    mounted() {
+        let preData = store.getters.getContent;
+        if (preData.title.length > 0){
+            this.mdTitle = preData.title;
+            this.content = preData.content;
         }
     },
     computed:{
@@ -62,19 +71,19 @@ export default {
         createTag(){
 
             if (this.tagName.length == 0){
-                window.alert('标签不可为空');
+                callError('标签不可为空');
                 return;
             }
             if (this.tagName.length > 3){
-                window.alert('标签过长');
+                callError('标签过长');
                 return;
             }
             if (this.tags.includes(this.tagName)){
-                window.alert('标签不可重复');
+                callError('标签不可重复');
                 return;
             }
             if (this.tags.length > 3){
-                window.alert('标签过多');
+                callError('标签过多');
                 return;
             }
 
@@ -114,9 +123,17 @@ export default {
             saveAs(blob, (this.mdTitle.length > 0 ? this.mdTitle:'temp')+ '.md');
         },
         save(){
-
+            store.commit('setContent', {
+                "title": this.mdTitle,
+                "content": this.content
+            });
+            callSuccess('暂存成功');
         },
         async post(){
+            store.commit('setContent', {
+                "title": '',
+                "content": ''
+            });
             if (this.topicId != -1){
                 try{
                     const response = await this.$http.post(`blog/create`, {
@@ -126,13 +143,13 @@ export default {
                         "topicId": this.topicId
                     });
                     if (response.status === 200) {
-                        window.alert('发表成功');
+                        callSuccess('发表博客成功');
                         this.$router.push(`/blog/articles/${this.topicId}/${this.sectionName}`);
-                    } else window.alert('网络错误');
+                    } else callError('网络错误');
                 }catch (error){
-                    window.alert(error);
+                    callError(error);
                 }
-            }else window.alert('请选择专区');
+            }else callError('请选择专区');
         }
     }
 }

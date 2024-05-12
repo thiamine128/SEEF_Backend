@@ -106,7 +106,7 @@ const router = createRouter({
                         import(`../pages/blog/subPages/homepage/index.vue`)),
                 },
                 {
-                    path: '/blog/article',
+                    path: '/blog/article/:id',
                     name: 'article',
                     component: defineAsyncComponent(() =>
                         import(`../pages/blog/subPages/article/index.vue`)),
@@ -183,7 +183,6 @@ router.beforeEach((to, from, next)=>{
             next();
         }else{
             window.alert('未检测到token，请重新登录');
-            console.log('未检测到token，请重新登录');
             next('/login');
         }
     }
