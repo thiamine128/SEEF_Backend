@@ -1,6 +1,7 @@
 package com.software.service.impl;
 
 import com.software.constant.JwtClaimsConstant;
+import com.software.constant.RoleConstant;
 import com.software.exception.PermissionDeniedException;
 import com.software.service.AuthService;
 import com.software.service.UserService;
@@ -37,5 +38,13 @@ public class AuthCheckUtil implements AuthService {
 
 
         throw new PermissionDeniedException("权限不足");
+    }
+
+    @Override
+    public void classCheck(Long userId, Long classId) {
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
+        // TODO 权限校验 --班级
+
     }
 }

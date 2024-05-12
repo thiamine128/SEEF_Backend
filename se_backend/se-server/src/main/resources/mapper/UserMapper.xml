@@ -14,6 +14,19 @@
         </set>
         where id=#{id}
     </update>
+    <select id="getCourses" resultType="com.software.entity.Course">
+        select * from courses where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="getClasses" resultType="com.software.entity.TClass">
+        select * from classes where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+        #{id}
+        </foreach>
+    </select>
 
     <insert id="addButchUser" >
         insert into users (name, email, role, password) Values

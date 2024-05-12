@@ -4,7 +4,10 @@ import com.software.config.OssConfiguration;
 import com.software.config.WebConfiguration;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
+import com.software.constant.RoleConstant;
 import com.software.dto.*;
+import com.software.entity.Course;
+import com.software.entity.TClass;
 import com.software.entity.User;
 import com.software.properties.JwtProperties;
 import com.software.result.Result;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -166,6 +170,25 @@ public class UserController {
     @Operation(summary = "更新用户昵称/简介")
     public Result updateUserMessage(@RequestBody UserUpdateDTO userUpdateDTO){
         userService.updateUserMessage(userUpdateDTO);
+        return Result.success();
+    }
+
+    @GetMapping("/myCourse")
+    public Result<List<Course>> getMyCourse(){
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        long id = (long) currentUser.get(JwtClaimsConstant.USER_ID);
+        String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
+        List<Long> courseIds = userService.getCourseIds(role,id);
+        List<Course> courses = userService.getCourses(courseIds);
+        return Result.success(courses);
+    }
+
+    @GetMapping("/myClass")
+    public Result<List<TClass>> getMyClass(){
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        long id = (long) currentUser.get(JwtClaimsConstant.USER_ID);
+        List<Long> classIds = userService.getClassIds(id);
+        List<TClass> classes = userService.getClasses(classIds);
         return Result.success();
     }
 }

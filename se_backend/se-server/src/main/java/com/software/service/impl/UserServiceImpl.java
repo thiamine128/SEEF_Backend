@@ -5,6 +5,8 @@ import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
 import com.software.constant.StatusConstant;
 import com.software.dto.*;
+import com.software.entity.Course;
+import com.software.entity.TClass;
 import com.software.entity.User;
 import com.software.exception.AccountLockedException;
 import com.software.exception.AccountNotFoundException;
@@ -18,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import java.util.List;
@@ -145,12 +146,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getTA(Long studentId, Long courseId) {
+    public Long getTA(Long studentId, Long courseId) {
         return userMapper.getTA(studentId, courseId);
     }
 
     @Override
-    public User checkTeacher(Long teacherId, Long courseId) {return userMapper.checkTeacher(teacherId, courseId);}
+    public Long checkTeacher(Long teacherId, Long courseId) {return userMapper.checkTeacher(teacherId, courseId);}
+
+    @Override
+    public List<Course> getCourses(List<Long> courseIds) {
+        return userMapper.getCourses(courseIds);
+    }
+
+    @Override
+    public List<Long> getCourseIds(String role, Long id) {
+        if(role == RoleConstant.STUDENT)
+            return userMapper.getTACourseIds(id);
+        if(role == RoleConstant.TEACHER)
+            return userMapper.getTeacherCourseIds(id);
+        return null;
+    }
+
+    @Override
+    public List<Long> getClassIds(Long id) {
+
+        return userMapper.getClassIds(id);
+    }
+
+    @Override
+    public List<TClass> getClasses(List<Long> classIds) {
+        return userMapper.getClasses(classIds);
+    }
 
 
     private void verifyCodeOrThrow(String email, String code) {

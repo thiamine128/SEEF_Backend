@@ -1,10 +1,12 @@
 package com.software.mapper;
 
 import com.software.dto.AssignmentPublishDto;
+import com.software.dto.HomeWorkFeedBackDTO;
 import com.software.entity.Assignment;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.Date;
 import java.util.List;
@@ -22,4 +24,6 @@ public interface AssignmentMapper {
 
     @Select("select due_date from assignments where id=#{assignmentId}")
     Date getDueDate(Long assignmentId);
+    @Update("update student_assignment set grade = #{grade}, feedback = #{feedback} where assignment_id = #{assignmentId} and student_id = #{studentId}")
+    void markHw(HomeWorkFeedBackDTO homeWorkFeedBackDTO);
 }

@@ -7,6 +7,7 @@ import com.software.constant.RoleConstant;
 import com.software.dto.AssignmentPublishDto;
 import com.software.dto.AssignmentClassQueryDto;
 import com.software.dto.AssignmentSubmitDto;
+import com.software.dto.HomeWorkFeedBackDTO;
 import com.software.exception.PermissionDeniedException;
 import com.software.result.Result;
 import com.software.service.AssignmentService;
@@ -74,6 +75,13 @@ public class AssignmentController {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
         assignmentService.submitAssignment(id, assignmentSubmitDto);
+        return Result.success();
+    }
+
+    @PostMapping("/markAssignment")
+    @Operation(summary = "批改作业")
+    public Result markHw(@RequestBody HomeWorkFeedBackDTO homeWorkFeedBackDTO) {
+        assignmentService.markHw(homeWorkFeedBackDTO);
         return Result.success();
     }
 }

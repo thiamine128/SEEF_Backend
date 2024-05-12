@@ -3,6 +3,7 @@ package com.software.service.impl;
 import com.software.constant.MessageConstant;
 import com.software.dto.AssignmentPublishDto;
 import com.software.dto.AssignmentSubmitDto;
+import com.software.dto.HomeWorkFeedBackDTO;
 import com.software.entity.Assignment;
 import com.software.exception.AssignmentOverdueException;
 import com.software.mapper.AssignmentMapper;
@@ -35,5 +36,10 @@ public class AssignmentServiceImpl implements AssignmentService {
             throw new AssignmentOverdueException(MessageConstant.SUBMISSION_OVERDUE);
         }
         assignmentMapper.submitAssignment(studentId, assignmentSubmitDto.getAssignmentId(), assignmentSubmitDto.getAssignmentFile(), assignmentSubmitDto.getAssignmentContext());
+    }
+
+    @Override
+    public void markHw(HomeWorkFeedBackDTO homeWorkFeedBackDTO) {
+        assignmentMapper.markHw(homeWorkFeedBackDTO);
     }
 }

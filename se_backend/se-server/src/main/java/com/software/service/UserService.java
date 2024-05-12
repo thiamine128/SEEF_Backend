@@ -1,6 +1,8 @@
 package com.software.service;
 
 import com.software.dto.*;
+import com.software.entity.Course;
+import com.software.entity.TClass;
 import com.software.entity.User;
 
 import java.util.List;
@@ -26,8 +28,15 @@ public interface UserService {
 
     void resetPassword(ResetPasswordDto resetPasswordDto);
 
-    User getTA(Long studentId,Long courseId);
+    Long getTA(Long studentId, Long courseId);
 
-    User checkTeacher(Long teacherId,Long courseId);
+    Long checkTeacher(Long teacherId, Long courseId);
 
+    List<Course> getCourses(List<Long> courseIds);
+
+    List<Long> getCourseIds(String role,Long id);
+
+    List<Long> getClassIds(Long id);
+
+    List<TClass> getClasses(List<Long> classIds);
 }
