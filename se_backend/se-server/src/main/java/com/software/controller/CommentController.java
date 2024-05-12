@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Objects;
 
 @Tag(name = "评论相关接口")
 @RestController
@@ -35,7 +36,8 @@ public class CommentController {
     public Result deleteBlogs(@RequestParam  Long commentId){
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
-        if ((!role.equals(RoleConstant.ADMIN))&&(!role.equals(RoleConstant.TEACHER)))throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+        Long id = Long.parseLong(currentUser.get(JwtClaimsConstant.USER_ID).toString());
+        if (role.equals(RoleConstant.STUDENT) && !commentService.getComment(commentId).getUserId().equals(id)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);        commentService.deleteComment(commentId);
         commentService.deleteComment(commentId);
         return Result.success();
     }

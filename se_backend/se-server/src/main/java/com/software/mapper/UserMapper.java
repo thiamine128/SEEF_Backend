@@ -57,4 +57,6 @@ public interface UserMapper {
     List<Long> getClassIds(Long id);
 
     List<TClass> getClasses(List<Long> ids);
+    @Select("select id from users where id=#{id}")
+    Long exist(Long id);
 }

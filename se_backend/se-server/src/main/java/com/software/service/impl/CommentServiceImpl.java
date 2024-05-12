@@ -2,6 +2,7 @@ package com.software.service.impl;
 
 import com.software.constant.JwtClaimsConstant;
 import com.software.dto.CommentCreateDto;
+import com.software.entity.Comment;
 import com.software.mapper.CommentMapper;
 import com.software.service.CommentService;
 import com.software.utils.BaseContext;
@@ -27,5 +28,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void deleteComment(Long id) {
         commentMapper.deleteComment(id);
+    }
+
+    @Override
+    public Comment getComment(Long id) {
+        return commentMapper.getComment(id);
     }
 }

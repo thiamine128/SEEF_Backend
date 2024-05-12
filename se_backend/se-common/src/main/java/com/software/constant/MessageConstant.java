@@ -21,4 +21,5 @@ public class MessageConstant {
     public static final String SUBMISSION_OVERDUE = "作业已截止";
     public static final String INVALID_CHARACTER = "存在非法字符";
     public static final String EMPTY_TAG = "标签不能为空";
+    public static final String INVALID_USER = "用户不合法";
 }

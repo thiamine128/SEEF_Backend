@@ -51,11 +51,12 @@ public class BlogController {
 
     @DeleteMapping("/deleteBlog")
     @Operation(summary = "删除博客")
-    @AuthCheck(mustRole = {RoleConstant.ADMIN,RoleConstant.TEACHER})
+    @AuthCheck(mustRole = {RoleConstant.ADMIN,RoleConstant.TEACHER,RoleConstant.STUDENT})
     public Result deleteBlogs(@RequestParam  Long blogId){
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
-        if ((!role.equals(RoleConstant.ADMIN))&&(!role.equals(RoleConstant.TEACHER)))throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+        Long id = Long.parseLong(currentUser.get(JwtClaimsConstant.USER_ID).toString());
+        if (role.equals(RoleConstant.STUDENT) && !blogService.getDetail(blogId).getUserId().equals(id)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         blogService.deleteblog(blogId);
         return Result.success();
     }

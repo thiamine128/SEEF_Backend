@@ -32,23 +32,12 @@ public class ReplyController {
     }
     @DeleteMapping("/deleteReply")
     @Operation(summary = "删除回复")
-    @AuthCheck(mustRole = {RoleConstant.ADMIN, RoleConstant.TEACHER})
-    public Result deleteBlogs(@RequestParam  Long replyId){
-//        Map<String,Object> currentUser = BaseContext.getCurrentUser();
-//        String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
-//        if ((!role.equals(RoleConstant.ADMIN))&&(!role.equals(RoleConstant.TEACHER)))throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
-        replyService.deleteReply(replyId);
-        return Result.success();
-    }
-
-    @DeleteMapping("/deleteMyBlog")
-    @Operation(summary = "删除我的回复")
-    public Result deleteMyBlogs(@RequestParam  Long replyId){
+    public Result deleteReply(@RequestParam  Long replyId){
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
-        String userId = currentUser.get(JwtClaimsConstant.USER_ID).toString();
-        Long uid =Long.parseLong(userId);
-        replyService.deleteMyReply(replyId,uid);
+        Long id = Long.parseLong(currentUser.get(JwtClaimsConstant.USER_ID).toString());
+        if (role.equals(RoleConstant.STUDENT) && !replyService.getReply(replyId).getUserId().equals(id)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+        replyService.deleteReply(replyId);
         return Result.success();
     }
 }

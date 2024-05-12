@@ -18,5 +18,5 @@ public interface ReplyMapper {
     @Delete("delete from replies where id=#{replyId}")
     void deleteReply(Long replyId);
     @Select("select * from replies where id=#{replyId}")
-    Reply getReplieById(Long replyId);
+    Reply getReply(Long replyId);
 }
