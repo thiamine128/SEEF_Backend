@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@Configuration(value = "com.software.properties")
+@Configuration
 public class WebSocketConfig extends ServerEndpointConfig.Configurator {
     private JwtProperties jwtProperties = SoftwareContext.getBean(JwtProperties.class);
 
