@@ -1,14 +1,17 @@
 <template>
     <div class="bg-container"/>
     <navigation-bar/>
+    <create-course-button></create-course-button>
 </template>
 
 <script>
 import navigationBar from "@/pages/education/components/navigationBar/index.vue";
+import createCourseButton from "@/pages/education/components/createCourseButton/index.vue";
 
 export default {
     name: "myLesson",
     components: {
+        createCourseButton,
         navigationBar
     },
     methods: {
