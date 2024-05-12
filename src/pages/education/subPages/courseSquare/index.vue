@@ -1,6 +1,6 @@
 <template>
     <div class="bg-container"/>
-    <navigation-bar/>
+    <navigation-bar></navigation-bar>
     <div class="course-square">
         <course v-for="(course, index) in courses" :key="index" :course="course" />
     </div>
@@ -10,10 +10,12 @@
 import navigationBar from "@/pages/education/components/navigationBar/index.vue";
 import todayLesson from "@/pages/education/components/todayLesson/index.vue";
 import course from "@/pages/education/components/course/index.vue";
+import createCourseButton from "@/pages/education/components/createCourseButton/index.vue";
+// import navigationBarTeacher from "@/pages/education/components/navigationBarTeacher/index.vue";
 export default {
     name: "courseSquare",
     components: {
-        todayLesson,navigationBar,course
+        todayLesson,navigationBar,course,createCourseButton
     },
     data() {
         return {
