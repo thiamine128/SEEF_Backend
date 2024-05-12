@@ -24,6 +24,7 @@ import articleList from "@/pages/blog/components/articleList/index.vue";
 import recommend from "@/pages/blog/components/recommend/index.vue";
 import rightPin from "@/pages/blog/components/rightPin/index.vue";
 import {useRouter} from "vue-router";
+import {callError} from "@/callMessage";
 export default {
     name: "articles",
     components: {rightPin, recommend, articleList},
@@ -44,9 +45,9 @@ export default {
                 if (response.status === 200) {
                     this.artiList = response.data.data.records;
                     this.totalPage = Math.ceil(response.data.data.total / 10);
-                } else window.alert('网络错误');
+                } else callError('网络错误');
             }catch (error){
-                window.alert(error);
+                callError(error);
             }
         }
     },

@@ -29,6 +29,7 @@
 
 <script>
 import articleList from "@/pages/blog/components/articleList/index.vue";
+import {callError, callSuccess} from "@/callMessage";
 export default {
     name: "section",
     components: {articleList},
@@ -47,11 +48,11 @@ export default {
 
         async createSection(){
             if (this.sectionInput.length == 0 || this.sectionAbstract.length == 0){
-                window.alert('内容不可为空');
+                callError('内容不可为空');
             }else if (this.sectionAbstract.length > 20){
-                window.alert('简介过长');
+                callError('简介过长');
             }else if (this.sectionInput.length > 16){
-                window.alert('标题过长');
+                callError('标题过长');
             } else{
                 const response = await this.$http.post('/topic/create', {
                     "name": this.sectionInput,
@@ -64,11 +65,11 @@ export default {
 
                 if (response.status === 200) {
                     if (response.data.code == 1) {
-                        window.alert('板块创建成功');
+                        callSuccess('板块创建成功');
                         location.reload();
                     }
-                    else window.alert(response.data.msg);
-                } else window.alert('网络错误');
+                    else callError(response.data.msg);
+                } else callError('网络错误');
             }
         },
 
@@ -79,9 +80,9 @@ export default {
                 if (response.status === 200) {
                     this.sectionList = response.data.data.records;
                     this.totalPage = Math.ceil(response.data.data.total / 15);
-                } else window.alert('网络错误');
+                } else callError('网络错误');
             }catch (error){
-                window.alert(error);
+                callError(error);
             }
         }
 

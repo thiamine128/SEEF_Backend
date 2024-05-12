@@ -107,7 +107,6 @@ export default {
                 this.clickSet = false;
                 setTimeout(()=>{
                     this.clickSet = true;
-                    console.log('clickset is true now');
                 }, 5000);
             }
 

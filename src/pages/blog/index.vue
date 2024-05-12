@@ -32,6 +32,7 @@ import blogBottom from "@/pages/blog/components/blogBottom/index.vue";
 import {reactive} from "vue";
 import CommentTextarea from "@/pages/blog/components/commentTextarea/index.vue";
 import articleList from "@/pages/blog/components/articleList/index.vue";
+import {callError} from "@/callMessage";
 
 export default {
     name: "blog",
@@ -118,9 +119,9 @@ export default {
                 if (response.status === 200) {
                     this.sectionList = response.data.data.records;
                     this.totalPage = Math.ceil(response.data.data.total / 6);
-                } else window.alert('网络错误');
+                } else callError('网络错误');
             }catch (error){
-                window.alert(error);
+                callError(error);
             }
         }
 

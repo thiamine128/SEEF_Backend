@@ -1,9 +1,12 @@
 <template>
-    <div class="box-container">
+    <div class="box-container" @click="callArticle">
 
 
-        <img class="img-adjust" src="@/assets/blog/testArticleImg.png" alt="404 not found">
+        <img v-if="imgShow" class="img-adjust" src="@/assets/blog/testArticleImg.png" alt="404 not found">
 
+        <div v-if="!imgShow" class="no-img-adjust">
+            <div style="font-size: 80px; color: rgba(22, 22, 22, 0.1)"> {{titleShow}} </div>
+        </div>
 
         <div class="msg">
             <div :class="{ titleFont: true }">{{title}}</div>
@@ -21,7 +24,26 @@
 <script>
 export default {
     name: "articleBox",
-    props:['title', 'abstract', 'author', 'postTime', 'likes']
+    props:['title', 'abstract', 'author', 'postTime', 'likes', 'articleId'],
+    methods:{
+        callArticle(){
+            this.$router.push(`/blog/article/${this.articleId}`);
+        }
+    },
+    data(){
+        return{
+            imgShow: false
+        }
+    },
+    computed:{
+        titleShow(){
+            if (this.title != null){
+                // if (this.title.length <= 5) return this.title;
+                // else return this.title.slice(0, 5)+'...';
+                return this.title.slice(0, 1);
+            }else return '';
+        }
+    }
 }
 </script>
 
@@ -33,10 +55,18 @@ export default {
     flex-direction: row;
     justify-content: left;
     margin: 4px;
+    cursor: pointer;
 }
 .img-adjust{
     width: 25%;
     height: 100%;
+    display: flex;
+}
+.no-img-adjust{
+    width: 25%;
+    height: 100%;
+    display: flex;
+    background: url('@/assets/blog/article-bg.png');
 }
 .msg{
     display: flex;
@@ -59,7 +89,7 @@ export default {
 .abstractFont {
     font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
     font-size: 12px;
-    margin-left: 5px;
+    margin-left: 7px;
     color: #8e8e8e;
     text-align: left;
 }

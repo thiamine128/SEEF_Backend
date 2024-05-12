@@ -1,5 +1,5 @@
 <template>
-    <blogTitle title="BUAA-SE-Wonderful" post-time="2023-12-11" update-time="2023-12-15"/>
+    <blogTitle :title="title" :post-time="postTime" :update-time="updateTime"/>
     <div class="content-container">
         <div class="content-left">
             <md-field id="md-hook" :input-content="content"></md-field>
@@ -38,25 +38,31 @@ import recommend from "@/pages/blog/components/recommend/index.vue";
 import PersonalBox from "@/pages/blog/components/personalBox/index.vue";
 import Catalog from "@/pages/blog/components/catalog/index.vue";
 import CommentBox from "@/pages/blog/components/commentBox/index.vue";
+import dayjs from "dayjs";
 export default {
     name: "article",
     components: {CommentBox, Catalog, PersonalBox, recommend, blogTitle, mdField, rightPin},
-    async created() {
+    async mounted() {
         try {
-            const response = await axios.get(inject('webURL')+"testMarkdown.md");
-            this.content = response.data;
-            console.log(this.content)
+            const response = await this.$http.get(`blog/detail?blogId=${this.$route.params.id}`);
+            console.log(response);
+            this.content = response.data.data.content;
+            this.updateTime = this.dateF(response.data.data.updateTIme);
+            this.postTime = this.dateF(response.data.data.createTime);
+            this.title = response.data.data.title;
         } catch (error) {
             console.error("Error fetching Markdown file:", error);
         }
     },
     data(){
         return{
-            content: '',
+            content: '', title: '', postTime: '1919-8-10', updateTime: '1919-8-10',
         }
     },
     methods:{
-
+        dateF(num) {
+            return dayjs(num).format('YYYY-MM-DD');
+        },
     }
 }
 </script>
