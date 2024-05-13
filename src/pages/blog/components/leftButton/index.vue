@@ -19,22 +19,20 @@ export default {
 
 <style scoped>
 .imgLoc{
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
 }
 .buttonFont{
     font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
     font-size: 10px;
     text-align: center;
     cursor: default;
-    margin-top: -2px;
 }
 .buttonFontExtra{
     font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
     font-size: 10px;
     text-align: center;
-    cursor: default;
-    margin-top: -2px;
+    cursor: pointer;
     font-weight: bold;
     color: #00bbff;
 }
@@ -47,6 +45,7 @@ export default {
     background-color: rgba(11, 11, 11, 0);
     transition: background-color 0.5s;
     border-radius: 10px;
+    cursor: pointer;
 }
 .photo-set:hover{
     background-color: rgba(11, 11, 11, 0.1);

@@ -39,7 +39,7 @@ export default {
         async pullArticles(pageNum){
             try{
                 const response = await this.$http.get(
-                    `topic/viewBlogs?page=${pageNum}&pageSize=10&topicId=${this.$route.params.topicId}&previewLength=50`
+                    `topic/viewBlogs?page=${pageNum}&pageSize=10&topicId=${this.$route.params.topicId}&previewLength=180`
                 );
                 console.log(response);
                 if (response.status === 200) {

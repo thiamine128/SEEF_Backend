@@ -1,7 +1,7 @@
 <template>
     <div class="bg-container"/>
 
-    <div v-if="floatComment" class="float-set" >
+    <div :class="{floatSet: floatComment, floatSetNone: !floatComment}" >
 
         <comment-textarea v-if="floatSelect == 1 || floatSelect == 3" style="margin: auto" :blog-id="blogId"
           @cancelFloat="cancelFloatWindow" :holder-content="holderText"
@@ -11,7 +11,7 @@
               height-set="510px" r-title="选择专区"
               :list-set="sectionList" select="section" :total-page="totalPage"
               @page-change="getSections" @cancelFloat="cancelFloatWindow"
-              @sel="selectTopic" :editor-set="true"></article-list>
+              @sel="selectTopic" :editor-set="true" ref="selectSectionList"></article-list>
 
     </div>
 
@@ -108,7 +108,8 @@ export default {
         },
 
         selectTopic(id, topicName){
-            this.sectionName = topicName;
+            if (topicName.length > 4) this.sectionName = topicName.slice(0, 4)+'...';
+            else this.sectionName = topicName;
             this.topicId = id;
             console.log('topic: '+id+ " "+topicName);
             this.cancelFloatWindow();
@@ -150,7 +151,7 @@ export default {
     left: 0;
 }
 
-.float-set{
+.floatSet{
     background-color: rgba(33, 33, 33, 0.1);
     opacity: 1.0;
     background-size: cover;
@@ -161,6 +162,21 @@ export default {
     top: 0;
     left: 0;
     display: flex;
+    transition: opacity 0.8s;
+}
+
+.floatSetNone{
+    background-color: rgba(33, 33, 33, 0.1);
+    opacity: 0.0;
+    background-size: cover;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    z-index: -5;
+    top: 0;
+    left: 0;
+    display: flex;
+    transition: opacity 0.8s;
 }
 
 .setNavBar{
