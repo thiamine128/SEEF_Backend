@@ -12,4 +12,5 @@ public class UserUpdateDTO {
     private Long id;
     private String nickname;
     private String profile;
+    private String realName;
 }

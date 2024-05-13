@@ -11,6 +11,9 @@
             <if test="profile!=null">
              ,profile=#{profile}
          </if>
+            <if test="realName!=null">
+            ,real_name=#{realName}
+            </if>
         </set>
         where id=#{id}
     </update>
