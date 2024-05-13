@@ -19,6 +19,7 @@ export default {
     min-height: 15px;
     margin-top: 3px;
     margin-bottom: 3px;
+    cursor: pointer;
 }
 .nameFont{
     font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;

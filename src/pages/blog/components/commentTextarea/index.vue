@@ -8,25 +8,74 @@
                 type="textarea"
                 :placeholder="holderContent"
         />
-        <el-button style="width: 390px;">评论</el-button>
+        <el-button style="width: 390px;" @click="postComment()">评论</el-button>
         <div/>
         <el-button style="width: 390px; margin-top: 5px" @click="cancelComment()">取消</el-button>
     </div>
 </template>
 
 <script>
+import {callError, callSuccess} from "@/callMessage";
+
 export default {
     name: "commentTextarea",
-    props: ['holderContent'],
+    props: ['holderContent', 'blogId', 'replyData', 'sel'],
     data(){
         return{
             commentContent: ''
         }
     },
     methods:{
-        postComment(){
 
+        async postComment(){
+            if (this.sel == 1){
+                try {
+                    const response = await this.$http.post(`comment/create`, {
+                        "content": this.commentContent,
+                        "blogId": this.blogId
+                    });
+                    if (response.status === 200) {
+                        callSuccess('评论成功');
+                        this.cancelComment();
+                        setTimeout(()=>{
+                            location.reload();
+                        }, 1000);
+                    } else callError('网络错误');
+                }catch (error){
+                    callError(error);
+                }
+            }else if (this.sel == 3){
+                try {
+                    let response = null;
+                    console.log('reply: ' + this.replyData.to);
+                    if (this.replyData.to < 0){
+                        response = await this.$http.post(`reply/create`, {
+                            "content": this.commentContent,
+                            "commentId": this.replyData.commentId
+                        });
+                    }else{
+                        response = await this.$http.post(`reply/create`, {
+                            "content": this.commentContent,
+                            "commentId": this.replyData.commentId,
+                            "to": this.replyData.to
+                        });
+                    }
+
+                    if (response.status === 200) {
+                        callSuccess('回复成功');
+                        this.cancelComment();
+                        setTimeout(()=>{
+                            location.reload();
+                        }, 1000);
+                    } else callError('网络错误');
+                }catch (error){
+                    callError(error);
+                }
+            }
+
+            this.cancelComment();
         },
+
         cancelComment(){
             this.$emit('cancelFloat');
         }

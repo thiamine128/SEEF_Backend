@@ -7,12 +7,27 @@
             <div class="comment-head">
 
                 <div style="cursor: default; margin-left: 10px">
-                    0 comments
+                    {{commentNum}} comments
                 </div>
 
-                <div style="cursor: pointer; margin-right: 10px; color: #0c82e9">
+                <div style="cursor: pointer; margin-right: 10px; color: #0c82e9" @click="callAddComment">
                     Add Comment
                 </div>
+            </div>
+
+            <comment-box v-if="commentNum > 0" v-for="item in comments" :name="Null" :content="item.content"
+            :post-time="dateF(item.createTime)" :reply-list="item.replies" :comment-id="item.id"
+            @callReply="callAddReply" :user-id="item.userId"/>
+
+            <el-pagination v-if="commentNum > 0" class="pagination-style"
+                           v-model:current-page="currentPos"
+                           ref="bottomPagination"
+                           layout="prev, pager, next, jumper"
+                           @current-change="pageChange()"
+                           :total="10*totalPage" />
+
+            <div v-if="commentNum === 0" style="background-color: rgba(255, 255, 255, 0.9); width: 100%; height: 400px; display: flex">
+                <div style="margin: auto; font-size: 25px"> 目前还没有评论 </div>
             </div>
 
         </div>
@@ -39,6 +54,7 @@ import PersonalBox from "@/pages/blog/components/personalBox/index.vue";
 import Catalog from "@/pages/blog/components/catalog/index.vue";
 import CommentBox from "@/pages/blog/components/commentBox/index.vue";
 import dayjs from "dayjs";
+import {callError} from "@/callMessage";
 export default {
     name: "article",
     components: {CommentBox, Catalog, PersonalBox, recommend, blogTitle, mdField, rightPin},
@@ -46,10 +62,13 @@ export default {
         try {
             const response = await this.$http.get(`blog/detail?blogId=${this.$route.params.id}`);
             console.log(response);
-            this.content = response.data.data.content;
+            this.content = response.data.data.context;
             this.updateTime = this.dateF(response.data.data.updateTIme);
             this.postTime = this.dateF(response.data.data.createTime);
             this.title = response.data.data.title;
+
+            await this.pageChange();
+
         } catch (error) {
             console.error("Error fetching Markdown file:", error);
         }
@@ -57,12 +76,39 @@ export default {
     data(){
         return{
             content: '', title: '', postTime: '1919-8-10', updateTime: '1919-8-10',
+            totalPage: 1, currentPos: 1, comments: [], commentNum: 0
         }
     },
     methods:{
+        callAddReply(to, commentId){
+            this.$emit('callFloat', `输入回复内容`, 3, {
+                "commentId": commentId,
+                "to": to
+            });
+        },
+        callAddComment(){
+            this.$emit('callFloat', `对《${this.title}》发表评论`, 1, {
+                "blogId": this.$route.params.id
+            });
+        },
         dateF(num) {
             return dayjs(num).format('YYYY-MM-DD');
         },
+        async pageChange(){
+            try {
+                const response = await this.$http.get(
+                    `blog/viewComments?page=${this.currentPos}&pageSize=10&blogId=${this.$route.params.id}`
+                );
+                console.log(response);
+                if (response.status === 200) {
+                    this.commentNum = response.data.data.total;
+                    this.comments = response.data.data.records;
+                    this.totalPage = Math.ceil(response.data.data.total / 10);
+                } else callError('网络错误');
+            }catch (error){
+                callError(error);
+            }
+        }
     }
 }
 </script>
@@ -94,5 +140,9 @@ export default {
 }
 .content-right{
     width: 28%;
+}
+.pagination-style{
+    background-color: rgba(255, 255, 255, 0.9);
+    justify-content: right;
 }
 </style>
