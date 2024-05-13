@@ -4,23 +4,50 @@
          @mouseleave="hover = false"
          @mouseover="hover = true">
         <a  :href="dest" class="linkStyle">
-            <div :class="{ customFont: true }">{{buttonName}}</div>
+            <div v-if="buttonName !== '动态' || !badgeSet" :class="{ customFont: true }">{{buttonName}}</div>
+            <el-badge v-if="buttonName === '动态' && badgeSet " :value="100" :max="99" type="primary">
+                <div :class="{ customFont: true }">{{buttonName}}</div>
+            </el-badge>
         </a>
     </div>
 </template>
 
 <script>
-
+import store from "@/store/store";
 export default {
     name: "navButton",
     props: ['buttonName', 'dest'],
     data(){
         return{
-          hover: false
+          hover: false, badgeSet: false, ws: null, badgeValue: 0
+        }
+    },
+    methods:{
+        setupWebSocket() {
+            this.ws = new WebSocket(
+                `ws://123.249.103.199:8080/api/webSocket/${store.getters.getToken}`
+            );
+
+            this.ws.onopen = function(event) {
+                console.log('WebSocket 连接已打开', event);
+            };
+
+            this.ws.onerror = function(error) {
+                console.error('WebSocket 出错', error);
+            };
+
+            this.ws.onmessage = function(event) {
+                // 收到信息event.data
+                console.log(event.data);
+            };
+
+            this.ws.onclose = function() {
+                console.log('WebSocket 连接已关闭');
+            };
         }
     },
     mounted() {
-
+        if (this.buttonName === '动态') this.setupWebSocket();
     },
 }
 </script>

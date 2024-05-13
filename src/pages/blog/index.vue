@@ -3,8 +3,9 @@
 
     <div v-if="floatComment" class="float-set" >
 
-        <comment-textarea v-if="floatSelect == 1" style="margin: auto"
-          @cancelFloat="cancelFloatWindow" :holder-content="holderText"/>
+        <comment-textarea v-if="floatSelect == 1 || floatSelect == 3" style="margin: auto" :blog-id="blogId"
+          @cancelFloat="cancelFloatWindow" :holder-content="holderText"
+          :reply-data="replyData" :sel="floatSelect"/>
 
         <article-list v-if="floatSelect == 2" style="width: 50%; margin: auto"
               height-set="510px" r-title="选择专区"
@@ -19,7 +20,8 @@
     </div>
     <div class="view-set-margin">
 
-        <router-view @callFloat="callFloatWindow" :section-name="sectionName" :topic-id="topicId" ref="views"/>
+        <router-view @callFloat="callFloatWindow" :section-name="sectionName"
+             :topic-id="topicId" ref="views"/>
 
     </div>
     <blog-bottom/>
@@ -83,7 +85,9 @@ export default {
           sectionList: [],
           totalPage: 10,
           sectionName: '选择专区',
-          topicId: -1
+          topicId: -1,
+          blogId: -1,
+          replyData: {}
       }
     },
     mounted() {
@@ -94,11 +98,13 @@ export default {
     },
     methods:{
 
-        callFloatWindow(holder, sel){
+        callFloatWindow(holder, sel, data = {}){
             this.floatSelect = sel;
             this.holderText = holder;
             this.floatComment = true;
             if (sel == 2) this.getSections(1);
+            else if (sel == 1) this.blogId = data.blogId;
+            else if (sel == 3) this.replyData = data;
         },
 
         selectTopic(id, topicName){

@@ -6,6 +6,8 @@
             <nav class="button-nav">
                 <nav-button v-for="item in buttonSet"
                 :button-name="item.name" :dest="item.dest"></nav-button>
+
+                <nav-button :button-name="spaceSet.name" :dest="spaceSet.dest"/>
             </nav>
             <el-avatar class="avatarSet" :src="require('@/assets/blog/testPortrait.jpg')"
             @mouseenter="hover=true" @mouseleave="hover=false" @click="toPersonal" />
@@ -24,8 +26,8 @@ export default {
                 {name: '首页', dest: '/blog/homepage'},
                 {name: '专区', dest: '/blog/section/'},
                 {name: '发布', dest:'/blog/editor'},
-                {name: '动态', dest: '/blog/space'}
             ],
+            spaceSet: {name: '动态', dest: '/blog/space'},
             hover: false
         }
     },

@@ -9,14 +9,16 @@
                 </div>
 
                 <div class="textSet">
-                    <div :class="{ contentFont: true }"> {{content}} </div>
+                    <div :class="{ contentFont: true }" @click="addReply()"> {{content}} </div>
                     <div :class="{ dateFont: true }"> 发布于{{postTime}} </div>
                 </div>
             </div>
 
             <div class="bottom-style">
 
-
+                <reply-box v-for="item in replyList" :name="item.to == null ? item.userId : `${item.userId}回复${item.to}`"
+                :content="item.content"
+                @click="addReply(item.userId)"/>
 
             </div>
 
@@ -30,7 +32,12 @@ import ReplyBox from "@/pages/blog/components/replyBox/index.vue";
 export default {
     name: "commentBox",
     components: {ReplyBox},
-    props: ['name', 'content', 'postTime', 'replyList'],
+    props: ['userId', 'commentId', 'name', 'content', 'postTime', 'replyList'],
+    methods:{
+        addReply(to = -1){
+            this.$emit('callReply', to, this.commentId);
+        }
+    }
 }
 </script>
 
@@ -92,6 +99,7 @@ export default {
     height: 70px;
     background-color: rgba(22, 22, 22, 0.07);
     overflow-x: auto;
+    cursor: pointer;
 }
 .dateFont{
     font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
