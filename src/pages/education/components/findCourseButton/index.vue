@@ -1,27 +1,17 @@
 <template>
     <div class="create-course-container">
-        <button class="first-button" @click="showCreatePage">创建课程</button>
+        <button class="first-button" @click="showCreatePage">查询课程</button>
 
-        <div class="create-course-modal" v-if="showCreateCourseModal">
+        <div class="create-course-modal" v-if="showFindCourseModal">
             <div class="modal-content">
-                <span class="close-icon" @click="showCreateCourseModal = false">&times;</span>
+                <span class="close-icon" @click="showFindCourseModal = false">&times;</span>
 
-                <h2>创建课程</h2>
+                <h2>查询课程</h2>
 
-                <form @submit.prevent="createCourse">
+                <form @submit.prevent="findCourse">
                     <div class="input-group">
                         <label for="courseName">课程名称:</label>
                         <input type="text" id="courseName" v-model="courseName" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="courseCredits">课程学分:</label>
-                        <input type="text" id="courseCredits" v-model="courseCredits" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="introduction">课程简介:</label>
-                        <input type="text" id="introduction" v-model="introduction" required>
                     </div>
 
                     <button type="submit">确认</button>
@@ -32,32 +22,48 @@
 </template>
 
 <script>
-import {createCourseAPI} from "@/pages/education/components/createCourseButton/api/api";
-
+import {findCourseAPI} from "@/pages/education/components/findCourseButton/api/api";
+// import { defineEmit } from 'vue';
+import { ref } from 'vue';
 export default {
-    name: "createCourseButton",
+    // setup() {
+    //     const searchQuery = ref('');
+    //     const emitSearchQuery = defineEmit('searchQuery'); // Define the event
+    //
+    //     const onSearch = () => {
+    //         emitSearchQuery(searchQuery.value); // Emit the event with query
+    //     };
+    //     return {
+    //         searchQuery,
+    //         onSearch,
+    //     }
+    // },
+    name: "findCourseButton",
     data() {
         return {
-            showCreateCourseModal: false,
+            showFindCourseModal: false,
             courseName: '课程名称',
-            courseCredits: 0,
-            introduction: '课程简介',
+            page: 1,
+            pageSize: 10,
+            courses: [],
         };
     },
 
     methods: {
         showCreatePage() {
-            this.showCreateCourseModal = true;
+            this.showFindCourseModal = true;
         },
 
-        createCourse(event) {
+        async findCourse() {
             let data = {
                 name: this.courseName,
-                credit: this.courseCredits,
-                introduction: this.introduction
+                page: this.page,
+                pageSize: this.pageSize,
             };
-            console.log("调用createCourseAPT");
-            createCourseAPI(data);
+            console.log("调用findCourseAPT");
+            this.courses = await findCourseAPI(data);
+            console.log('In findCourseButton');
+            console.log(this.courses);
         },
     },
 }
