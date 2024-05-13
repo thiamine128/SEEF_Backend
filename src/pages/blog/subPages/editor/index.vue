@@ -74,7 +74,7 @@ export default {
                 callError('标签不可为空');
                 return;
             }
-            if (this.tagName.length > 3){
+            if (this.tagName.length > 10){
                 callError('标签过长');
                 return;
             }
@@ -82,7 +82,7 @@ export default {
                 callError('标签不可重复');
                 return;
             }
-            if (this.tags.length > 3){
+            if (this.tags.length >= 3){
                 callError('标签过多');
                 return;
             }
@@ -139,8 +139,8 @@ export default {
                     const response = await this.$http.post(`blog/create`, {
                         "title": this.mdTitle,
                         "context": this.content,
-                        "tags": "", //暂时没有实现
-                        "topicId": this.topicId
+                        "topicId": this.topicId,
+                        "tags": this.tags
                     });
                     if (response.status === 200) {
                         callSuccess('发表博客成功');

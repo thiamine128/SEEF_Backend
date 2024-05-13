@@ -16,7 +16,8 @@
 
             <div class="bottom-style">
 
-                <reply-box v-for="item in replyList" :name="item.to == null ? item.userId : `${item.userId}回复${item.to}`"
+                <reply-box v-for="item in replyList"
+                    :name="item.toId == null ? item.userId : `${item.userId}回复${item.toId}`"
                 :content="item.content"
                 @click="addReply(item.userId)"/>
 
@@ -56,7 +57,7 @@ export default {
 
 .frameSet{
     width: 100%;
-    min-height: 130px;
+    min-height: 110px;
     background-color: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(155, 155, 155, 0.2);
     display: flex;
@@ -66,7 +67,7 @@ export default {
     margin-top: 5px;
     margin-left: 5px;
     width: 95%;
-    min-height: 112px;
+    min-height: 102px;
     display: flex;
     flex-direction: column;
     align-items: center;

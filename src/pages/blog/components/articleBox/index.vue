@@ -72,6 +72,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: left;
+    width: 75%;
 }
 .otherMsg{
     display: flex;

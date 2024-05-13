@@ -22,12 +22,13 @@
             <el-pagination v-if="commentNum > 0" class="pagination-style"
                            v-model:current-page="currentPos"
                            ref="bottomPagination"
-                           layout="prev, pager, next, jumper"
+                           layout="prev, pager, next"
                            @current-change="pageChange()"
                            :total="10*totalPage" />
 
-            <div v-if="commentNum === 0" style="background-color: rgba(255, 255, 255, 0.9); width: 100%; height: 400px; display: flex">
-                <div style="margin: auto; font-size: 25px"> 目前还没有评论 </div>
+            <div v-if="commentNum === 0" style="background-color: rgba(255, 255, 255, 0.9); width: 100%; height: 200px; display: flex">
+                <div style="margin: auto; font-size: 25px;
+                font-weight: bold; color: #8e8e8e"> 目前还没有评论 </div>
             </div>
 
         </div>
@@ -37,7 +38,7 @@
             <personal-box/>
             <recommend height-set="300px" r-title="今日推荐"/>
             <recommend height-set="400px" r-title="关注列表"/>
-            <right-pin r-title="null" container="#md-hook" content-name="catalog"></right-pin>
+            <right-pin v-if="catalogShow" r-title="null" container="#md-hook" content-name="catalog"></right-pin>
 
         </div>
     </div>
@@ -72,11 +73,16 @@ export default {
         } catch (error) {
             console.error("Error fetching Markdown file:", error);
         }
+
+        setTimeout(()=>{
+            this.catalogShow = true;
+        }, 1000);
     },
     data(){
         return{
             content: '', title: '', postTime: '1919-8-10', updateTime: '1919-8-10',
-            totalPage: 1, currentPos: 1, comments: [], commentNum: 0
+            totalPage: 1, currentPos: 1, comments: [], commentNum: 0,
+            catalogShow: false
         }
     },
     methods:{

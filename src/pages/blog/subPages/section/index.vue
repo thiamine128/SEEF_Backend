@@ -49,7 +49,7 @@ export default {
         async createSection(){
             if (this.sectionInput.length == 0 || this.sectionAbstract.length == 0){
                 callError('内容不可为空');
-            }else if (this.sectionAbstract.length > 20){
+            }else if (this.sectionAbstract.length > 50){
                 callError('简介过长');
             }else if (this.sectionInput.length > 16){
                 callError('标题过长');
@@ -66,7 +66,9 @@ export default {
                 if (response.status === 200) {
                     if (response.data.code == 1) {
                         callSuccess('板块创建成功');
-                        location.reload();
+                        setTimeout(()=>{
+                            location.reload();
+                        }, 1000);
                     }
                     else callError(response.data.msg);
                 } else callError('网络错误');
