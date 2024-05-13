@@ -1,27 +1,32 @@
 <template>
-    <div class="create-course-container">
-        <button class="first-button" @click="showCreatePage">创建课程</button>
+    <div class="create-class-container">
+        <button class="first-button" @click="showCreatePage">创建教学班</button>
 
-        <div class="create-course-modal" v-if="showCreateCourseModal">
+        <div class="create-class-modal" v-if="showCreateClassModal">
             <div class="modal-content">
-                <span class="close-icon" @click="showCreateCourseModal = false">&times;</span>
+                <span class="close-icon" @click="showCreateClassModal = false">&times;</span>
 
-                <h2>创建课程</h2>
+                <h2>创建教学班</h2>
 
-                <form @submit.prevent="createCourse">
+                <form @submit.prevent="createClass">
                     <div class="input-group">
-                        <label for="courseName">课程名称:</label>
-                        <input type="text" id="courseName" v-model="courseName" required>
+                        <label for="className">课程名称:</label>
+                        <input type="text" id="className" v-model="className" required>
                     </div>
 
                     <div class="input-group">
-                        <label for="courseCredits">课程学分:</label>
-                        <input type="text" id="courseCredits" v-model="courseCredits" required>
+                        <label for="teacherName">任课教师:</label>
+                        <input type="text" id="teacherName" v-model="teacherName" required>
                     </div>
 
                     <div class="input-group">
-                        <label for="introduction">课程简介:</label>
-                        <input type="text" id="introduction" v-model="introduction" required>
+                        <label for="classTime">上课时间:</label>
+                        <input type="text" id="classTime" v-model="classTime" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="classLocation">上课地点:</label>
+                        <input type="text" id="classLocation" v-model="classLocation" required>
                     </div>
 
                     <button type="submit">确认</button>
@@ -32,46 +37,48 @@
 </template>
 
 <script>
-import {createCourseAPI} from "@/pages/education/components/createCourseButton/api/api";
+import {createClassAPI} from "@/pages/education/components/createClassButton/api/api";
 
 export default {
-    name: "createCourseButton",
+    name: "createClassButton",
     data() {
         return {
-            showCreateCourseModal: false,
-            courseName: '课程名称',
-            courseCredits: 0,
-            introduction: '课程简介',
+            showCreateClassModal: false,
+            className: '课程名称',
+            teacherName: '教师名称',
+            classTime: '上课时间',
+            classLocation: '课程大纲',
         };
     },
 
     methods: {
         showCreatePage() {
-            this.showCreateCourseModal = true;
+            this.showCreateClassModal = true;
         },
 
-        createCourse(event) {
+        createClass(event) {
             let data = {
-                name: this.courseName,
-                credit: this.courseCredits,
-                introduction: this.introduction
+                name: this.className,
+                teacherName: this.teacherName,
+                classTime: this.classTime,
+                classLocation: this.classLocation
             };
-            console.log("调用createCourseAPT");
-            createCourseAPI(data);
+            console.log("调用createClassAPI");
+            createClassAPI(data);
         },
     },
 }
 </script>
 
 <style scoped>
-.create-course-container {
+.create-class-container {
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 20px;
 }
 
-.create-course-button {
+.create-class-button {
     padding: 10px 20px;
     background-color: #007bff;
     color: white;
@@ -79,7 +86,7 @@ export default {
     cursor: pointer;
 }
 
-.create-course-modal {
+.create-class-modal {
     position: fixed;
     top: 50%;
     left: 50%;

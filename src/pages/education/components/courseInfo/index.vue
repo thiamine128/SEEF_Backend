@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import syllabus from "@/pages/education/components/syllabus/index.vue";
+import introduction from "@/pages/education/components/syllabus/index.vue";
 export default {
     name: "courseInfo",
     components: {
