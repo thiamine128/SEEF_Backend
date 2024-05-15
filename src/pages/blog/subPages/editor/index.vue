@@ -3,7 +3,7 @@
         <div class="left-column">
             <div class="postMark">Post</div>
 
-            <left-button :path="require('@/assets/blog/photo-camera.png')" name="上传图片" />
+            <left-button :path="require('@/assets/blog/photo-camera.png')" name="上传图片" @click="uploadImage"/>
             <left-button :path="require('@/assets/blog/code.png')" name="添加代码" @click = "addCode" />
             <left-button :path="require('@/assets/blog/formula.png')" name="添加公式" @click= "addFormula" />
             <left-button :path="require('@/assets/blog/upload.png')" name="上传文件" @click="upload" />
@@ -38,6 +38,7 @@ import MdField from "@/pages/blog/components/mdField/index.vue";
 import LeftButton from "@/pages/blog/components/leftButton/index.vue";
 import store from "@/store/store";
 import {callSuccess, callError} from "@/callMessage";
+import axios from "axios";
 
 export default {
     name: "editor",
@@ -150,7 +151,62 @@ export default {
                     callError(error);
                 }
             }else callError('请选择专区');
+        },
+
+        uploadImage(){
+            const fileInput = document.createElement("input");
+            fileInput.type = "file";
+            fileInput.accept = ".jpg, .png";
+            fileInput.addEventListener("change", this.handleImage);
+            fileInput.click();
+        },
+
+        async handleImage(event){
+            const file = event.target.files[0];
+            const formData = new FormData();
+            const fileUploadData = new FormData();
+            formData.append('file', file);
+            try {
+
+                const response = await this.$http.post('/common/requestUploadImage', formData, {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                });
+
+                console.log(response.data);
+                const keyData = {
+                    "name": 'ok',
+                    "policy": response.data.data.encodedPolicy,
+                    "OSSAccessKeyId": response.data.data.accessKeyId,
+                    "success_action_status": '200',
+                    "signature": response.data.data.postSignature,
+                    "key": response.data.data.objectName,
+                    "Content-Disposition": `attachment; filename=${response.data.data.objectName.replace('image/', '')}.png`
+                };
+
+                for (let key in keyData){
+                    fileUploadData.append(key, keyData[key]);
+                }
+                fileUploadData.append('file', file);
+
+                const imgAxios = this.$http.create({baseURL: '/postFile'});
+
+                const responseImage = await imgAxios.post(``,
+                    fileUploadData, {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                });
+
+                if (responseImage.status === 200){
+                    callSuccess('图片上传成功');
+                    this.content = this.content + `\n![](${response.data.data.host + '/' + response.data.data.objectName})`;
+                }
+
+            } catch (error) {
+                console.error(error);
+            }
         }
+
     }
 }
 </script>
@@ -183,7 +239,7 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: right;
-    width: 100%;
+    width: 1400px;
     margin-top: 20px;
 }
 

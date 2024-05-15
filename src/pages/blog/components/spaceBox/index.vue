@@ -7,8 +7,10 @@
                     <div :class="{ nameFont: true }"> 阮阳栋 </div>
                     <div :class="{ contentFont: true }"> 发布了文章 </div>
 <!--                    <div :class="{ contentFont: true }"> 于2024年4月23日回复了你 </div>-->
-<!--                    <div :class="{ replyFont: true }">  </div>-->
+<!--                    <div :class="{ replyFont: true }"> 哈哈哈  </div>-->
+                    <hr class="setHr">
                     <article-box title="米浴说的道理"/>
+<!--                    <article-box title="米浴说的道理"/>-->
 
                 </div>
             </div>
@@ -36,11 +38,10 @@ export default {
 
 .frameSet{
     width: 100%;
-    min-height: 140px;
+    min-height: 90px;
     background-color: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(155, 155, 155, 0.2);
     display: flex;
-    margin-bottom: 10px;
 }
 .personContainer{
     width: 96%;
@@ -50,8 +51,9 @@ export default {
     align-items: center;
 }
 .personInfo{
-    width: 100%;
-    min-height: 80px;
+    width: 98%;
+    margin-top: 5px;
+    min-height: 0;
     display: flex;
     flex-direction: row;
 }
@@ -66,6 +68,8 @@ export default {
     display: flex;
     flex-direction: column;
     margin-left: 8px;
+    width: 85%;
+    min-height: 0;
 }
 .contentFont{
     font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
@@ -83,5 +87,8 @@ export default {
     font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
     font-size: 14px;
     text-align: left;
+}
+.setHr{
+    border-top-color: rgba(44, 44, 44, 0.1);
 }
 </style>
