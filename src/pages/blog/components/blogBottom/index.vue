@@ -1,6 +1,6 @@
 <template>
     <div class="bottom-style">
-        <div :class="{ trademark: true }">School of Software, Beihang University</div>
+        <div :class="{ trademark: true }"> Software Engineering Education Forum </div>
     </div>
 </template>
 

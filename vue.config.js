@@ -4,6 +4,7 @@ module.exports = defineConfig({
   devServer: {
     port: 5653,
     proxy: {
+
       '/api': {
         target: 'http://123.249.103.199:8080',
         changeOrigin: true,
@@ -11,6 +12,15 @@ module.exports = defineConfig({
           "^/api": "/api"
         }
       },
+
+      '/postFile': {
+        target: 'http://chkbigevent.oss-cn-beijing.aliyuncs.com',
+        changeOrigin: true,
+        pathRewrite: {
+          "^/postFile": ""
+        }
+      }
+
     }
   },
 })
