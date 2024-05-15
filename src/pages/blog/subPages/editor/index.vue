@@ -101,6 +101,7 @@ export default {
         addFormula(){
             this.content += "\n$your formula$";
         },
+
         upload(){
             const fileInput = document.createElement("input");
             fileInput.type = "file";
@@ -119,6 +120,7 @@ export default {
             };
             reader.readAsText(file);
         },
+
         download(){
             const blob = new Blob([this.content], { type: 'text/plain;charset=utf-8' });
             saveAs(blob, (this.mdTitle.length > 0 ? this.mdTitle:'temp')+ '.md');
@@ -152,6 +154,8 @@ export default {
                 }
             }else callError('请选择专区');
         },
+
+
 
         uploadImage(){
             const fileInput = document.createElement("input");

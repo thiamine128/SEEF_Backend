@@ -2,7 +2,7 @@
     <div class="content-container">
         <div class="content-left">
 
-            <article-list height-set="2000px" r-title="Blogs ~Wonderful Zone~"
+            <article-list height-set="1920px" r-title="Blogs ~Wonderful Zone~"
             :list-set="artiList" select="article" :total-page="totalPage"
             @page-change="pullArticles"></article-list>
 
@@ -39,12 +39,12 @@ export default {
         async pullArticles(pageNum){
             try{
                 const response = await this.$http.get(
-                    `topic/viewBlogs?page=${pageNum}&pageSize=10&topicId=${this.$route.params.topicId}&previewLength=180`
+                    `topic/viewBlogs?page=${pageNum}&pageSize=15&topicId=${this.$route.params.topicId}&previewLength=500`
                 );
                 console.log(response);
                 if (response.status === 200) {
                     this.artiList = response.data.data.records;
-                    this.totalPage = Math.ceil(response.data.data.total / 10);
+                    this.totalPage = Math.ceil(response.data.data.total / 15);
                 } else callError('网络错误');
             }catch (error){
                 callError(error);

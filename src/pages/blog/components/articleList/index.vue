@@ -14,8 +14,8 @@
                 :topic-id="item.id" :editor-set="editorSet" @modifyClick="selectSection(item.id, item.name)"/>
 
                 <article-box v-if="select == 'article'" v-for="item in listSet"
-                :abstract="item.preview" :title="item.title" :likes="item.favourNum"
-                :post-time="dateF(item.createTime)" :article-id="item.id"/>
+                :abstract="item.preview.slice(0, 180)" :title="item.title" :likes="item.favourNum"
+                :post-time="dateF(item.createTime)" :article-id="item.id" :img-source="item.preview"/>
 
             </div>
             <el-pagination class="pagination-style"

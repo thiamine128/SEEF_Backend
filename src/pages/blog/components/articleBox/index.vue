@@ -2,7 +2,7 @@
     <div class="box-container" @click="callArticle">
 
 
-        <img v-if="imgShow" class="img-adjust" src="@/assets/blog/testArticleImg.png" alt="404 not found">
+        <img v-if="imgShow" class="img-adjust" :src="src_img" alt="404 not found">
 
         <div v-if="!imgShow" class="no-img-adjust">
             <div style="font-size: 80px; color: rgba(22, 22, 22, 0.1)"> {{titleShow}} </div>
@@ -24,15 +24,30 @@
 <script>
 export default {
     name: "articleBox",
-    props:['title', 'abstract', 'author', 'postTime', 'likes', 'articleId'],
+    props:['title', 'abstract', 'author', 'postTime', 'likes', 'articleId', 'imgSource'],
     methods:{
         callArticle(){
             this.$router.push(`/blog/article/${this.articleId}`);
         }
     },
+    mounted() {
+        const reg = /\(([^)]+)\)/;
+        const matchResult = this.imgSource.match(reg);
+        if (matchResult != null) {
+            if (matchResult[1].includes('http://chkbigevent.oss-cn-beijing.aliyuncs.com')){
+                try{
+                    this.src_img =  new URL(matchResult[1], import.meta.url).href;
+                    this.imgShow = true;
+                }catch (error){
+                    console.log(error);
+                }
+            }
+        }
+    },
     data(){
         return{
-            imgShow: false
+            imgShow: false,
+            src_img: require('@/assets/blog/testArticleImg.png')
         }
     },
     computed:{
