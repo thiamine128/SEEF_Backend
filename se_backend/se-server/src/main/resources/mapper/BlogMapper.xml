@@ -4,7 +4,7 @@
 <mapper namespace="com.software.mapper.BlogMapper">
 
     <select id="favorPageQuery" resultType="com.software.entity.Blog">
-        select * from blog where id in
+        select * from blogs where id in
         <foreach collection="ids" item="id" separator="," open="(" close=")">
             #{id}
         </foreach>

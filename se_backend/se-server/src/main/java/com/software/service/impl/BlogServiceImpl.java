@@ -90,7 +90,7 @@ public class BlogServiceImpl implements BlogService {
             blogMapper.decreaseLikes(blogId);
         }
         else{
-            eventService.newEvent(Event.like(id, blogId, getDetail(id).getUserId()));
+            eventService.newEvent(Event.like(id, blogId, getDetail(blogId).getUserId()));
             blogMapper.like(blogId, id);
             blogMapper.increaseLikes(blogId);
 
@@ -112,12 +112,12 @@ public class BlogServiceImpl implements BlogService {
         Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
         if(blogMapper.isFavor(blogId, id)!=null){
             blogMapper.cancelFavor(blogId, id);
-            blogMapper.increaseFavors(blogId);
+            blogMapper.decreaseFavors(blogId);
         }
         else{
             blogMapper.favor(blogId, id);
-            blogMapper.decreaseFavors(blogId);
-            eventService.newEvent(Event.favour(id,blogId,getDetail(id).getUserId()));
+            blogMapper.increaseFavors(blogId);
+            eventService.newEvent(Event.favour(id,blogId,getDetail(blogId).getUserId()));
         }
     }
 
