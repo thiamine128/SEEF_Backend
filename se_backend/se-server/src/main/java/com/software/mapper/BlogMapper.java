@@ -25,21 +25,21 @@ public interface BlogMapper {
     void cancelLike(Long blogId, Long id);
     @Select("select blog_id from blog_thumb where blog_id=#{blogId} and user_id=#{id}")
     Long isLiked(Long blogId, Long id);
-    @Update("update blog set thumb_num = thumb_num + 1 where id = #{blogId}")
+    @Update("update blogs set thumb_num = thumb_num + 1 where id = #{blogId}")
     void increaseLikes(Long blogId);
-    @Update("update blog set thumb_num = thumb_num - 1 where id = #{blogId}")
+    @Update("update blogs set thumb_num = thumb_num - 1 where id = #{blogId}")
     void decreaseLikes(Long blogId);
-    @Insert("insert into blog_favor (blog_id, user_id) values (#{blogId}, #{id})")
+    @Insert("insert into blog_favour (blog_id, user_id) values (#{blogId}, #{id})")
     void favor(Long blogId, Long id);
-    @Delete("delete from blog_favor where blog_id=#{blogId} and user_id=#{id}")
+    @Delete("delete from blog_favour where blog_id=#{blogId} and user_id=#{id}")
     void cancelFavor(Long blogId, Long id);
-    @Update("update blog set favor_num = favor_num + 1 where id = #{blogId}")
+    @Update("update blogs set favour_num = favour_num + 1 where id = #{blogId}")
     void increaseFavors(Long blogId);
-    @Update("update blog set favor_num = favor_num - 1 where id = #{blogId}")
+    @Update("update blogs set favour_num = favour_num - 1 where id = #{blogId}")
     void decreaseFavors(Long blogId);
-    @Select("select blog_id from blog_favor where blog_id=#{blogId} and user_id=#{id}")
+    @Select("select blog_id from blog_favour where blog_id=#{blogId} and user_id=#{id}")
     Long isFavor(Long blogId, Long id);
-    @Select("select blog_id from blog_favor where user_id=#{id} ")
+    @Select("select blog_id from blog_favour where user_id=#{id} ")
     List<Long> getFavorBlogIds(Long id);
 
     Page<Blog> favorPageQuery(List<Long> ids, int pages, int pageSize);
