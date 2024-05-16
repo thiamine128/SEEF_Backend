@@ -20,8 +20,7 @@ public class SoftwareContext implements ApplicationContextAware {
     }
 
     // Generic method to return a beanClass
-    public static <T> T getBean(Class<T> beanClass)
-    {
+    public static <T> T getBean(Class<T> beanClass) {
         return context.getBean(beanClass);
     }
 }

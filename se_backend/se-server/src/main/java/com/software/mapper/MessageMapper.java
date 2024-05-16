@@ -18,4 +18,10 @@ public interface MessageMapper {
 
     @Delete("delete from message where send=#{send} and `to`=#{to}")
     void markRead(Long send, Long to);
+
+    @Delete("delete from message where `to`=#{to}")
+    void delete(Long to);
+
+    @Select("select cnt from message_cnt where `to`=#{to}")
+    Long getCount(Long to);
 }

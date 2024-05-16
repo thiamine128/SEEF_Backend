@@ -12,6 +12,11 @@ public interface CourseService {
     PageResult pageQuery(CoursePageQueryDto coursePageQueryDto);
     List<CourseClass> getClasses(ClassQueryDto classQueryDto);
     boolean hasPermission(Long courseId);
-    Long getCourse(Long classId);
+    Long getCourseByClass(Long classId);
+    void addTeacherToClass(Long teacherId, Long classId);
+    void addTeacherToCourse(Long teacherId, Long courseId);
+    void removeTeacherFromClass(Long teacherId, Long classId);
+    List<Long> getTeachers(Long courseId);
+    List<Long> getTeachersInClass(Long classId);
     PageResult getUserClasses(UserClassesPageQueryDto userClassesPageQueryDto, Long userId);
 }

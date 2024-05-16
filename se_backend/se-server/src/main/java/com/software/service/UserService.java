@@ -4,6 +4,7 @@ import com.software.dto.*;
 import com.software.entity.Course;
 import com.software.entity.TClass;
 import com.software.entity.User;
+import com.software.vo.UserProfileVO;
 
 import java.util.List;
 
@@ -14,7 +15,6 @@ import java.util.List;
  */
 public interface UserService {
     User login(UserLoginDTO userLoginDTO);
-
     User eLogin(UserEmailLoginDTO userEmailLoginDTO);
 
     void register(UserRegisterDTO userRegisterDTO);
@@ -25,12 +25,13 @@ public interface UserService {
 
     void updateUserMessage(UserUpdateDTO userUpdateDTO);
 
-
     void resetPassword(ResetPasswordDto resetPasswordDto);
 
     Long getTA(Long studentId, Long courseId);
 
     Long checkTeacher(Long teacherId, Long courseId);
+
+    boolean isTeacher(Long id);
 
     List<Course> getCourses(List<Long> courseIds);
 
@@ -39,4 +40,6 @@ public interface UserService {
     List<Long> getClassIds(Long id);
 
     List<TClass> getClasses(List<Long> classIds);
+
+    UserProfileVO getProfile(Long id);
 }

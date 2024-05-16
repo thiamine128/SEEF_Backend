@@ -16,5 +16,5 @@ public class Reply {
     private Date updateTime;
     private Long commentId;
     private Long userId;
-    private Long to;
+    private Long toId;
 }

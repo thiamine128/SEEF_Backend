@@ -30,10 +30,13 @@ import java.util.Map;
 @Slf4j
 @Configuration
 public class WebSocketConfig extends ServerEndpointConfig.Configurator {
-    private JwtProperties jwtProperties = SoftwareContext.getBean(JwtProperties.class);
+    private JwtProperties jwtProperties;
 
     @Override
     public void modifyHandshake(ServerEndpointConfig sec, HandshakeRequest request, HandshakeResponse response) {
+        if (jwtProperties == null) {
+            jwtProperties = SoftwareContext.getBean(JwtProperties.class);
+        }
         String[] path = request.getRequestURI().getPath().split("/");
         String token = path[path.length - 1];
         final Map<String, Object> userProperties = sec.getUserProperties();

@@ -27,12 +27,11 @@ public class MessageController {
         return Result.success();
     }
 
-    @PostMapping("/markRead")
-    @Operation(summary = "标记已读")
-    public Result markRead(@RequestBody MessageMarkReadDTO messageMarkReadDTO) {
+    @GetMapping("/messageCount")
+    @Operation(summary = "私信数量")
+    public Result getCount() {
         Long id = Long.parseLong(BaseContext.getCurrentUser().get(JwtClaimsConstant.USER_ID).toString());
-        messageService.markRead(messageMarkReadDTO.getSender(), id);
-        return Result.success();
+        return Result.success(messageService.getCnt(id));
     }
 
     @GetMapping("/unread")

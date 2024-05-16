@@ -29,6 +29,8 @@ public class CourseServiceImpl implements CourseService {
     public void createCourse(CourseCreateDto courseCreateDto) {
         Course course = new Course();
         course.setName(courseCreateDto.getName());
+        course.setCredit(courseCreateDto.getCredit());
+        course.setIntroduction(courseCreateDto.getIntroduction());
         courseMapper.create(course);
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
@@ -37,7 +39,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void addClass(ClassCreateDto classCreateDto) {
-        classMapper.addClass(classCreateDto.getCourseId(), classCreateDto.getName());
+        classMapper.addClass(classCreateDto.getCourseId(), classCreateDto.getName(), classCreateDto.getTime(), classCreateDto.getLocation());
     }
 
     @Override
@@ -61,8 +63,33 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Long getCourse(Long classId) {
+    public Long getCourseByClass(Long classId) {
         return classMapper.getCourse(classId);
+    }
+
+    @Override
+    public void addTeacherToClass(Long teacherId, Long classId) {
+        classMapper.addTeacher(classId, teacherId);
+    }
+
+    @Override
+    public void addTeacherToCourse(Long teacherId, Long courseId) {
+        courseMapper.addTeacher(courseId, teacherId);
+    }
+
+    @Override
+    public void removeTeacherFromClass(Long teacherId, Long classId) {
+        classMapper.deleteTeacher(classId, teacherId);
+    }
+
+    @Override
+    public List<Long> getTeachers(Long courseId) {
+        return courseMapper.getTeachers(courseId);
+    }
+
+    @Override
+    public List<Long> getTeachersInClass(Long classId) {
+        return classMapper.getTeachers(classId);
     }
 
     @Override

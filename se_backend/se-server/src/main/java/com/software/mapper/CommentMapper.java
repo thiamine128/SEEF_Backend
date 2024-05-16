@@ -10,8 +10,7 @@ import java.util.List;
 
 @Mapper
 public interface CommentMapper {
-    @Insert("insert into comments (content, blog_id, user_id) values (#{content}, #{blogId}, #{userId})")
-    void makeComment(String content, Long blogId, Long userId);
+    void makeComment(Comment comment);
 
     @Select("select * from comments where blog_id=#{blogId}")
     List<Comment> getComments(Long blogId);

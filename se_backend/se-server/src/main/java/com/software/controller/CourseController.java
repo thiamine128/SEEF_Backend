@@ -1,16 +1,17 @@
 package com.software.controller;
 
+import com.software.annotation.AuthCheck;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
-import com.software.dto.ClassCreateDto;
-import com.software.dto.ClassQueryDto;
-import com.software.dto.CourseCreateDto;
-import com.software.dto.CoursePageQueryDto;
+import com.software.dto.*;
+import com.software.exception.InvalidUserException;
 import com.software.exception.PermissionDeniedException;
 import com.software.result.PageResult;
 import com.software.result.Result;
 import com.software.service.CourseService;
+import com.software.service.UserService;
+import com.software.utils.AliOssUtil;
 import com.software.utils.BaseContext;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,6 +29,10 @@ import java.util.Map;
 public class CourseController {
     @Autowired
     private CourseService courseService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private AliOssUtil aliOssUtil;
 
     @PostMapping("/create")
     @Operation(summary = "创建课程")
@@ -63,6 +68,46 @@ public class CourseController {
         return Result.success(pageResult);
     }
 
+    @GetMapping("/teachers")
+    @Operation(summary = "查询课程组")
+    public Result getTeachers(@RequestParam Long courseId) {
+        return Result.success(courseService.getTeachers(courseId));
+    }
 
+    @PostMapping("/addTeacher")
+    @Operation(summary = "添加教师到课程组")
+    @AuthCheck(mustRole = {RoleConstant.ADMIN,RoleConstant.TEACHER})
+    public Result addTeacher(@RequestParam Long teacherId, @RequestParam Long courseId) {
+        if (!courseService.hasPermission(courseId)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+        if (!userService.isTeacher(teacherId)) throw new InvalidUserException(MessageConstant.INVALID_USER);
+        courseService.addTeacherToCourse(teacherId, courseId);
+        return Result.success();
+    }
 
+    @PostMapping("/addTeacherToClass")
+    @Operation(summary = "分配教师到教学班")
+    @AuthCheck(mustRole = {RoleConstant.ADMIN,RoleConstant.TEACHER})
+    public Result addTeacherToClass(@RequestParam Long teacherId, @RequestParam Long classId) {
+        Long courseId = courseService.getCourseByClass(classId);
+        if (!courseService.hasPermission(courseId)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+        if (!userService.isTeacher(teacherId)) throw new InvalidUserException(MessageConstant.INVALID_USER);
+        courseService.addTeacherToClass(teacherId, classId);
+        return Result.success();
+    }
+
+    @DeleteMapping("/deleteTeacherFromClass")
+    @Operation(summary = "取消教学班教师分配")
+    @AuthCheck(mustRole = {RoleConstant.ADMIN,RoleConstant.TEACHER})
+    public Result deleteTeacherFromClass(@RequestParam Long teacherId, @RequestParam Long classId) {
+        Long courseId = courseService.getCourseByClass(classId);
+        if (!courseService.hasPermission(courseId)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+        courseService.removeTeacherFromClass(teacherId, classId);
+        return Result.success();
+    }
+
+    @GetMapping("/getTeachersInClass")
+    @Operation(summary = "查询教学班教师")
+    public Result getTeachersInClass(@RequestParam Long classId) {
+        return Result.success(courseService.getTeachersInClass(classId));
+    }
 }

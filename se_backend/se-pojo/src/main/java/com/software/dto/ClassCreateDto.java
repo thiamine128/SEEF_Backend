@@ -8,4 +8,6 @@ import java.util.List;
 public class ClassCreateDto {
     private String name;
     private Long courseId;
+    private String time;
+    private String location;
 }

@@ -149,6 +149,12 @@ public class UserController {
         return Result.success();
     }
 
+    @GetMapping()
+    @Operation(summary = "获取资料")
+    public Result getProfile(@RequestParam Long userId) {
+        return Result.success(userService.getProfile(userId));
+    }
+
     @PostMapping("/requestUploadAvatar")
     @Operation(summary = "请求上传头像")
     public Result requestUploadAvatar() throws UnsupportedEncodingException {

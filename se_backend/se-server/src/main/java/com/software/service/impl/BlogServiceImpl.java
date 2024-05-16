@@ -69,4 +69,9 @@ public class BlogServiceImpl implements BlogService {
     public void deleteblog(Long blogId) {
         blogMapper.deleteBlog(blogId);
     }
+
+    @Override
+    public void requestImage() {
+
+    }
 }

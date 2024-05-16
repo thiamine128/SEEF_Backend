@@ -58,7 +58,7 @@ public class AssignmentController {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
         if (!role.equals(RoleConstant.TEACHER)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
-        if (!courseService.hasPermission(courseService.getCourse(assignmentPublishDto.getClassId()))) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+        if (!courseService.hasPermission(courseService.getCourseByClass(assignmentPublishDto.getClassId()))) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         assignmentService.publishAssignment(assignmentPublishDto);
         return Result.success();
     }

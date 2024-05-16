@@ -12,4 +12,5 @@ public interface BlogService {
     PageResult viewComments(CommentPageQueryDto commentPageQueryDto);
 
     void deleteblog(Long blogId);
+    void requestImage();
 }

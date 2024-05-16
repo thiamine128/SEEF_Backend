@@ -11,4 +11,6 @@ public class CourseClass {
     private Long id;
     private Long courseId;
     private String name;
+    private String time;
+    private String location;
 }

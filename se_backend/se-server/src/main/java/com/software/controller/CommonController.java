@@ -70,19 +70,17 @@ public class CommonController {
 
     }
 
-    @PostMapping("/mkdir")
-    @Operation(summary = "新建目录")
-    public Result mkDirectory(@RequestBody MakeDirectoryDTO makeDirectoryDTO){
-//        Map<String,Object> currentUser = BaseContext.getCurrentUser();
-//        String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
-//        if ((!role.equals(RoleConstant.ADMIN))&&(!role.equals(RoleConstant.TEACHER)))
-//        {throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);}
-        String id = makeDirectoryDTO.getCourseId().toString();
-        if(makeDirectoryDTO.getCurrentDirectory().startsWith("/")||makeDirectoryDTO.getCurrentDirectory().endsWith("/")||makeDirectoryDTO.getNewDirectory().endsWith("/")){
-            throw new IllegalArgumentException("头尾不能包含斜杠");
-        }
-        String path = "course_resource/"+id+"/"+makeDirectoryDTO.getCurrentDirectory()+"/"+makeDirectoryDTO.getNewDirectory()+"/";
-        aliOssUtil.mkdir(path);
-        return Result.success();
+    @PostMapping("/requestUploadImage")
+    @Operation(summary = "请求上传图片")
+    public Result requestUploadImage() throws UnsupportedEncodingException {
+        String objectName = "image/" + UUID.randomUUID();
+        AliOssUtil.PostSignature postSignature = aliOssUtil.generatePostSignature(objectName, System.currentTimeMillis() + OssConfiguration.EXPIRE_SEC * 1000, 524288000);
+        OSSPostSignatureVO ossPostSignatureVO = OSSPostSignatureVO.builder()
+                .accessKeyId(postSignature.getAccessKeyId())
+                .objectName(postSignature.getObjectName())
+                .encodedPolicy(postSignature.getEncodedPolicy())
+                .postSignature(postSignature.getPostSignature())
+                .host(postSignature.getHost()).build();
+        return Result.success(ossPostSignatureVO);
     }
 }

@@ -36,20 +36,26 @@ public class MessageServiceImpl implements MessageService {
         }
         Message message = new Message(UUID.randomUUID().toString(), send, sendMessageDTO.getTo(), sendMessageDTO.getContent(), new Date(System.currentTimeMillis()), false);
         try {
-            WebSocketServer.sendInfo(JSON.toJSONString(message), sendMessageDTO.getTo());
+            WebSocketServer.sendInfo("message" + JSON.toJSONString(message), sendMessageDTO.getTo());
         } catch (Exception ignored) {
-
+            messageMapper.createMessage(message);
         }
-        messageMapper.createMessage(message);
     }
 
     @Override
     public List<Message> getMessages(Long id) {
-        return messageMapper.getMessages(id);
+        List<Message> messages = messageMapper.getMessages(id);
+        messageMapper.delete(id);
+        return messages;
     }
 
     @Override
     public void markRead(Long sender, Long to) {
         messageMapper.markRead(sender, to);
+    }
+
+    @Override
+    public Long getCnt(Long id) {
+        return messageMapper.getCount(id);
     }
 }

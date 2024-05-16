@@ -23,6 +23,9 @@ public interface UserMapper {
     @Select("select * from users where name= #{username}")
     User getByAccount(String username);
 
+    @Select("select * from users where id= #{id}")
+    User getByID(Long id);
+
     @Select("select * from users where email= #{email}")
     User getByEmail(String email);
 
@@ -59,4 +62,9 @@ public interface UserMapper {
     List<TClass> getClasses(List<Long> ids);
     @Select("select id from users where id=#{id}")
     Long exist(Long id);
+
+    @Update("update users set subscribers=subscribers+1 where id=#{id}")
+    void addSubscribers(Long id);
+    @Update("update users set subscribers=subscribers-1 where id=#{id}")
+    void subSubscribers(Long id);
 }

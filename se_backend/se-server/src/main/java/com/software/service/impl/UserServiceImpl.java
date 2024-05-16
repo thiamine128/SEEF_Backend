@@ -8,13 +8,11 @@ import com.software.dto.*;
 import com.software.entity.Course;
 import com.software.entity.TClass;
 import com.software.entity.User;
-import com.software.exception.AccountLockedException;
-import com.software.exception.AccountNotFoundException;
-import com.software.exception.IncorrectVerificationCode;
-import com.software.exception.PasswordErrorException;
+import com.software.exception.*;
 import com.software.mapper.UserMapper;
 import com.software.service.UserService;
 import com.software.utils.BaseContext;
+import com.software.vo.UserProfileVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -154,6 +152,13 @@ public class UserServiceImpl implements UserService {
     public Long checkTeacher(Long teacherId, Long courseId) {return userMapper.checkTeacher(teacherId, courseId);}
 
     @Override
+    public boolean isTeacher(Long id) {
+        User user = userMapper.getByID(id);
+        if (user == null) return false;
+        return user.getRole().equals(RoleConstant.TEACHER);
+    }
+
+    @Override
     public List<Course> getCourses(List<Long> courseIds) {
         return userMapper.getCourses(courseIds);
     }
@@ -176,6 +181,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<TClass> getClasses(List<Long> classIds) {
         return userMapper.getClasses(classIds);
+    }
+
+    @Override
+    public UserProfileVO getProfile(Long id) {
+        User user = userMapper.getByID(id);
+        if (user == null) throw new InvalidUserException(MessageConstant.INVALID_USER);
+        return UserProfileVO.fromUser(user);
     }
 
 

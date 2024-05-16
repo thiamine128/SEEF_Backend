@@ -4,6 +4,7 @@ import com.software.config.OssConfiguration;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
+import com.software.dto.MakeDirectoryDTO;
 import com.software.exception.PermissionDeniedException;
 import com.software.result.Result;
 import com.software.service.CourseResourceService;
@@ -73,6 +74,22 @@ public class CourseResourceController {
         {throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);}
         String objectName = "course_resource/"+id+"/"+currentDirectory+"/"+filename;
         aliOssUtil.delete(objectName);
+        return Result.success();
+    }
+
+    @PostMapping("/mkdir")
+    @Operation(summary = "新建课程资源目录")
+    public Result mkDirectory(@RequestBody MakeDirectoryDTO makeDirectoryDTO){
+//        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+//        String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
+//        if ((!role.equals(RoleConstant.ADMIN))&&(!role.equals(RoleConstant.TEACHER)))
+//        {throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);}
+        String id = makeDirectoryDTO.getCourseId().toString();
+        if(makeDirectoryDTO.getCurrentDirectory().startsWith("/")||makeDirectoryDTO.getCurrentDirectory().endsWith("/")||makeDirectoryDTO.getNewDirectory().endsWith("/")){
+            throw new IllegalArgumentException("头尾不能包含斜杠");
+        }
+        String path = "course_resource/"+id+"/"+makeDirectoryDTO.getCurrentDirectory()+"/"+makeDirectoryDTO.getNewDirectory()+"/";
+        aliOssUtil.mkdir(path);
         return Result.success();
     }
 }

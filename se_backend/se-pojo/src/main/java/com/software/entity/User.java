@@ -63,4 +63,6 @@ public class User {
      * 是否删除
      */
     private Integer isDeleted;
+
+    private Long subscribers;
 }

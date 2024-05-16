@@ -24,4 +24,7 @@ public interface CourseMapper {
 
     @Select("select teacher_id from teacher_course where teacher_id=#{teacherId} and course_id=#{courseId}")
     Long checkTeacher(Long teacherId, Long courseId);
+
+    @Select("select teacher_id from teacher_course where course_id=#{courseId}")
+    List<Long> getTeachers(Long courseId);
 }

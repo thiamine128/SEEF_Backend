@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Tag(name = "WebSocket")
 @Component
-@ServerEndpoint(value = "/webSocket/{token}", configurator = WebSocketConfig.class)
+@ServerEndpoint(value = "/api/webSocket/{token}", configurator = WebSocketConfig.class)
 @Slf4j
 public class WebSocketServer {
     private static int onlineCount = 0;
