@@ -20,8 +20,9 @@ public class EventServiceImpl implements EventService {
         try {
             WebSocketServer.sendInfo("event" + JSON.toJSONString(event), event.getSubscriber());
         } catch (Exception ignored) {
-            eventMapper.newEvent(event);
+
         }
+        eventMapper.newEvent(event);
     }
 
     @Override

@@ -37,6 +37,7 @@ public class GlobalExceptionHandler {
             String msg = username + MessageConstant.ALREADY_EXISTS;
             return Result.error(msg);
         } else if (message.contains("foreign key")) {
+            System.out.println(ex.getMessage());
             String msg = message.split("[\\(\\)]")[2] + MessageConstant.NOT_EXISTS;
             return Result.error(msg);
         } else {
