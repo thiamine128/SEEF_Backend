@@ -9,6 +9,7 @@ import com.software.dto.BlogCreateDTO;
 import com.software.dto.CommentPageQueryDto;
 import com.software.exception.NoSuchTopicException;
 import com.software.exception.PermissionDeniedException;
+import com.software.result.PageResult;
 import com.software.result.Result;
 import com.software.service.BlogService;
 import com.software.utils.AliOssUtil;
@@ -22,6 +23,8 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.UUID;
@@ -45,8 +48,8 @@ public class BlogController {
 
     @GetMapping("/detail")
     @Operation(summary = "浏览博客")
-    public Result getBlog(Long blogId) {
-        return Result.success(BlogVO.fromBlog(blogService.getDetail(blogId)));
+    public Result<BlogVO> getBlog(Long blogId) {
+        return Result.success(BlogVO.fromBlog(blogService.getDetail(blogId),blogService.isLike(blogId),blogService.isFavor(blogId)));
     }
 
     @GetMapping("/viewComments")
@@ -68,4 +71,29 @@ public class BlogController {
         blogService.deleteblog(blogId);
         return Result.success();
     }
+
+    @PostMapping("/like")
+    @Operation(summary = "（取消）点赞博客")
+    public Result likeBlog(@RequestParam Long blogId){
+        blogService.like(blogId);
+        return Result.success();
+    }
+
+    @PostMapping("/favor")
+    @Operation(summary = "（取消）收藏博客")
+    public Result favorBlog(@RequestParam Long blogId){
+        blogService.favor(blogId);
+        return Result.success();
+    }
+
+    @GetMapping("/listFavor")
+    @Operation(summary = "获取我的收藏")
+    public Result<PageResult> listFavor(@RequestParam int page,@RequestParam int pageSize,@RequestParam int previewLength){
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        Long id = Long.parseLong(currentUser.get(JwtClaimsConstant.USER_ID).toString());
+        List<Long> ids = blogService.getfavorBlogIds(id);
+        PageResult pageResult = blogService.listFavor(ids,page,pageSize, previewLength);
+        return Result.success(pageResult);
+    }
+
 }

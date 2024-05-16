@@ -23,8 +23,10 @@ public class BlogPreviewVO {
     private Date updateTIme;
     private boolean isDeleted;
     private Long topicId;
+    private Long isLike;
+    private Long isFavor;
 
-    public static BlogPreviewVO fromBlog(Blog blog, int len) {
+    public static BlogPreviewVO fromBlog(Blog blog, int len, Long isLike, Long favor) {
         int sub = Math.min(blog.getContent().length(), len);
         return new BlogPreviewVOBuilder()
                 .id(blog.getId())
@@ -37,6 +39,8 @@ public class BlogPreviewVO {
                 .createTime(blog.getCreateTime())
                 .updateTIme(blog.getUpdateTIme())
                 .isDeleted(blog.isDeleted())
-                .topicId(blog.getTopicId()).build();
+                .topicId(blog.getTopicId())
+                .isLike(isLike)
+                .isFavor(favor).build();
     }
 }

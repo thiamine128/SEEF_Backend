@@ -23,8 +23,10 @@ public class BlogVO {
     private Date updateTIme;
     private boolean isDeleted;
     private Long topicId;
+    private Boolean isLike;
+    private Boolean isFavor;
 
-    public static BlogVO fromBlog(Blog blog) {
+    public static BlogVO fromBlog(Blog blog,Boolean isLike,Boolean isFavor) {
         return new BlogVOBuilder()
                 .id(blog.getId())
                 .title(blog.getTitle())
@@ -36,6 +38,8 @@ public class BlogVO {
                 .createTime(blog.getCreateTime())
                 .updateTIme(blog.getUpdateTIme())
                 .isDeleted(blog.isDeleted())
-                .topicId(blog.getTopicId()).build();
+                .topicId(blog.getTopicId())
+                .isLike(isLike)
+                .isFavor(isFavor).build();
     }
 }

@@ -1,5 +1,6 @@
 package com.software.mapper;
 
+import com.github.pagehelper.Page;
 import com.software.entity.Blog;
 import org.apache.ibatis.annotations.*;
 
@@ -18,5 +19,28 @@ public interface BlogMapper {
     @Update("update blogs set is_deleted=true where id=#{blogId}")
     void deleteBlog(Long blogId);
 
+    @Insert("insert into blog_thumb (blog_id, user_id) values (#{blogId}, #{id})")
+    void like(Long blogId, Long id);
+    @Delete("delete from blog_thumb where blog_id=#{blogId} and user_id=#{id}")
+    void cancelLike(Long blogId, Long id);
+    @Select("select blog_id from blog_thumb where blog_id=#{blogId} and user_id=#{id}")
+    Long isLiked(Long blogId, Long id);
+    @Update("update blog set thumb_num = thumb_num + 1 where id = #{blogId}")
+    void increaseLikes(Long blogId);
+    @Update("update blog set thumb_num = thumb_num - 1 where id = #{blogId}")
+    void decreaseLikes(Long blogId);
+    @Insert("insert into blog_favor (blog_id, user_id) values (#{blogId}, #{id})")
+    void favor(Long blogId, Long id);
+    @Delete("delete from blog_favor where blog_id=#{blogId} and user_id=#{id}")
+    void cancelFavor(Long blogId, Long id);
+    @Update("update blog set favor_num = favor_num + 1 where id = #{blogId}")
+    void increaseFavors(Long blogId);
+    @Update("update blog set favor_num = favor_num - 1 where id = #{blogId}")
+    void decreaseFavors(Long blogId);
+    @Select("select blog_id from blog_favor where blog_id=#{blogId} and user_id=#{id}")
+    Long isFavor(Long blogId, Long id);
+    @Select("select blog_id from blog_favor where user_id=#{id} ")
+    List<Long> getFavorBlogIds(Long id);
 
+    Page<Blog> favorPageQuery(List<Long> ids, int pages, int pageSize);
 }
