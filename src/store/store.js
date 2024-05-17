@@ -4,6 +4,9 @@ import router from "@/router";
 import VuexPersistence from "vuex-persist";
 import {callError, callSuccess} from "@/callMessage";
 
+//状态管理
+
+//本地cookie存储
 const vuexLocal = new VuexPersistence({
     storage: window.localStorage
 });
@@ -11,7 +14,7 @@ const vuexLocal = new VuexPersistence({
 export default createStore({
 
 
-    state: {
+    state: { //存储内容
         token: null,
         tokenExpire: null,
         id: null,
@@ -28,12 +31,14 @@ export default createStore({
 
 
     getters:{
+        //获取文章暂存信息
         getContent(state){
             return{
                 title: state.tempTitle,
                 content: state.tempContent
             }
         },
+        //获取用户个人信息
         getData(state){
             return {
                 id: state.id,
@@ -45,6 +50,7 @@ export default createStore({
                 email: state.email
             }
         },
+        //获取登录认证令牌
         getToken(state){
             console.log('当前时间：'+Date.now());
             console.log('token过期时间：'+state.tokenExpire);
@@ -54,6 +60,7 @@ export default createStore({
             }
             return state.token;
         },
+        //获取动态信息
         getEventList(state){
             return state.eventList;
         }
@@ -61,12 +68,12 @@ export default createStore({
 
 
     mutations: {
-         //如果想要去除token，执行以下代码，commit('setToken', null);
+
+        //如果想要去除token，执行以下代码，commit('setToken', null);
         setToken(state, token) {
             state.token = token;
             state.tokenExpire = Date.now() + 3600 * 1000;
         },
-
 
         //设置个人信息
         setData(state, data){
@@ -79,11 +86,13 @@ export default createStore({
             state.email = data.email;
         },
 
+        //设置文章暂存
         setContent(state, content){
             state.tempContent = content.content;
             state.tempTitle = content.title;
         },
 
+        //存放私信
         addEvent(state, newEvent){
             state.eventList.push(newEvent);
         }
@@ -102,7 +111,7 @@ export default createStore({
                         commit('setToken', response.data.data.token);
                         commit('setData', response.data.data);
                         callSuccess('登录成功');
-                        router.push('/education');
+                        router.push('/blog');
                     }else callError(response.data.msg);
                 }else callError('网络错误');
             } catch (error) {
@@ -122,7 +131,7 @@ export default createStore({
                         commit('setToken', response.data.data.token);
                         commit('setData', response.data.data);
                         callSuccess('登录成功');
-                        router.push('/education');
+                        router.push('/blog');
                     }else callError(response.data.msg);
                 }else callError('网络错误');
             } catch (error) {
@@ -144,5 +153,7 @@ export default createStore({
 
 
     },
+
+    //本地存储插件
     plugins: [vuexLocal.plugin]
 });

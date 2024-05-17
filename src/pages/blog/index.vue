@@ -44,9 +44,12 @@ export default {
         navBar, blogBottom
     },
     data(){
+
+        //滑动响应式组件
         const data=reactive({
             oldScrollTop:0,
         });
+
         const scrolling=()=>{
             // 滚动条距文档顶部的距离
             let scrollTop =window.pageYOffset ||document.documentElement.scrollTop ||document.body.scrollTop;
@@ -75,11 +78,12 @@ export default {
             }
             // 判断是否到了最顶部
             if (scrollTop <= 0) {
-                console.log("header 到了最顶部")
                 this.notHead = false;
             }
+
         };
       return{
+
           data, scrolling, notHead: false, step: true,
           floatComment: false, holderText: '', floatSelect: 1,
           sectionList: [],
@@ -88,13 +92,14 @@ export default {
           topicId: -1,
           blogId: -1,
           replyData: {}
+
       }
     },
     mounted() {
-        window.addEventListener("scroll", this.scrolling);
+        window.addEventListener("scroll", this.scrolling); //加入监听器
     },
     unmounted() {
-        window.removeEventListener("scroll", this.scrolling);
+        window.removeEventListener("scroll", this.scrolling); //去掉监听器
     },
     methods:{
 

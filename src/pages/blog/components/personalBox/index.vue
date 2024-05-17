@@ -32,26 +32,37 @@ import {callError} from "@/callMessage";
 export default {
     name: "personalBox",
     components:{personalButton},
-    props: ['userId', 'createTime', 'isFavor', 'isLike', 'thumbNum'],
+    props: [ 'userId', 'createTime', 'isFavor', 'isLike', 'thumbNum'],
     methods:{
+
         likeArticle(){
+            const blogId = this.$route.params.id;
+            if (!this.isLike){
+                //对文章点赞
+            }else{
+                //取消点赞
+            }
             this.$emit('callLike');
         },
 
         favorArticle(){
+            const blogId = this.$route.params.id;
+            if (!this.isFavor){
+                //收藏文章
+            }else{
+                //取消收藏
+            }
             this.$emit('callFavor');
         },
 
         async pullPersonalData(){
             try{
                 const response = await this.$http.get(`/user?userId=${this.userId}`);
-                console.log(1111111111);
                 console.log(response);
                 const personal_data = response.data.data;
                 try{
                     this.avatar = require(personal_data.avatar);
-                }catch (error){
-                }
+                }catch (error){}
 
                 this.name = personal_data.name;
             }catch (e){

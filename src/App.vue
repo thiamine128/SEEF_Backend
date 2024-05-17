@@ -9,16 +9,9 @@
 import axios from 'axios'
 import {provide} from "vue";
 
+//根组件
 export default {
-    name: 'App',
-    data: function(){
-    return{
-
-    }
-    },
-    components: {
-
-    }
+    name: 'App'
 }
 </script>
 
