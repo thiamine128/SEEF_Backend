@@ -5,7 +5,7 @@
             <div class="personInfo">
                 <div>
                     <img class="portraitSet" src="@/assets/blog/testPortrait.jpg" alt="404 not found">
-                    <div :class="{ nameFont: true }"> {{name}} </div>
+                    <div :class="{ nameFont: true }"> {{author}} </div>
                 </div>
 
                 <div class="textSet">
@@ -16,8 +16,7 @@
 
             <div class="bottom-style">
 
-                <reply-box v-for="item in replyList"
-                    :name="item.toId == null ? item.userId : `${item.userId}回复${item.toId}`"
+                <reply-box v-for="item in replyList" :user-id="item.userId" :to-id="item.toId"
                 :content="item.content"
                 @click="addReply(item.userId)"/>
 
@@ -33,10 +32,24 @@ import ReplyBox from "@/pages/blog/components/replyBox/index.vue";
 export default {
     name: "commentBox",
     components: {ReplyBox},
-    props: ['userId', 'commentId', 'name', 'content', 'postTime', 'replyList'],
+    props: ['userId', 'commentId', 'content', 'postTime', 'replyList'],
     methods:{
         addReply(to = -1){
             this.$emit('callReply', to, this.commentId);
+        },
+        async pullPersonalData(id){
+            const response = await this.$http.get(`/user?userId=${id}`);
+            const personal_data = response.data.data;
+            this.author = personal_data.name;
+        },
+
+    },
+    mounted() {
+        this.pullPersonalData(this.userId);
+    },
+    data(){
+        return{
+            author: ''
         }
     }
 }

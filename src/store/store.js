@@ -22,7 +22,8 @@ export default createStore({
         role: null,
         email: null,
         tempTitle: '',
-        tempContent: ''
+        tempContent: '',
+        eventList: []
     },
 
 
@@ -52,6 +53,9 @@ export default createStore({
                 console.log('token已经过期');
             }
             return state.token;
+        },
+        getEventList(state){
+            return state.eventList;
         }
     },
 
@@ -78,6 +82,10 @@ export default createStore({
         setContent(state, content){
             state.tempContent = content.content;
             state.tempTitle = content.title;
+        },
+
+        addEvent(state, newEvent){
+            state.eventList.push(newEvent);
         }
 
     },

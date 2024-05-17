@@ -2,7 +2,7 @@
     <div class="content-container">
         <div class="content-left">
 
-            <article-list height-set="1920px" r-title="Blogs ~Wonderful Zone~"
+            <article-list height-set="1940px" r-title="Blogs ~Wonderful Zone~"
             :list-set="artiList" select="article" :total-page="totalPage"
             @page-change="pullArticles"></article-list>
 

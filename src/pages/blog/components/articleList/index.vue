@@ -15,7 +15,8 @@
 
                 <article-box v-if="select == 'article'" v-for="item in listSet"
                 :abstract="item.preview.slice(0, 180)" :title="item.title" :likes="item.favourNum"
-                :post-time="dateF(item.createTime)" :article-id="item.id" :img-source="item.preview"/>
+                :post-time="dateF(item.createTime)" :article-id="item.id" :img-source="item.preview"
+                :author-id="item.userId"/>
 
             </div>
             <el-pagination class="pagination-style"

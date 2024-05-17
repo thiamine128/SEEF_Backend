@@ -130,7 +130,7 @@ const router = createRouter({
                         import(`../pages/blog/subPages/section/index.vue`)),
                 },
                 {
-                    path: '/blog/personal',
+                    path: '/blog/personal/:userId',
                     name: 'personal',
                     component: defineAsyncComponent(() =>
                         import(`../pages/blog/subPages/personal/index.vue`)),

@@ -2,13 +2,14 @@
     <div class="frameSet">
         <div class="personContainer">
             <div class="personInfo">
-                <img class="portraitSet" src="@/assets/blog/testPortrait.jpg" alt="404 not found">
+                <img class="portraitSet" :src="avatar_set" @error="altImg">
                 <div class="textSet">
-                    <div :class="{ nameFont: true }"> 阮阳栋 </div>
-                    <div :class="{ contentFont: true }"> 发布了文章 </div>
+                    <div :class="{ nameFont: true }"> {{name}} </div>
+                    <div :class="{ contentFont: true }"> {{description}} </div>
 <!--                    <div :class="{ contentFont: true }"> 于2024年4月23日回复了你 </div>-->
 <!--                    <div :class="{ replyFont: true }"> 哈哈哈  </div>-->
                     <hr class="setHr">
+
                     <article-box title="米浴说的道理"/>
 <!--                    <article-box title="米浴说的道理"/>-->
 
@@ -24,7 +25,19 @@ import ArticleBox from "@/pages/blog/components/articleBox/index.vue";
 export default {
     name: "spaceBox",
     components: {ArticleBox},
-    props: ['content']
+    props: ['content'],
+    data(){
+        return{
+            'name': '',
+            'description': '',
+            'avatar_set': require('@/assets/blog/user.png')
+        }
+    },
+    methods:{
+        altImg(e){
+            this.my_avatar = require('@/assets/blog/user.png');
+        }
+    }
 }
 </script>
 
