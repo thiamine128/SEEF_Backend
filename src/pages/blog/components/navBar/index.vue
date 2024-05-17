@@ -1,6 +1,6 @@
 <template>
     <nav class="mainTitleContainer">
-        <div :class="{ customFont: true }" @click="toHome">software and life</div>
+        <div :class="{ customFont: true }" @click="toHome">SEEF </div>
         <div class="search-nav">
             <search-bar/>
             <nav class="button-nav">
@@ -86,7 +86,6 @@ export default {
 }
 .customFont {
     font-family: 'rage', sans-serif;
-    font-weight: bold;
     font-size: 32px;
     margin: 25px 0 25px 60px;
     color: white;

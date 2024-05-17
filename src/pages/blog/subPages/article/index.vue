@@ -96,6 +96,8 @@ export default {
         },
 
         callChangeLike(){
+            if (this.isLike) this.thumbNum--;
+            else this.thumbNum++;
             this.isLike = !this.isLike;
         },
 
@@ -105,14 +107,17 @@ export default {
                 "to": to
             });
         },
+
         callAddComment(){
             this.$emit('callFloat', `对《${this.title}》发表评论`, 1, {
                 "blogId": this.$route.params.id
             });
         },
+
         dateF(num) {
             return dayjs(num).format('YYYY-MM-DD');
         },
+
         async pageChange(){
             try {
                 const response = await this.$http.get(
@@ -128,6 +133,7 @@ export default {
                 callError(error);
             }
         }
+
     }
 }
 </script>
