@@ -5,9 +5,11 @@
             <div class="textSet">
                 <div class="nameSet">
                     <div :class="{ nameFont: true }"> {{my_name}} </div>
+
                     <personal-button v-if="showSubscribe" class="subscribeSet"
-                     :img-path="require('@/assets/blog/subscribe.png')" content="关注" >
-                    </personal-button>
+                     :img-path="require('@/assets/blog/subscribe.png')"
+                     :content="buttonName" @click="subscribeUser"/>
+
                 </div>
                 <div :class="{ contentFont: true }"> {{email}} </div>
                 <div :class="{ contentFont: true }"> 注册于 {{dateF(createTime)}} </div>
@@ -59,6 +61,7 @@ import * as echarts from 'echarts';
 import dayjs from "dayjs";
 import {callError} from "@/callMessage";
 import store from "@/store/store";
+import {subscribe_func, unSubscribe_func} from "@/pages/blog/api";
 
 export default {
 
@@ -76,13 +79,20 @@ export default {
             articleList: [], //发表的文章具体信息，要分页
             subscribeList: [], //关注博主的具体信息，要分页，且要有收藏夹
             collectList: [], //收藏的文章的具体信息，要分页，且要有收藏夹
-            introduction: '该用户没有留下简介......'
+            introduction: '该用户没有留下简介......',
+            isSubscribe: false //是否关注过
         }
     },
     computed:{
+
         showSubscribe(){
             return store.getters.getData.id != this.$route.params.userId;
+        },
+
+        buttonName(){
+            return this.isSubscribe ? '取消关注' : '关注';
         }
+
     },
     methods:{
 
@@ -95,22 +105,26 @@ export default {
         },
 
         async pullPersonalData(){
-            const response = await this.$http.get(`/user?userId=${this.$route.params.userId}`);
-            console.log(response);
-            const personal_data = response.data.data;
-            this.my_avatar = personal_data.avatar;
-            this.my_name = personal_data.name;
-            this.createTime = personal_data.createTime;
-            if (personal_data.profile) this.introduction = personal_data.profile;
-        },
-
-        async subscribeUser(){
             try{
-                const response = await this.$http.post(`event/subscribe?user=${this.$route.params.userId}`);
-
+                const response = await this.$http.get(`/user?userId=${this.$route.params.userId}`);
+                console.log(response);
+                const personal_data = response.data.data;
+                this.my_avatar = personal_data.avatar;
+                this.my_name = personal_data.name;
+                this.createTime = personal_data.createTime;
+                this.email = personal_data.email;
+                this.isSubscribe = personal_data.subscribed;
+                if (personal_data.profile) this.introduction = personal_data.profile;
             }catch(error){
                 callError(error);
             }
+
+        },
+
+        subscribeUser(){
+            if (this.isSubscribe) unSubscribe_func(this.$route.params.userId);
+            else subscribe_func(this.$route.params.userId);
+            this.isSubscribe = !this.isSubscribe;
         }
 
     },
