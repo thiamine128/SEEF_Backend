@@ -15,7 +15,7 @@
                 </div>
             </div>
 
-            <comment-box v-if="commentNum > 0" v-for="item in comments" :name="Null" :content="item.content"
+            <comment-box v-if="commentNum > 0" v-for="item in comments" :content="item.content"
             :post-time="dateF(item.createTime)" :reply-list="item.replies" :comment-id="item.id"
             @callReply="callAddReply" :user-id="item.userId"/>
 
@@ -35,7 +35,9 @@
 
         <div class="content-right">
 
-            <personal-box/>
+            <personal-box v-if="personalShow" :create-time="postTime"
+            :user-id="authorId" :thumb-num="thumbNum" :is-favor="isFavor" :is-like="isLike"
+            @callLike="callChangeLike" @callFavor="callChangeFavor"/>
             <recommend height-set="300px" r-title="今日推荐"/>
             <recommend height-set="400px" r-title="关注列表"/>
             <right-pin v-if="catalogShow" r-title="null" container="#md-hook" content-name="catalog"></right-pin>
@@ -67,25 +69,36 @@ export default {
             this.updateTime = this.dateF(response.data.data.updateTIme);
             this.postTime = this.dateF(response.data.data.createTime);
             this.title = response.data.data.title;
-
+            this.authorId = response.data.data.userId;
+            this.thumbNum = response.data.data.thumbNum;
             await this.pageChange();
-
         } catch (error) {
             console.error("Error fetching Markdown file:", error);
         }
 
         setTimeout(()=>{
             this.catalogShow = true;
-        }, 1000);
+            this.personalShow = true;
+        }, 500);
     },
     data(){
         return{
             content: '', title: '', postTime: '1919-8-10', updateTime: '1919-8-10',
             totalPage: 1, currentPos: 1, comments: [], commentNum: 0,
-            catalogShow: false
+            catalogShow: false, authorId: -1, personalShow: false,
+            thumbNum: -1, isFavor: false, isLike: false
         }
     },
     methods:{
+
+        callChangeFavor(){
+            this.isFavor = !this.isFavor;
+        },
+
+        callChangeLike(){
+            this.isLike = !this.isLike;
+        },
+
         callAddReply(to, commentId){
             this.$emit('callFloat', `输入回复内容`, 3, {
                 "commentId": commentId,

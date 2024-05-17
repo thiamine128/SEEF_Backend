@@ -7,7 +7,29 @@
 <script>
 export default {
     name: "replyBox",
-    props: ['name', 'content']
+    props: ['content', 'userId', 'toId'],
+    methods:{
+        async pullPersonalData(){
+            const response = await this.$http.get(`/user?userId=${this.userId}`);
+            const personal_data = response.data.data;
+            this.name = personal_data.name;
+
+            if (this.toId != null){
+                const response2 = await this.$http.get(`/user?userId=${this.toId}`);
+                const personal_data2 = response2.data.data;
+                this.name += ' 回复 ' + personal_data.name;
+            }
+
+        },
+    },
+    data(){
+        return{
+            name: ''
+        }
+    },
+    mounted() {
+        this.pullPersonalData();
+    }
 }
 </script>
 

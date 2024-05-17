@@ -24,22 +24,36 @@
 <script>
 export default {
     name: "articleBox",
-    props:['title', 'abstract', 'author', 'postTime', 'likes', 'articleId', 'imgSource'],
+    props:['title', 'abstract', 'authorId', 'postTime', 'likes', 'articleId', 'imgSource'],
     methods:{
         callArticle(){
             this.$router.push(`/blog/article/${this.articleId}`);
+        },
+        async pullPersonalData(){
+            try{
+                const response = await this.$http.get(`/user?userId=${this.authorId}`);
+                const personal_data = response.data.data;
+                this.author = personal_data.name;
+            }catch (error){
+
+            }
         }
     },
     mounted() {
+
+        this.pullPersonalData();
+
         const reg = /\(([^)]+)\)/;
-        const matchResult = this.imgSource.match(reg);
-        if (matchResult != null) {
-            if (matchResult[1].includes('http://chkbigevent.oss-cn-beijing.aliyuncs.com')){
-                try{
-                    this.src_img =  new URL(matchResult[1], import.meta.url).href;
-                    this.imgShow = true;
-                }catch (error){
-                    console.log(error);
+        if (this.imgSource != null){
+            const matchResult = this.imgSource.match(reg);
+            if (matchResult != null) {
+                if (matchResult[1].includes('http://chkbigevent.oss-cn-beijing.aliyuncs.com')){
+                    try{
+                        this.src_img =  new URL(matchResult[1], import.meta.url).href;
+                        this.imgShow = true;
+                    }catch (error){
+                        console.log(error);
+                    }
                 }
             }
         }
@@ -47,7 +61,8 @@ export default {
     data(){
         return{
             imgShow: false,
-            src_img: require('@/assets/blog/testArticleImg.png')
+            src_img: require('@/assets/blog/testArticleImg.png'),
+            author: ''
         }
     },
     computed:{

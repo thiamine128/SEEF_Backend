@@ -9,7 +9,7 @@
 
                 <nav-button :button-name="spaceSet.name" :dest="spaceSet.dest"/>
             </nav>
-            <el-avatar class="avatarSet" :src="require('@/assets/blog/testPortrait.jpg')"
+            <el-avatar class="avatarSet" :src="imgPath" @error="altImg()"
             @mouseenter="hover=true" @mouseleave="hover=false" @click="toPersonal" />
         </div>
     </nav>
@@ -18,8 +18,15 @@
 <script>
 import navButton from "@/pages/blog/components/navButton/index.vue";
 import searchBar from "@/pages/blog/components/searchBar/index.vue";
+import store from "@/store/store";
 export default {
     name: "navBar",
+    mounted() {
+        try{
+            this.imgPath = require(store.getters.getData.avatar);
+        }catch (e){
+        }
+    },
     data(){
         return{
             buttonSet: [
@@ -28,16 +35,20 @@ export default {
                 {name: '发布', dest:'/blog/editor'},
             ],
             spaceSet: {name: '动态', dest: '/blog/space'},
-            hover: false
+            hover: false,
+            imgPath: require('@/assets/blog/user.png')
         }
     },
     methods:{
         toPersonal(){
-            this.$router.push('/blog/personal');
+            this.$router.push(`/blog/personal/${store.getters.getData.id}`);
         },
         toHome(){
             this.$router.push('/blog/');
-        }
+        },
+        altImg(){
+            this.imgPath = require('@/assets/blog/user.png');
+        },
     },
     components: {navButton, searchBar}
 }

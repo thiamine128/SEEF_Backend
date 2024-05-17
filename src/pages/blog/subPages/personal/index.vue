@@ -1,34 +1,34 @@
 <template>
     <div class="content-container">
         <div class="personal-container">
-            <img class="portraitSet" src="@/assets/blog/testPortrait.jpg" alt="404 not found">
+            <img class="portraitSet" :src="my_avatar" @error="altImg">
             <div class="textSet">
                 <div class="nameSet">
-                    <div :class="{ nameFont: true }"> 阮阳栋 </div>
-                    <personal-button class="subscribeSet"
+                    <div :class="{ nameFont: true }"> {{my_name}} </div>
+                    <personal-button v-if="showSubscribe" class="subscribeSet"
                      :img-path="require('@/assets/blog/subscribe.png')" content="关注" >
                     </personal-button>
                 </div>
-                <div :class="{ contentFont: true }"> 1164754246@qq.com </div>
-                <div :class="{ contentFont: true }"> 注册于2024年4月23日 </div>
+                <div :class="{ contentFont: true }"> {{email}} </div>
+                <div :class="{ contentFont: true }"> 注册于 {{dateF(createTime)}} </div>
             </div>
         </div>
         <div class="navStyle">
             <div class="select">
-                操作系统是计算机系统中软件与硬件联系的纽带，课程内容丰富，既包含操作系统的基础理论，又涉及实际操作系统的设计与实现。操作系统实验设计是操作系统课程实践环节的集中表现，旨在巩固学生理论课学习的概念和原理，同时培养学生的工程实践能力。
+                {{introduction}}
             </div>
             <div class="show">
                 <div class="like" >
                     <div :class="{ contentFont: true }"> 点赞 </div>
-                    <div :class="{ contentFont: true }"> 0 </div>
+                    <div :class="{ contentFont: true }"> {{likes}} </div>
                 </div>
                 <div class="like" >
                     <div :class="{ contentFont: true }"> 关注 </div>
-                    <div :class="{ contentFont: true }"> 0 </div>
+                    <div :class="{ contentFont: true }"> {{subscribes}} </div>
                 </div>
                 <div class="like" >
                     <div :class="{ contentFont: true }"> 文章 </div>
-                    <div :class="{ contentFont: true }"> 0 </div>
+                    <div :class="{ contentFont: true }"> {{articles}} </div>
                 </div>
             </div>
 
@@ -56,41 +56,69 @@
 import personalButton from "@/pages/blog/components/personalButton/index.vue";
 import PersonalCard from "@/pages/blog/components/personalCard/index.vue";
 import * as echarts from 'echarts';
+import dayjs from "dayjs";
+import {callError} from "@/callMessage";
+import store from "@/store/store";
 
 export default {
 
     name: "personal",
     components: {PersonalCard, personalButton},
-
+    data(){
+        return{
+            my_avatar: require('@/assets/blog/user.png'),
+            my_name: '',
+            createTime: 0,
+            email: '', //邮箱，现在还没有返回
+            likes: 0, //博客获得的总点赞数
+            subscribes: 0, //关注（关注别人）的总数
+            articles: 0, //发布的文章总数
+            articleList: [], //发表的文章具体信息，要分页
+            subscribeList: [], //关注博主的具体信息，要分页，且要有收藏夹
+            collectList: [], //收藏的文章的具体信息，要分页，且要有收藏夹
+            introduction: '该用户没有留下简介......'
+        }
+    },
+    computed:{
+        showSubscribe(){
+            return store.getters.getData.id != this.$route.params.userId;
+        }
+    },
     methods:{
 
-        uploadImage(){
-            const fileInput = document.createElement("input");
-            fileInput.type = "file";
-            fileInput.accept = ".jpg, .png";
-            fileInput.addEventListener("change", this.handleImage);
-            fileInput.click();
+        altImg(e){
+            this.my_avatar = require('@/assets/blog/user.png');
         },
 
-        async handleImage(event){
-            const file = event.target.files[0];
-            const formData = new FormData();
-            formData.append('image', file);
+        dateF(num) {
+            return dayjs(num).format('YYYY-MM-DD');
+        },
 
-            try {
-                const response = await this.$http.post('/user/requestUploadAvatar', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
-                console.log(response.data);
-            } catch (error) {
-                console.error(error);
+        async pullPersonalData(){
+            const response = await this.$http.get(`/user?userId=${this.$route.params.userId}`);
+            console.log(response);
+            const personal_data = response.data.data;
+            this.my_avatar = personal_data.avatar;
+            this.my_name = personal_data.name;
+            this.createTime = personal_data.createTime;
+            if (personal_data.profile) this.introduction = personal_data.profile;
+        },
+
+        async subscribeUser(){
+            try{
+                const response = await this.$http.post(`event/subscribe?user=${this.$route.params.userId}`);
+
+            }catch(error){
+                callError(error);
             }
         }
+
     },
 
     mounted() {
+
+        this.pullPersonalData();
+
         const myChart = echarts.init(this.$refs.pieChart);
         const pieData = [
             { value: 1, name: '开发' },

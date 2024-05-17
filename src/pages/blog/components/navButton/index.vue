@@ -5,7 +5,7 @@
          @mouseover="hover = true">
         <a  :href="dest" class="linkStyle">
             <div v-if="buttonName !== '动态' || !badgeSet" :class="{ customFont: true }">{{buttonName}}</div>
-            <el-badge v-if="buttonName === '动态' && badgeSet " :value="100" :max="99" type="primary">
+            <el-badge v-if="buttonName === '动态' && badgeSet " :value="badgeValue" :max="99" type="primary">
                 <div :class="{ customFont: true }">{{buttonName}}</div>
             </el-badge>
         </a>
@@ -14,40 +14,37 @@
 
 <script>
 import store from "@/store/store";
+import {callError} from "@/callMessage";
 export default {
     name: "navButton",
     props: ['buttonName', 'dest'],
     data(){
         return{
-          hover: false, badgeSet: false, ws: null, badgeValue: 0
+          hover: false, badgeSet: false, badgeValue: 0
         }
     },
     methods:{
-        setupWebSocket() {
-            this.ws = new WebSocket(
-                `ws://123.249.103.199:8080/api/webSocket/${store.getters.getToken}`
-            );
+        async getEventCount(){
+            try{
 
-            this.ws.onopen = function(event) {
-                console.log('WebSocket 连接已打开', event);
-            };
+                const response = await this.$http.get('event/eventCount');
+                console.log('event count: ');
+                console.log(response);
 
-            this.ws.onerror = function(error) {
-                console.error('WebSocket 出错', error);
-            };
+                if (response.status === 200){
+                    if (response.data.data != null && response.data.data > 0){
+                        this.badgeSet = true;
+                        this.badgeValue = response.data.data;
+                    }
+                }else callError('网络错误');
 
-            this.ws.onmessage = function(event) {
-                // 收到信息event.data
-                console.log(event.data);
-            };
-
-            this.ws.onclose = function() {
-                console.log('WebSocket 连接已关闭');
-            };
+            }catch(error){
+                callError(error);
+            }
         }
     },
     mounted() {
-        if (this.buttonName === '动态') this.setupWebSocket();
+        if (this.buttonName === '动态') this.getEventCount();
     },
 }
 </script>

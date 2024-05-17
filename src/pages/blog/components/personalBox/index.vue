@@ -2,22 +2,25 @@
     <div class="frameSet">
         <div class="personContainer">
             <div class="personInfo">
-                <img class="portraitSet" src="@/assets/blog/testPortrait.jpg" alt="404 not found">
+                <img class="portraitSet" :src="avatar" alt="404 not found">
                 <div class="textSet">
-                    <div :class="{ nameFont: true }"> 阮阳栋 </div>
+                    <div :class="{ nameFont: true }"> {{name}} </div>
                     <div :class="{ contentFont: true }"> 1164754246@qq.com </div>
-                    <div :class="{ contentFont: true }"> 发布于2024年4月23日 </div>
+                    <div :class="{ contentFont: true }"> 发布于 {{createTime}} </div>
                 </div>
             </div>
             <div class="bottom-style">
-                <personal-button :img-path="require('@/assets/blog/like.png')" content="0" >
-                </personal-button>
-                <personal-button :img-path="require('@/assets/blog/collect.png')" content="收藏" >
-                </personal-button>
-                <personal-button :img-path="require('@/assets/blog/subscribe.png')" content="关注" >
-                </personal-button>
-                <personal-button :img-path="require('@/assets/blog/edit.png')" content="编辑" >
-                </personal-button>
+                <personal-button v-if="!isLike" :img-path="require('@/assets/blog/like.png')" :content="thumbNum" @click="likeArticle" />
+                <personal-button v-if="isLike" :img-path="require('@/assets/blog_change/like.png')" :content="thumbNum" @click="likeArticle"/>
+
+                <personal-button v-if="!isFavor" :img-path="require('@/assets/blog/collect.png')" content="收藏" @click="favorArticle"/>
+                <personal-button v-if="isFavor" :img-path="require('@/assets/blog_change/collect.png')" content="收藏" @click="favorArticle"/>
+
+                <personal-button :img-path="require('@/assets/blog/subscribe.png')" content="关注" />
+
+
+                <personal-button :img-path="require('@/assets/blog/edit.png')" content="编辑" />
+
             </div>
         </div>
     </div>
@@ -25,9 +28,46 @@
 
 <script>
 import personalButton from "@/pages/blog/components/personalButton/index.vue";
+import {callError} from "@/callMessage";
 export default {
     name: "personalBox",
-    components:{personalButton}
+    components:{personalButton},
+    props: ['userId', 'createTime', 'isFavor', 'isLike', 'thumbNum'],
+    methods:{
+        likeArticle(){
+            this.$emit('callLike');
+        },
+
+        favorArticle(){
+            this.$emit('callFavor');
+        },
+
+        async pullPersonalData(){
+            try{
+                const response = await this.$http.get(`/user?userId=${this.userId}`);
+                console.log(1111111111);
+                console.log(response);
+                const personal_data = response.data.data;
+                try{
+                    this.avatar = require(personal_data.avatar);
+                }catch (error){
+                }
+
+                this.name = personal_data.name;
+            }catch (e){
+                callError(e);
+            }
+        },
+    },
+    mounted() {
+        this.pullPersonalData();
+    },
+    data(){
+        return{
+            avatar: require('@/assets/blog/user.png'),
+            name: ''
+        }
+    }
 }
 </script>
 

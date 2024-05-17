@@ -10,8 +10,8 @@
             </div>
 
             <div :style="listStyle">
-                <article-box v-for="item in testList" :title="item.name">
-                </article-box>
+<!--                <article-box v-for="item in testList" :title="item.name">-->
+<!--                </article-box>-->
             </div>
 
             <el-pagination class="pagination-style"
@@ -49,10 +49,12 @@ export default {
                 flexGrow: '1',
                 overflowX: 'hidden'
             },
-            testList: [
-                {name: '数据管理技术'}, {name: '软件工程'},
-                {name: '人工智障'}, {name: '操作系统'},
-            ],
+
+            // testList: [
+            //     {name: '数据管理技术'}, {name: '软件工程'},
+            //     {name: '人工智障'}, {name: '操作系统'},
+            // ],
+
             currentPos: 0
         }
     },
