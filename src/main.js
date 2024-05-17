@@ -7,7 +7,7 @@ import axios from "axios";
 import { saveAs } from 'file-saver';
 import store from "@/store/store";
 
-axios.defaults.baseURL = '/api' //axios网络配置
+axios.defaults.baseURL = '/api' //axios请求默认URL
 axios.interceptors.request.use(config => {
     config.headers['token'] = store.getters.getToken; //有效
     config.headers.Authorization = `Bearer ${store.getters.getToken}`; //无效
@@ -15,7 +15,7 @@ axios.interceptors.request.use(config => {
     return config;
 }, error => {
     return Promise.reject(error);
-});
+}); //请求头token设置
 
 const app = createApp(App);
 app.use(App);
