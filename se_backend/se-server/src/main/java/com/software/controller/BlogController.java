@@ -6,6 +6,7 @@ import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
 import com.software.dto.BlogCreateDTO;
+import com.software.dto.BlogPreviewPageQueryDTO;
 import com.software.dto.CommentPageQueryDto;
 import com.software.exception.NoSuchTopicException;
 import com.software.exception.PermissionDeniedException;
@@ -44,6 +45,14 @@ public class BlogController {
     public Result createBlog(@RequestBody BlogCreateDTO blogCreateDTO) {
         blogService.create(blogCreateDTO);
         return Result.success();
+    }
+
+    @GetMapping("/viewBlogs")
+    @Operation(summary = "博客列表")
+    public Result<PageResult> viewBlogs(@RequestParam int page, @RequestParam int pageSize, @RequestParam(required = false) String keyword, @RequestParam(required = false) List<Long> topicIds,  @RequestParam(required = false) List<String> tags, @RequestParam int previewLength) {
+        BlogPreviewPageQueryDTO blogPageQueryDto = new BlogPreviewPageQueryDTO(page, pageSize, keyword, topicIds, tags, previewLength);
+        PageResult pageResult = blogService.getBlogs(blogPageQueryDto);
+        return Result.success(pageResult);
     }
 
     @GetMapping("/detail")

@@ -20,4 +20,7 @@ public interface SubscribeMapper {
 
     @Delete("delete from subscribe where subscriber=#{subscriber} and user=#{user}")
     int unsubscribe(Long user, Long subscriber);
+
+    @Select("select subscriber from subscribe where subscriber = #{subscriber} and user=#{user}")
+    Long isSubscribed(Long user, Long subscriber);
 }

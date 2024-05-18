@@ -25,8 +25,6 @@ public class TopicServiceImpl implements TopicService {
 
     @Autowired
     private TopicMapper topicMapper;
-    @Autowired
-    private BlogMapper blogMapper;
 
     @Override
     public void createTopic(TopicCreateDto topicCreateDto) {
@@ -39,17 +37,6 @@ public class TopicServiceImpl implements TopicService {
         Page page = (Page) topicMapper.pageQuery(topicPageQueryDTO);//后绪步骤实现
 
         return new PageResult(page.getTotal(), page.getResult());
-    }
-
-    @Override
-    public PageResult getBlogs(BlogPreviewPageQueryDTO blogPageQueryDto) {
-        PageHelper.startPage(blogPageQueryDto.getPage(), blogPageQueryDto.getPageSize());
-        Page page = (Page) blogMapper.getBlogsInTopic(blogPageQueryDto.getTopicId());
-        Map<String,Object> currentUser = BaseContext.getCurrentUser();
-        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
-        return new PageResult(page.getTotal(), page.getResult().stream().map(blog ->{
-            return BlogPreviewVO.fromBlog((Blog) blog, blogPageQueryDto.getPreviewLength(), blogMapper.isLiked(((Blog) blog).getId(),id),blogMapper.isFavor(((Blog) blog).getId(),id));
-        }).toList());
     }
 
     @Override

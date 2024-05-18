@@ -10,6 +10,7 @@ import com.software.entity.TClass;
 import com.software.entity.User;
 import com.software.exception.*;
 import com.software.mapper.UserMapper;
+import com.software.service.SubscribeService;
 import com.software.service.UserService;
 import com.software.utils.BaseContext;
 import com.software.vo.UserProfileVO;
@@ -36,6 +37,8 @@ public class UserServiceImpl implements UserService {
     @Qualifier("redisTemplate")
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private SubscribeService subscribeService;
 
     @Override
     public User login(UserLoginDTO userLoginDTO) {
@@ -187,7 +190,8 @@ public class UserServiceImpl implements UserService {
     public UserProfileVO getProfile(Long id) {
         User user = userMapper.getByID(id);
         if (user == null) throw new InvalidUserException(MessageConstant.INVALID_USER);
-        return UserProfileVO.fromUser(user);
+
+        return UserProfileVO.fromUser(user, subscribeService.isSubscribed(id, user.getId()));
     }
 
 

@@ -1,6 +1,7 @@
 package com.software.mapper;
 
 import com.github.pagehelper.Page;
+import com.software.dto.BlogPreviewPageQueryDTO;
 import com.software.entity.Blog;
 import org.apache.ibatis.annotations.*;
 
@@ -11,8 +12,7 @@ public interface BlogMapper {
     @Insert("insert into blogs (title, content, user_id, topic_id, tags) values (#{title}, #{content}, #{userId}, #{topicId}, #{tags})")
     void createBlog(String title, String content, Long userId, Long topicId, String tags);
 
-    @Select("select * from blogs where topic_id=#{topicId}")
-    List<Blog> getBlogsInTopic(Long topicId);
+    List<Blog> pageQuery(BlogPreviewPageQueryDTO blogPreviewPageQueryDTO);
 
     @Select("select * from blogs where id=#{blogId} ")
     Blog getBlog(Long blogId);

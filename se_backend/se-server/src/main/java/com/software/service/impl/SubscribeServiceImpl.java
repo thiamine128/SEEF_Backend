@@ -45,4 +45,10 @@ public class SubscribeServiceImpl implements SubscribeService {
     public List<Long> getSubscribers(Long id) {
         return subscribeMapper.getSubscribers(id);
     }
+
+    @Override
+    public Boolean isSubscribed(Long user, Long subscriber) {
+        Long id = subscribeMapper.isSubscribed(user, subscriber);
+        return id != null;
+    }
 }

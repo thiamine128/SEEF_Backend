@@ -46,14 +46,6 @@ public class TopicController {
 
     }
 
-    @GetMapping("/viewBlogs")
-    @Operation(summary = "板块博客")
-    public Result<PageResult> viewBlogs(@RequestParam int page, @RequestParam int pageSize, @RequestParam Long topicId, @RequestParam int previewLength) {
-        BlogPreviewPageQueryDTO blogPageQueryDto = new BlogPreviewPageQueryDTO(page, pageSize, topicId, previewLength);
-        PageResult pageResult = topicService.getBlogs(blogPageQueryDto);
-        return Result.success(pageResult);
-    }
-
     @DeleteMapping("/deleteTopic")
     @Operation(summary = "删除板块")
     @AuthCheck(mustRole = {RoleConstant.ADMIN,RoleConstant.TEACHER})

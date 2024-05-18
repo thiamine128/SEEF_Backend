@@ -40,4 +40,10 @@ public class ReplyController {
         replyService.deleteReply(replyId);
         return Result.success();
     }
+
+    @GetMapping("/getReply")
+    @Operation(summary = "获取回复")
+    public Result getReply(Long id) {
+        return Result.success(replyService.getReply(id));
+    }
 }

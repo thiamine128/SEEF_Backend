@@ -28,11 +28,15 @@ public class BlogPreviewVO {
 
     public static BlogPreviewVO fromBlog(Blog blog, int len, Long isLike, Long favor) {
         int sub = Math.min(blog.getContent().length(), len);
+        String tags = blog.getTags();
+        if (tags != null && !tags.isEmpty()) {
+            tags = blog.getTags().substring(1);
+        }
         return new BlogPreviewVOBuilder()
                 .id(blog.getId())
                 .title(blog.getTitle())
                 .preview(blog.getContent().substring(0, sub))
-                .tags(blog.getTags() == null ? List.of() : Arrays.stream(blog.getTags().split(";")).toList())
+                .tags(tags == null ? List.of() : Arrays.stream(tags.split(";")).toList())
                 .thumbNum(blog.getThumbNum())
                 .favourNum(blog.getFavourNum())
                 .userId(blog.getUserId())

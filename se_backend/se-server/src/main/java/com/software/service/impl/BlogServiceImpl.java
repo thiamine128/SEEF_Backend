@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.dto.BlogCreateDTO;
+import com.software.dto.BlogPreviewPageQueryDTO;
 import com.software.dto.CommentPageQueryDto;
 import com.software.entity.Blog;
 import com.software.entity.Comment;
@@ -53,7 +54,7 @@ public class BlogServiceImpl implements BlogService {
                 throw new EmptyTagException(MessageConstant.EMPTY_TAG);
             }
         });
-        String tags = blogCreateDTO.getTags().stream().map(str -> str + ";").collect(Collectors.joining());
+        String tags = ";" + blogCreateDTO.getTags().stream().map(str -> str + ";").collect(Collectors.joining());
         blogMapper.createBlog(blogCreateDTO.getTitle(), blogCreateDTO.getContext(), id, blogCreateDTO.getTopicId(), tags);
     }
 
@@ -146,5 +147,14 @@ public class BlogServiceImpl implements BlogService {
         }).toList());
     }
 
-
+    @Override
+    public PageResult getBlogs(BlogPreviewPageQueryDTO blogPageQueryDto) {
+        PageHelper.startPage(blogPageQueryDto.getPage(), blogPageQueryDto.getPageSize());
+        Page page = (Page) blogMapper.pageQuery(blogPageQueryDto);
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
+        return new PageResult(page.getTotal(), page.getResult().stream().map(blog ->{
+            return BlogPreviewVO.fromBlog((Blog) blog, blogPageQueryDto.getPreviewLength(), blogMapper.isLiked(((Blog) blog).getId(),id),blogMapper.isFavor(((Blog) blog).getId(),id));
+        }).toList());
+    }
 }

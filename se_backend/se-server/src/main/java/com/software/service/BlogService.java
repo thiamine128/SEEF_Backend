@@ -1,6 +1,7 @@
 package com.software.service;
 
 import com.software.dto.BlogCreateDTO;
+import com.software.dto.BlogPreviewPageQueryDTO;
 import com.software.dto.CommentPageQueryDto;
 import com.software.entity.Blog;
 import com.software.result.PageResult;
@@ -23,6 +24,7 @@ public interface BlogService {
     Boolean isFavor(Long blogId);
 
     List<Long> getfavorBlogIds(Long id);
+    PageResult getBlogs(BlogPreviewPageQueryDTO blogPageQueryDto);
 
     PageResult listFavor(List<Long> ids,int page,int pageSize,int previewLength);
 }

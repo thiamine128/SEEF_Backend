@@ -10,7 +10,7 @@ import java.util.List;
 
 @Mapper
 public interface EventMapper {
-    @Insert("insert into events (subscriber, id, type, subject, object) values (#{subscriber}, #{id}, #{type}, #{subject}, #{object})")
+    @Insert("insert into events (subscriber, id, type, subject, object, `where`) values (#{subscriber}, #{id}, #{type}, #{subject}, #{object}, #{where})")
     void newEvent(Event event);
 
     @Select("select * from events where subscriber=#{id}")

@@ -9,8 +9,5 @@ public interface TopicService {
     void createTopic(TopicCreateDto topicCreateDto);
 
     PageResult pageQuery(TopicPageQueryDTO topicPageQueryDTO);
-
-    PageResult getBlogs(BlogPreviewPageQueryDTO blogPageQueryDto);
-
     void deleteTopic(Integer topicId);
 }

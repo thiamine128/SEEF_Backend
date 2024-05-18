@@ -27,11 +27,15 @@ public class BlogVO {
     private Boolean isFavor;
 
     public static BlogVO fromBlog(Blog blog,Boolean isLike,Boolean isFavor) {
+        String tags = blog.getTags();
+        if (tags != null && !tags.isEmpty()) {
+            tags = blog.getTags().substring(1);
+        }
         return new BlogVOBuilder()
                 .id(blog.getId())
                 .title(blog.getTitle())
                 .context(blog.getContent())
-                .tags(blog.getTags() == null ? List.of() : Arrays.stream(blog.getTags().split(";")).toList())
+                .tags(tags == null ? List.of() : Arrays.stream(tags.split(";")).toList())
                 .thumbNum(blog.getThumbNum())
                 .favourNum(blog.getFavourNum())
                 .userId(blog.getUserId())

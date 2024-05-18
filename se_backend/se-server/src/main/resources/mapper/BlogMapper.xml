@@ -9,4 +9,25 @@
             #{id}
         </foreach>
     </select>
+
+    <select id="pageQuery" resultType="com.software.entity.Blog">
+        select * from blogs
+        <where>
+            <if test="topicIds != null">
+                and topic_id in
+                 <foreach collection="topicIds" item="id" separator="," open="(" close=")">
+                     #{id}
+                 </foreach>
+            </if>
+            <if test="keyword != null">
+                and (content like concat('%',#{keyword},'%') or content like concat('%',#{keyword},'%'))
+            </if>
+            <if test="tags != null">
+                 and
+                <foreach collection="tags" item="tag" separator="or" open="(" close=")">
+                    tags like concat('%;', #{tag}, ';%')
+                </foreach>
+            </if>
+        </where>
+    </select>
 </mapper>

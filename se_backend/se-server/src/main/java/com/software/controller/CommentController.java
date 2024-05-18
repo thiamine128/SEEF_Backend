@@ -41,4 +41,10 @@ public class CommentController {
         commentService.deleteComment(commentId);
         return Result.success();
     }
+
+    @GetMapping("/getComment")
+    @Operation(summary = "获取评论")
+    public Result getComment(@RequestParam Long id) {
+        return Result.success(commentService.getComment(id));
+    }
 }
