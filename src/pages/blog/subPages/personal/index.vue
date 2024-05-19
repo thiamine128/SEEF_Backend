@@ -61,7 +61,7 @@ import * as echarts from 'echarts';
 import dayjs from "dayjs";
 import {callError} from "@/callMessage";
 import store from "@/store/store";
-import {subscribe_func, unSubscribe_func} from "@/pages/blog/api";
+import {getUserData, subscribe_func, unSubscribe_func} from "@/pages/blog/api";
 
 export default {
 
@@ -105,19 +105,15 @@ export default {
         },
 
         async pullPersonalData(){
+            const personal_data = await getUserData(this.$route.params.userId, false);
             try{
-                const response = await this.$http.get(`/user?userId=${this.$route.params.userId}`);
-                console.log(response);
-                const personal_data = response.data.data;
-                this.my_avatar = personal_data.avatar;
-                this.my_name = personal_data.name;
-                this.createTime = personal_data.createTime;
-                this.email = personal_data.email;
-                this.isSubscribe = personal_data.subscribed;
-                if (personal_data.profile) this.introduction = personal_data.profile;
-            }catch(error){
-                callError(error);
-            }
+                this.my_avatar = require(personal_data.avatar);
+            }catch (e){}
+            this.my_name = personal_data.name;
+            this.createTime = personal_data.createTime;
+            this.email = personal_data.email;
+            this.isSubscribe = personal_data.subscribed;
+            if (personal_data.profile) this.introduction = personal_data.profile;
 
         },
 

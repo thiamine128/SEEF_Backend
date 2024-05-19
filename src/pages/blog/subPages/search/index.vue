@@ -1,26 +1,21 @@
 <template>
 
-    <img src="@/assets/blog/homehead.png" style="width: 1200px; margin-top: 25px" alt="404">
-
     <div class="content-container">
 
         <div class="content-left">
 
-            <md-field style="min-height: 0; margin-bottom: 10px" :input-content="broadcast_content"></md-field>
-
-            <article-list height-set="740px" r-title="~Topic~ 所有专区"
+            <article-list height-set="740px" r-title="~Topic~ 专区搜索结果"
                           :list-set="sectionList" select="section" :total-page="sectionTotalPage"
                           @page-change="getSections"/>
 
-            <article-list height-set="880px" r-title="~Blog~ 所有博客"
+            <article-list height-set="880px" r-title="~Blog~ 博客搜索结果"
                           :list-set="articleList" select="article" :total-page="articleTotalPage"
                           @page-change="getArticles"></article-list>
 
         </div>
         <div class="content-right">
-            <img alt="404" src="@/assets/blog/advertisement.png" style="width: 100%;">
-            <recommend height-set="300px" r-title="今日推荐"/>
-            <recommend height-set="400px" r-title="关注列表"/>
+            <img alt="404" src="@/assets/blog/advertisement2.png" style="width: 100%;">
+            <img alt="404" src="@/assets/blog/advertisement3.png" style="width: 100%;">
             <right-pin r-title="热门博主" content-name="recommend"></right-pin>
         </div>
     </div>
@@ -37,7 +32,7 @@ import ArticleList from "@/pages/blog/components/articleList/index.vue";
 import {callError} from "@/callMessage";
 
 export default {
-    name: "homepage",
+    name: "search",
     components: {ArticleList, Catalog, PersonalBox, recommend, blogTitle, mdField, rightPin},
     data(){
         return{
@@ -45,30 +40,20 @@ export default {
             sectionList: [],
             sectionTotalPage: 1,
             articleList: [],
-            articleTotalPage: 1
+            articleTotalPage: 1,
+            searchContent: ''
         }
     },
     mounted() {
-        this.makeBroadcast();
+        this.searchContent = this.$route.params.search.replace(/\s/g, '');
         this.getSections(1);
         this.getArticles(1);
     },
     methods:{
 
-        async makeBroadcast(){
-            try {
-                const response = await fetch('/blog_broadcast.md');
-                if (response.ok) {
-                    this.broadcast_content = await response.text();
-                } else callError('无法读取公告内容');
-            } catch (error) {
-                callError(error);
-            }
-        },
-
         async getSections(pageNum){ //获取全部板块信息
             try{
-                const response = await this.$http.get(`topic/pagedList?page=${pageNum}&pageSize=10`);
+                const response = await this.$http.get(`topic/pagedList?page=${pageNum}&pageSize=10&name=${this.searchContent}`);
                 if (response.status === 200) {
                     this.sectionList = response.data.data.records;
                     this.sectionTotalPage = Math.ceil(response.data.data.total / 10);
@@ -81,7 +66,7 @@ export default {
         async getArticles(pageNum){
             try{
                 const response = await this.$http.get(
-                    `blog/viewBlogs?page=${pageNum}&pageSize=6&previewLength=500`
+                    `blog/viewBlogs?page=${pageNum}&pageSize=6&previewLength=500&keyword=${this.searchContent}`
                 );
                 console.log(response);
                 if (response.status === 200) {

@@ -9,7 +9,7 @@
     <template #suffix>
       <div class="circular-icon-container">
           <img class="icon-search" style="width: 1em; height: 1em"
-               src="@/assets/blog/magnifying-glass.png" alt="Search"/>
+               src="@/assets/blog/magnifying-glass.png" alt="Search" @click="callSearchPage"/>
       </div>
     </template>
     </el-input>
@@ -22,6 +22,14 @@ export default {
         return{
             searchInput:  "",
             hover: false
+        }
+    },
+    methods:{
+        callSearchPage(){
+            this.$router.push(`/blog/`);
+            setTimeout(()=>{
+                this.$router.push(`/blog/find/${this.searchInput}`);
+            }, 100);
         }
     }
 }
