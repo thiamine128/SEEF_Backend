@@ -18,58 +18,66 @@
             </div>
         </div>
     </div>
-    <hr class="setHr">
+    <hr v-if="isHr" class="setHr">
 </template>
 
 <script>
+import {getBlogData, getUserData} from "@/pages/blog/api";
+
 export default {
     name: "articleBox",
-    props:['title', 'abstract', 'authorId', 'postTime', 'likes', 'articleId', 'imgSource'],
+    props:['title', 'abstract', 'authorId', 'postTime', 'likes', 'articleId', 'imgSource', 'hrNotShow'],
     methods:{
+
         callArticle(){
             this.$router.push(`/blog/article/${this.articleId}`);
         },
-        async pullPersonalData(){
-            try{
-                const response = await this.$http.get(`/user?userId=${this.authorId}`);
-                const personal_data = response.data.data;
-                this.author = personal_data.name;
-            }catch (error){
 
+        async pullPersonalData(){
+            const personal_data = await getUserData(this.authorId);
+            this.author = personal_data.name;
+        },
+
+        setImage(){
+            const reg = /\(([^)]+)\)/;
+            if (this.imgSource != null){
+                const matchResult = this.imgSource.match(reg);
+                if (matchResult != null) {
+                    if (matchResult[1].includes('http://chkbigevent.oss-cn-beijing.aliyuncs.com')){
+                        try{
+                            this.src_img =  new URL(matchResult[1], import.meta.url).href;
+                            this.imgShow = true;
+                        }catch (error){
+                            console.log(error);
+                        }
+                    }
+                }
             }
+
         }
+
     },
     mounted() {
 
         this.pullPersonalData();
+        setTimeout(()=>{
+            this.setImage();
+        }, 500);
 
-        const reg = /\(([^)]+)\)/;
-        if (this.imgSource != null){
-            const matchResult = this.imgSource.match(reg);
-            if (matchResult != null) {
-                if (matchResult[1].includes('http://chkbigevent.oss-cn-beijing.aliyuncs.com')){
-                    try{
-                        this.src_img =  new URL(matchResult[1], import.meta.url).href;
-                        this.imgShow = true;
-                    }catch (error){
-                        console.log(error);
-                    }
-                }
-            }
-        }
+        if (this.hrNotShow) this.isHr = false;
+
     },
     data(){
         return{
             imgShow: false,
             src_img: require('@/assets/blog/testArticleImg.png'),
-            author: ''
+            author: '',
+            isHr: true
         }
     },
     computed:{
         titleShow(){
             if (this.title != null){
-                // if (this.title.length <= 5) return this.title;
-                // else return this.title.slice(0, 5)+'...';
                 return this.title.slice(0, 1);
             }else return '';
         }

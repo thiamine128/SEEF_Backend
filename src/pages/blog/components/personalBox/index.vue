@@ -30,7 +30,7 @@
 <script>
 import personalButton from "@/pages/blog/components/personalButton/index.vue";
 import {callError} from "@/callMessage";
-import {favor_func, like_func, subscribe_func, unSubscribe_func} from "@/pages/blog/api";
+import {favor_func, getUserData, like_func, subscribe_func, unSubscribe_func} from "@/pages/blog/api";
 export default {
     name: "personalBox",
     components:{personalButton},
@@ -73,19 +73,13 @@ export default {
         },
 
         async pullPersonalData(){
+            const personal_data = await getUserData(this.userId, false);
             try{
-                const response = await this.$http.get(`/user?userId=${this.userId}`);
-                console.log(response);
-                const personal_data = response.data.data;
-                try{
-                    this.avatar = require(personal_data.avatar);
-                }catch (error){}
-                this.email = personal_data.email;
-                this.name = personal_data.name;
-                this.isSubscribe = personal_data.subscribed;
-            }catch (e){
-                callError(e);
-            }
+                this.avatar = require(personal_data.avatar);
+            }catch (error){}
+            this.email = personal_data.email;
+            this.name = personal_data.name;
+            this.isSubscribe = personal_data.subscribed;
         },
     },
     mounted() {

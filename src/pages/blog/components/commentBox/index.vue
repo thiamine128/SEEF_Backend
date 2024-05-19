@@ -28,6 +28,7 @@
 
 <script>
 import ReplyBox from "@/pages/blog/components/replyBox/index.vue";
+import {getUserData} from "@/pages/blog/api";
 
 export default {
     name: "commentBox",
@@ -38,8 +39,7 @@ export default {
             this.$emit('callReply', to, this.commentId);
         },
         async pullPersonalData(id){
-            const response = await this.$http.get(`/user?userId=${id}`);
-            const personal_data = response.data.data;
+            const personal_data = await getUserData(id);
             this.author = personal_data.name;
         },
 

@@ -37,7 +37,7 @@ import {ref} from "vue";
 import MdField from "@/pages/blog/components/mdField/index.vue";
 import LeftButton from "@/pages/blog/components/leftButton/index.vue";
 import store from "@/store/store";
-import {callSuccess, callError} from "@/callMessage";
+import {callSuccess, callError, callWarning} from "@/callMessage";
 import axios from "axios";
 
 export default {
@@ -133,6 +133,12 @@ export default {
             callSuccess('暂存成功');
         },
         async post(){
+
+            if (this.content.length > 20000){
+                callWarning('文章过长');
+                return;
+            }
+
             store.commit('setContent', {
                 "title": '',
                 "content": ''
@@ -154,7 +160,6 @@ export default {
                 }
             }else callError('请选择专区');
         },
-
 
 
         uploadImage(){

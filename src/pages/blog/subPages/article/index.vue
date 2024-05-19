@@ -58,23 +58,23 @@ import Catalog from "@/pages/blog/components/catalog/index.vue";
 import CommentBox from "@/pages/blog/components/commentBox/index.vue";
 import dayjs from "dayjs";
 import {callError} from "@/callMessage";
+import {getBlogData} from "@/pages/blog/api";
 export default {
     name: "article",
     components: {CommentBox, Catalog, PersonalBox, recommend, blogTitle, mdField, rightPin},
     async mounted() {
-        try {
-            const response = await this.$http.get(`blog/detail?blogId=${this.$route.params.id}`);
-            console.log(response);
-            this.content = response.data.data.context;
-            this.updateTime = this.dateF(response.data.data.updateTIme);
-            this.postTime = this.dateF(response.data.data.createTime);
-            this.title = response.data.data.title;
-            this.authorId = response.data.data.userId;
-            this.thumbNum = response.data.data.thumbNum;
-            await this.pageChange();
-        } catch (error) {
-            console.error("Error fetching Markdown file:", error);
-        }
+
+        const blog_Data = await getBlogData(this.$route.params.id);
+        console.log(blog_Data);
+        this.content = blog_Data.context;
+        this.updateTime = this.dateF(blog_Data.updateTIme);
+        this.postTime = this.dateF(blog_Data.createTime);
+        this.title = blog_Data.title;
+        this.authorId = blog_Data.userId;
+        this.thumbNum = blog_Data.thumbNum;
+        this.isLike = blog_Data.isLike;
+        this.isFavor = blog_Data.isFavor;
+        await this.pageChange();
 
         setTimeout(()=>{
             this.catalogShow = true;

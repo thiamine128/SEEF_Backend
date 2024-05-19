@@ -151,6 +151,13 @@ const router = createRouter({
                         import(`../pages/blog/subPages/personal/index.vue`)),
                 },
                 {
+                    //搜索页面
+                    path: '/blog/find/:search',
+                    name: 'search',
+                    component: defineAsyncComponent(() =>
+                        import(`../pages/blog/subPages/search/index.vue`)),
+                },
+                {
                     //错误路由重定向
                     path: '/blog/:catchAll(.*)',
                     redirect: '/blog/homepage',

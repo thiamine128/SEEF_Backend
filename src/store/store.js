@@ -26,7 +26,13 @@ export default createStore({
         email: null,
         tempTitle: '',
         tempContent: '',
-        eventList: []
+        eventList: [],
+
+        userMap: new Map(),
+        blogMap: new Map(),
+        commentMap: new Map(),
+        replyMap: new Map()
+
     },
 
 
@@ -56,6 +62,13 @@ export default createStore({
             console.log('token过期时间：'+state.tokenExpire);
             if (Date.now() > state.tokenExpire){
                 state.token = null;
+                state.eventList = [];
+
+                state.userMap = new Map();
+                state.blogMap = new Map();
+                state.commentMap = new Map();
+                state.replyMap = new Map();
+
                 console.log('token已经过期');
             }
             return state.token;
@@ -63,7 +76,24 @@ export default createStore({
         //获取动态信息
         getEventList(state){
             return state.eventList;
+        },
+
+        getMapUser: (state) => (userId) => {
+            return state.userMap[userId];
+        },
+
+        getMapBlog : (state) => (blogId) =>{
+            return state.blogMap[blogId];
+        },
+
+        getMapComment: (state)=> (commentId) => {
+            return state.commentMap[commentId];
+        },
+
+        getMapReply: (state)=> (replyId)=>{
+            return state.replyMap[replyId];
         }
+
     },
 
 
@@ -84,6 +114,11 @@ export default createStore({
             state.profile = data.profile;
             state.role = data.role;
             state.email = data.email;
+
+            state.userMap = new Map();
+            state.blogMap = new Map();
+            state.commentMap = new Map();
+            state.replyMap = new Map();
         },
 
         //设置文章暂存
@@ -95,6 +130,41 @@ export default createStore({
         //存放私信
         addEvent(state, newEvent){
             state.eventList.push(newEvent);
+        },
+
+        //清空事件
+        clearEvent(state){
+            state.eventList = [];
+        },
+
+        addMapUser(state, data){
+            const userId = data.userId;
+            const userData = data.userData;
+            console.log('尝试缓存user:'+userId);
+            state.userMap[userId] = userData;
+            console.log(state.userMap);
+            //state.userMap.set(userId, userData);
+        },
+
+        addMapBlog(state, data){
+            const blogId = data.blogId;
+            const blogData = data.blogData;
+            state.blogMap[blogId] = blogData;
+            //state.blogMap.set(blogId, blogData);
+        },
+
+        addMapComment(state, data){
+            const commentId = data.commentId;
+            const commentData = data.commentData;
+            state.commentMap[commentId] = commentData;
+            //state.commentMap.set(commentId, commentData);
+        },
+
+        addMapReply(state, data){
+            const replyId = data.replyId;
+            const replyData = data.replyData;
+            state.replyMap[replyId] = replyData;
+            //state.replyMap.set(replyId, replyData);
         }
 
     },
