@@ -152,7 +152,8 @@ public class UserController {
     @GetMapping()
     @Operation(summary = "获取资料")
     public Result getProfile(@RequestParam Long userId) {
-        return Result.success(userService.getProfile(userId));
+        Long id = Long.parseLong(BaseContext.getCurrentUser().get(JwtClaimsConstant.USER_ID).toString());
+        return Result.success(userService.getProfile(userId, id));
     }
 
     @PostMapping("/requestUploadAvatar")

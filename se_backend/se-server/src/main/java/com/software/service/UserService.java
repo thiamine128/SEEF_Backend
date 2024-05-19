@@ -41,5 +41,5 @@ public interface UserService {
 
     List<TClass> getClasses(List<Long> classIds);
 
-    UserProfileVO getProfile(Long id);
+    UserProfileVO getProfile(Long userId, Long id);
 }

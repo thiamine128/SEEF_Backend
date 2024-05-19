@@ -187,11 +187,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserProfileVO getProfile(Long id) {
-        User user = userMapper.getByID(id);
+    public UserProfileVO getProfile(Long userId, Long id) {
+        User user = userMapper.getByID(userId);
         if (user == null) throw new InvalidUserException(MessageConstant.INVALID_USER);
 
-        return UserProfileVO.fromUser(user, subscribeService.isSubscribed(id, user.getId()));
+        return UserProfileVO.fromUser(user, subscribeService.isSubscribed(user.getId(), id));
     }
 
 
