@@ -1,5 +1,9 @@
 <template>
-    <div class="bg-container"/>
+    <div class="bg-container">
+
+        <img  class="rotating-image" alt="404" src="@/assets/blog/software_circle.png">
+
+    </div>
 
     <div :class="{floatSet: floatComment, floatSetNone: !floatComment}" >
 
@@ -154,6 +158,23 @@ export default {
     z-index: -1;
     top: 0;
     left: 0;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.rotating-image {
+    position: absolute;
+    top: 0;
+    left: -20%;
+    height: 100%;
+    animation: rotate 10s infinite linear;
 }
 
 .floatSet{
