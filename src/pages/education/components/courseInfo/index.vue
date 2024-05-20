@@ -23,6 +23,7 @@
 
 <script>
 import introduction from "@/pages/education/components/syllabus/index.vue";
+import syllabus from "@/pages/education/components/syllabus/index.vue";
 export default {
     name: "courseInfo",
     components: {

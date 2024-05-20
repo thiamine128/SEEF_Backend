@@ -8,14 +8,13 @@
 
 <script>
 import navigationBar from "@/pages/education/components/navigationBar/index.vue";
-import todayLesson from "@/pages/education/components/todayLesson/index.vue";
 import course from "@/pages/education/components/course/index.vue";
 import createCourseButton from "@/pages/education/components/createCourseButton/index.vue";
 // import navigationBarTeacher from "@/pages/education/components/navigationBarTeacher/index.vue";
 export default {
     name: "courseSquare",
     components: {
-        todayLesson,navigationBar,course,createCourseButton
+        navigationBar,course,createCourseButton
     },
     data() {
         return {
