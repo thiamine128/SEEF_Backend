@@ -144,7 +144,7 @@ export default {
             if (!this.isCool) {
                 this.isCool = true;
                 this.countdown = 180;
-                this.intervalId = setInterval(this.countdownTimer, 1000)
+                this.intervalId = setInterval(this.countdownTimer, 1000);
             }
         },
         countdownTimer(){

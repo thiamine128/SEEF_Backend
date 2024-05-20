@@ -23,6 +23,7 @@
 
 <script>
 import {getBlogData, getUserData} from "@/pages/blog/api";
+import {ref} from "vue";
 
 export default {
     name: "articleBox",
@@ -39,6 +40,7 @@ export default {
         },
 
         setImage(){
+
             const reg = /\(([^)]+)\)/;
             if (this.imgSource != null){
                 const matchResult = this.imgSource.match(reg);
@@ -51,7 +53,7 @@ export default {
                             console.log(error);
                         }
                     }
-                }
+                }else this.imgShow = false;
             }
 
         }
@@ -60,9 +62,7 @@ export default {
     mounted() {
 
         this.pullPersonalData();
-        setTimeout(()=>{
-            this.setImage();
-        }, 500);
+        this.intervalId = setInterval(this.setImage, 500);
 
         if (this.hrNotShow) this.isHr = false;
 
@@ -72,7 +72,8 @@ export default {
             imgShow: false,
             src_img: require('@/assets/blog/testArticleImg.png'),
             author: '',
-            isHr: true
+            isHr: true,
+            intervalId: ref(null),
         }
     },
     computed:{
