@@ -31,7 +31,8 @@ export default createStore({
         userMap: new Map(),
         blogMap: new Map(),
         commentMap: new Map(),
-        replyMap: new Map()
+        replyMap: new Map(),
+        courseMap: new Map()
 
     },
 
@@ -92,6 +93,14 @@ export default createStore({
 
         getMapReply: (state)=> (replyId)=>{
             return state.replyMap[replyId];
+        },
+
+        getEduIdentity(state) {
+            return state.role;
+        },
+
+        getMapCourse: (state) => (courseId) => {
+            return state.courseMap[courseId];
         }
 
     },
@@ -114,6 +123,7 @@ export default createStore({
             state.profile = data.profile;
             state.role = data.role;
             state.email = data.email;
+            state.eduIdentity = 'teacher';
 
             state.userMap = new Map();
             state.blogMap = new Map();
@@ -165,7 +175,16 @@ export default createStore({
             const replyData = data.replyData;
             state.replyMap[replyId] = replyData;
             //state.replyMap.set(replyId, replyData);
-        }
+        },
+
+        addMapCourse(state, data){
+            const courseId = data.courseId;
+            const courseData = data.courseData;
+            console.log('尝试缓存course:'+courseId);
+            state.courseMap[courseId] = courseData;
+            console.log(state.userMap);
+            //state.courseMap.set(courseId, courseData);
+        },
 
     },
 

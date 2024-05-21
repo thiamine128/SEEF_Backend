@@ -98,7 +98,7 @@ const router = createRouter({
 
         {
             path: '/education/CourseInfo',
-            name: 'courses',
+            name: 'courseInfo',
             component: defineAsyncComponent(() =>
                 import(`@/pages/education/subPages/courseInfo/index.vue`)),
         },
