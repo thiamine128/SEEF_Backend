@@ -1,8 +1,8 @@
 <template>
     <div class="bg-container"/>
     <navigation-bar/>
-    <create-course-button/>
-    <create-class-button/>
+    <create-course-button v-if="showCreateCourseButton"/>
+    <create-class-button v-if="showCreateClassButton"/>
     <find-course-button/>
     <course-list :courses="courses" />
 
@@ -16,6 +16,7 @@ import createClassButton from "@/pages/education/components/createClassButton/in
 import findCourseButton from "@/pages/education/components/findCourseButton/index.vue";
 import courseList from "@/pages/education/components/courseList/index.vue";
 import {reactive} from 'vue';
+import store from "@/store/store";
 
 export default {
     name: "myLesson",
@@ -27,6 +28,15 @@ export default {
         courseList
     },
     methods: {
+
+    },
+    computed: {
+        showCreateCourseButton() {
+            return store.getters.getEduIdentity === 'teacher';
+        },
+        showCreateClassButton() {
+            return store.getters.getEduIdentity === 'teacher';
+        },
 
     },
     data() {
