@@ -20,6 +20,7 @@ import com.software.vo.OSSPostSignatureVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.mahout.cf.taste.common.TasteException;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +59,7 @@ public class BlogController {
     @GetMapping("/detail")
     @Operation(summary = "浏览博客")
     public Result<BlogVO> getBlog(Long blogId) {
+        blogService.increaseReadCnt(blogId);
         return Result.success(BlogVO.fromBlog(blogService.getDetail(blogId),blogService.isLike(blogId),blogService.isFavor(blogId)));
     }
 
@@ -103,6 +105,14 @@ public class BlogController {
         List<Long> ids = blogService.getfavorBlogIds(id);
         PageResult pageResult = blogService.listFavor(ids,page,pageSize, previewLength);
         return Result.success(pageResult);
+    }
+    @GetMapping("/recommend")
+    @Operation(summary = "推荐")
+    public Result recommend(@RequestParam int previewLength) throws TasteException {
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        Long id = Long.parseLong(currentUser.get(JwtClaimsConstant.USER_ID).toString());
+        List<Long> recommendIds =blogService.recommend(Math.toIntExact(id),previewLength);
+        return Result.success();
     }
 
 }

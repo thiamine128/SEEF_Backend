@@ -4,7 +4,10 @@ import com.software.dto.BlogCreateDTO;
 import com.software.dto.BlogPreviewPageQueryDTO;
 import com.software.dto.CommentPageQueryDto;
 import com.software.entity.Blog;
+import com.software.entity.UserBlogOperation;
 import com.software.result.PageResult;
+import org.apache.mahout.cf.taste.common.TasteException;
+import org.apache.mahout.cf.taste.model.DataModel;
 
 import java.util.List;
 
@@ -27,4 +30,7 @@ public interface BlogService {
     PageResult getBlogs(BlogPreviewPageQueryDTO blogPageQueryDto);
 
     PageResult listFavor(List<Long> ids,int page,int pageSize,int previewLength);
+    void increaseReadCnt(Long blogId);
+    public List<Long> recommend( Integer userId,int previewLength) throws TasteException;
+    public DataModel createDataModel(List<UserBlogOperation> userArticleOperations) ;
 }

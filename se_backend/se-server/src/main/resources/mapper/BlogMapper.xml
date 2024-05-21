@@ -30,4 +30,27 @@
             </if>
         </where>
     </select>
+
+    <select id="getAllUserPreference" resultType="com.software.entity.UserBlogOperation">
+        SELECT
+            user_id,
+            article_id,
+            SUM(
+                    CASE operation_type
+                        WHEN 0 THEN 2
+                        WHEN 1 THEN 3
+                        WHEN 2 THEN 5
+                        else 0 END
+            ) AS "value"
+        FROM
+            user_article_operation
+        GROUP BY user_id,article_id
+    </select>
+    <select id="recommend" resultType="com.software.entity.Blog">
+        select * from blogs where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
+
 </mapper>

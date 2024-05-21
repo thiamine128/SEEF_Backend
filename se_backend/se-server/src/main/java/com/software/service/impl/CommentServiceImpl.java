@@ -1,11 +1,13 @@
 package com.software.service.impl;
 
 import com.software.constant.JwtClaimsConstant;
+import com.software.constant.OperationTypeConstant;
 import com.software.dto.CommentCreateDto;
 import com.software.entity.Blog;
 import com.software.entity.Comment;
 import com.software.entity.Event;
 import com.software.mapper.CommentMapper;
+import com.software.mapper.OperationMapper;
 import com.software.service.BlogService;
 import com.software.service.CommentService;
 import com.software.service.EventService;
@@ -22,6 +24,8 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private CommentMapper commentMapper;
     @Autowired
+    private OperationMapper operationMapper;
+    @Autowired
     private EventService eventService;
     @Autowired
     private BlogService blogService;
@@ -30,6 +34,7 @@ public class CommentServiceImpl implements CommentService {
     public void makeComment(CommentCreateDto commentCreateDto) {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         Long id = (long) currentUser.get(JwtClaimsConstant.USER_ID);
+        operationMapper.insertOperation(id,commentCreateDto.getBlogId(), OperationTypeConstant.Comment);
         Comment comment = new Comment();
         comment.setBlogId(commentCreateDto.getBlogId());
         comment.setContent(commentCreateDto.getContent());

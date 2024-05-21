@@ -3,6 +3,7 @@ package com.software.mapper;
 import com.github.pagehelper.Page;
 import com.software.dto.BlogPreviewPageQueryDTO;
 import com.software.entity.Blog;
+import com.software.entity.UserBlogOperation;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -43,4 +44,10 @@ public interface BlogMapper {
     List<Long> getFavorBlogIds(Long id);
 
     Page<Blog> favorPageQuery(List<Long> ids, int pages, int pageSize);
+    @Update("update blogs set read_cnt = read_cnt + 1 where id = #{blogId}")
+    void increaseReadCnt(Long blogId);
+
+    List<UserBlogOperation> getAllUserPreference();
+
+    List<Blog> recommend(List<Long> ids);
 }
