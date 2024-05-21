@@ -96,6 +96,13 @@ const router = createRouter({
                 import(`@/pages/education/subPages/courses/index.vue`)),
         },
 
+        {
+            path: '/education/CourseInfo',
+            name: 'courses',
+            component: defineAsyncComponent(() =>
+                import(`@/pages/education/subPages/courseInfo/index.vue`)),
+        },
+
         //博客界面路由
         {
             path: '/blog',
