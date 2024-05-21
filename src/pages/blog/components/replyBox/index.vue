@@ -1,16 +1,28 @@
 <template>
     <div class="replySet">
-        <div class="nameFont"> <strong> {{name}}：</strong> {{content}} </div>
+        <div class="nameFont"> <strong> {{name}}：</strong> {{content}}
+            <strong v-if="userId === nowLogin && !dShow" style="margin-left: 5px; color: #ffb1b1;
+            cursor: pointer" @click.stop="deleteReply">删除</strong>
+        </div>
     </div>
 </template>
 
 <script>
-import {getUserData} from "@/pages/blog/api";
+import {deleteComment, deleteReply, getUserData} from "@/pages/blog/api";
+import store from "@/store/store";
 
 export default {
     name: "replyBox",
-    props: ['content', 'userId', 'toId'],
+    props: ['content', 'userId', 'toId', 'replyId', 'dShow'],
     methods:{
+
+        async deleteReply(){
+            await deleteReply(this.replyId);
+            setTimeout(()=>{
+                location.reload();
+            }, 1000);
+        },
+
         async pullPersonalData(){
             const personal_data = await getUserData(this.userId);
             this.name = personal_data.name;
@@ -22,10 +34,13 @@ export default {
     },
     data(){
         return{
-            name: ''
+            name: '',
+            nowLogin: -1
         }
     },
     mounted() {
+
+        this.nowLogin = store.getters.getData.id;
 
         this.pullPersonalData();
     }

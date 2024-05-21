@@ -13,10 +13,10 @@
                 :title="item.name" :abstract="item.introduction"
                 :topic-id="item.id" :editor-set="editorSet" @modifyClick="selectSection(item.id, item.name)"/>
 
-                <article-box v-if="select == 'article'" v-for="item in listSet"
-                :abstract="item.preview.slice(0, 180)" :title="item.title" :likes="item.favourNum"
+                <article-box v-for="item in listSet" v-if="select == 'article'"
+                :abstract="item.preview.slice(0, 180).replaceAll('#', '')" :title="item.title" :likes="item.favourNum"
                 :post-time="dateF(item.createTime)" :article-id="item.id" :img-source="item.preview"
-                :author-id="item.userId"/>
+                :author-id="item.userId" :tags="item.tags" :is-deleted="item.deleted"/>
 
             </div>
             <el-pagination class="pagination-style"
