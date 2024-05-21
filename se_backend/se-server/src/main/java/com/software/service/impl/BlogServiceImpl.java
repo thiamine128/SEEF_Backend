@@ -5,19 +5,14 @@ import com.github.pagehelper.PageHelper;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.OperationTypeConstant;
-import com.software.dto.BlogCreateDTO;
-import com.software.dto.BlogPreviewPageQueryDTO;
-import com.software.dto.CommentPageQueryDto;
+import com.software.dto.*;
 import com.software.entity.Blog;
 import com.software.entity.Comment;
 import com.software.entity.Event;
 import com.software.entity.UserBlogOperation;
 import com.software.exception.EmptyTagException;
 import com.software.exception.InvalidCharacterException;
-import com.software.mapper.BlogMapper;
-import com.software.mapper.CommentMapper;
-import com.software.mapper.OperationMapper;
-import com.software.mapper.ReplyMapper;
+import com.software.mapper.*;
 import com.software.result.PageResult;
 import com.software.service.BlogService;
 import com.software.service.EventService;
@@ -62,6 +57,8 @@ public class BlogServiceImpl implements BlogService {
     private ReplyMapper replyMapper;
     @Autowired
     private EventService eventService;
+    @Autowired
+    private SpaceMapper spaceMapper;
 
     @Override
     public void create(BlogCreateDTO blogCreateDTO) {
@@ -76,7 +73,28 @@ public class BlogServiceImpl implements BlogService {
             }
         });
         String tags = ";" + blogCreateDTO.getTags().stream().map(str -> str + ";").collect(Collectors.joining());
-        blogMapper.createBlog(blogCreateDTO.getTitle(), blogCreateDTO.getContext(), id, blogCreateDTO.getTopicId(), tags);
+        blogMapper.createBlog(blogCreateDTO.getTitle(), blogCreateDTO.getContext(), id, blogCreateDTO.getTopicId(), tags,blogCreateDTO.getCategory_id());
+    }
+    @Override
+    public void update(BlogUpdateDTO blogCreateDTO) {
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
+        blogCreateDTO.getTags().forEach(str -> {
+            if (str.contains(";")) {
+                throw new InvalidCharacterException(";", str);
+            }
+            if (str.isEmpty()) {
+                throw new EmptyTagException(MessageConstant.EMPTY_TAG);
+            }
+        });
+        String tags = ";" + blogCreateDTO.getTags().stream().map(str -> str + ";").collect(Collectors.joining());
+        blogMapper.updateBlog(blogCreateDTO.getTitle(), blogCreateDTO.getContext(), id, blogCreateDTO.getTopicId(), tags,blogCreateDTO.getCategory_id(),blogCreateDTO.getBlogId());
+    }
+
+    @Override
+    public List<Category> getCategoryList(Long userId) {
+        List <Category> categories = spaceMapper.getCategoryList(userId);
+        return categories;
     }
 
     @Override
@@ -215,6 +233,8 @@ public class BlogServiceImpl implements BlogService {
         return new GenericDataModel(fastByIdMap);
 
     }
+
+
 
     @Override
     public PageResult getBlogs(BlogPreviewPageQueryDTO blogPageQueryDto) {

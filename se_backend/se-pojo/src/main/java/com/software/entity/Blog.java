@@ -21,4 +21,5 @@ public class Blog {
     private Date updateTIme;
     private boolean isDeleted;
     private Long topicId;
+    private Long categoryId;
 }

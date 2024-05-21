@@ -5,6 +5,7 @@ import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
 import com.software.dto.*;
+import com.software.entity.Course;
 import com.software.exception.InvalidUserException;
 import com.software.exception.PermissionDeniedException;
 import com.software.result.PageResult;
@@ -40,8 +41,7 @@ public class CourseController {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
         if (!role.equals(RoleConstant.TEACHER)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
-        courseService.createCourse(courseCreateDto);
-        return Result.success();
+        return Result.success(courseService.createCourse(courseCreateDto));
     }
 
     @PostMapping("/addClass")
@@ -62,11 +62,18 @@ public class CourseController {
     }
 
     @GetMapping("/list")
-    @Operation(summary = "查询课程")
+    @Operation(summary = "根据名字查询课程")
     public Result pagedList(@ParameterObject CoursePageQueryDto coursePageQueryDto) {
         PageResult pageResult = courseService.pageQuery(coursePageQueryDto);//后绪步骤定义
         return Result.success(pageResult);
     }
+    @GetMapping("/getCourseById")
+    @Operation(summary = "根据名字查询课程")
+    public Result<Course> getCourseById(@RequestParam Long id) {
+        Course course = courseService.getCourseById(id);
+        return Result.success(course);
+    }
+
 
     @GetMapping("/teachers")
     @Operation(summary = "查询课程组")

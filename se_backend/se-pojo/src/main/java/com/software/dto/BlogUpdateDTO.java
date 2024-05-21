@@ -3,12 +3,17 @@ package com.software.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.Date;
 import java.util.List;
 
+/**
+ * @author
+ * @Description：
+ * @date
+ */
 @Data
 @AllArgsConstructor
-public class BlogCreateDTO {
+public class BlogUpdateDTO {
+    private Long blogId;
     private String title;
     private String context;
     private Long topicId;

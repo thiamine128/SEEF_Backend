@@ -1,5 +1,6 @@
 package com.software.mapper;
 
+import com.software.entity.Course;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -24,4 +25,6 @@ public interface ClassMapper {
 
     @Select("select teacher_id from teacher_class where class_id=#{classId}")
     List<Long> getTeachers(Long classId);
+    @Select("select * from courses where id=#{id}")
+    Course getCourseById(Long id);
 }

@@ -7,6 +7,7 @@ import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
 import com.software.dto.BlogCreateDTO;
 import com.software.dto.BlogPreviewPageQueryDTO;
+import com.software.dto.BlogUpdateDTO;
 import com.software.dto.CommentPageQueryDto;
 import com.software.exception.NoSuchTopicException;
 import com.software.exception.PermissionDeniedException;
@@ -45,6 +46,12 @@ public class BlogController {
     @Operation(summary = "创建博客")
     public Result createBlog(@RequestBody BlogCreateDTO blogCreateDTO) {
         blogService.create(blogCreateDTO);
+        return Result.success();
+    }
+    @PostMapping("/updateBlog")
+    @Operation(summary = "修改博客")
+    public Result updateBlog(@RequestBody BlogUpdateDTO blogUpdateDTO){
+        blogService.update(blogUpdateDTO);
         return Result.success();
     }
 

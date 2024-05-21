@@ -1,8 +1,6 @@
 package com.software.service;
 
-import com.software.dto.BlogCreateDTO;
-import com.software.dto.BlogPreviewPageQueryDTO;
-import com.software.dto.CommentPageQueryDto;
+import com.software.dto.*;
 import com.software.entity.Blog;
 import com.software.entity.UserBlogOperation;
 import com.software.result.PageResult;
@@ -33,4 +31,8 @@ public interface BlogService {
     void increaseReadCnt(Long blogId);
     public List<Long> recommend( Integer userId,int previewLength) throws TasteException;
     public DataModel createDataModel(List<UserBlogOperation> userArticleOperations) ;
+
+    void update(BlogUpdateDTO blogCreateDTO);
+
+    List<Category> getCategoryList(Long userId);
 }

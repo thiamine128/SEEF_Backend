@@ -3,11 +3,9 @@ package com.software.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.software.constant.JwtClaimsConstant;
-import com.software.constant.MessageConstant;
 import com.software.dto.*;
 import com.software.entity.Course;
 import com.software.entity.CourseClass;
-import com.software.exception.PermissionDeniedException;
 import com.software.mapper.ClassMapper;
 import com.software.mapper.CourseMapper;
 import com.software.result.PageResult;
@@ -26,7 +24,7 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private ClassMapper classMapper;
     @Override
-    public void createCourse(CourseCreateDto courseCreateDto) {
+    public Course createCourse(CourseCreateDto courseCreateDto) {
         Course course = new Course();
         course.setName(courseCreateDto.getName());
         course.setCredit(courseCreateDto.getCredit());
@@ -35,6 +33,7 @@ public class CourseServiceImpl implements CourseService {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
         courseMapper.addTeacher(course.getId(), id);
+        return course;
     }
 
     @Override
@@ -97,5 +96,10 @@ public class CourseServiceImpl implements CourseService {
         PageHelper.startPage(userClassesPageQueryDto.getPage(), userClassesPageQueryDto.getPageSize());
         Page page = (Page) classMapper.getUserCourses(userId);//后绪步骤实现
         return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    @Override
+    public Course getCourseById(Long id) {
+        return classMapper.getCourseById(id);
     }
 }
