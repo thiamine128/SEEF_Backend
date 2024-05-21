@@ -1,5 +1,5 @@
 <template>
-    <div class="frameSet">
+    <div class="frameSet" v-if="spaceShow">
         <div class="personContainer">
             <div class="personInfo">
                 <img class="portraitSet" :src="avatar_set" @error="altImg">
@@ -12,9 +12,10 @@
                     <div v-if="articleFrontTextShow" :class="{ contentFont: true }"> 原文章内容： </div>
 
                     <article-box v-if="articleShow" :title="articleData.title"
-                    :author-id="articleData.authorId" :abstract="articleData.abstract"
+                    :author-id="articleData.authorId" :abstract="articleData.abstract.replaceAll('#', '')"
                     :img-source="articleData.imgSource" :post-time="articleData.postTime"
-                    :article-id="articleData.authorId" :likes="articleData.likes" :hr-not-show="true"/>
+                    :article-id="articleData.authorId" :likes="articleData.likes" :hr-not-show="true"
+                    :d-show="1"/>
 
                     <div v-if="replyToShow || replyToCommentShow"
                          :class="{ contentFont: true }"> 原评论内容： </div>
@@ -22,7 +23,7 @@
                     <div v-if="replyToCommentShow" :class="{ replyFont: true }"> {{commentContent}}  </div>
 
                     <reply-box v-if="replyToShow" :user-id="replyData.userId" :to-id="replyData.toId"
-                    :content="replyData.content" style="margin-left: 0" />
+                    :content="replyData.content" style="margin-left: 0" :d-show="1"/>
 
                 </div>
             </div>
@@ -41,6 +42,7 @@ export default {
     props: ['eventBlock'],
     data(){
         return{
+            spaceShow: true,
             name: '',
             description: '',
             avatar_set: require('@/assets/blog/user.png'),
@@ -74,12 +76,16 @@ export default {
         }catch (e){}
         this.name = fromUserData.name;
 
-        if (this.eventBlock.type === 'subscribe') await this.makeSubscribe();
-        if (this.eventBlock.type === 'thumb') await this.makeThumb();
-        if (this.eventBlock.type === 'favour') await this.makeFavour();
-        if (this.eventBlock.type === 'comment') await this.makeComment();
-        if (this.eventBlock.type === 'replyComment') await this.makeReplyComment();
-        if (this.eventBlock.type === 'reply') await this.makeReply();
+        try{
+            if (this.eventBlock.type === 'subscribe') await this.makeSubscribe();
+            if (this.eventBlock.type === 'thumb') await this.makeThumb();
+            if (this.eventBlock.type === 'favour') await this.makeFavour();
+            if (this.eventBlock.type === 'comment') await this.makeComment();
+            if (this.eventBlock.type === 'replyComment') await this.makeReplyComment();
+            if (this.eventBlock.type === 'reply') await this.makeReply();
+        }catch (e){
+            this.spaceShow = false;
+        }
 
     },
     methods:{
@@ -202,6 +208,7 @@ export default {
     margin-left: 8px;
     width: 85%;
     min-height: 0;
+    margin-bottom: 5px;
 }
 .contentFont{
     font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;

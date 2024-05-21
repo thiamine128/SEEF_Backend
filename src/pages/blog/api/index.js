@@ -7,9 +7,8 @@ export async function subscribe_func(userId){
     try{
         const response = await axios.post(`event/subscribe?user=${userId}`);
         if (response.status === 200) callSuccess('关注成功');
-        else callError('网络错误');
     }catch (error){
-        callError(error);
+        //callError(error);
     }
 }
 
@@ -17,9 +16,8 @@ export async function unSubscribe_func(userId){
     try{
         const response = await axios.post(`event/unsubscribe?user=${userId}`);
         if (response.status === 200) callSuccess('取消关注成功');
-        else callError('网络错误');
     }catch (error){
-        callError(error);
+        //callError(error);
     }
 }
 
@@ -30,9 +28,8 @@ export async function like_func(blogId, result){
             if (result) callSuccess('点赞成功');
             else callSuccess('已取消点赞')
         }
-        else callError('网络错误');
     }catch (error){
-        callError(error);
+        //callError(error);
     }
 }
 
@@ -43,9 +40,8 @@ export async function favor_func(blogId, result){
             if (result) callSuccess('收藏成功');
             else callSuccess('已取消收藏')
         }
-        else callError('网络错误');
     }catch (error){
-        callError(error);
+        //callError(error);
     }
 }
 
@@ -63,9 +59,8 @@ export async function getUserData(userId, useCache = true){
             result = response.data.data;
             store.commit('addMapUser', {'userId': userId, 'userData': result});
         }
-        else callError('网络错误');
     }catch (error){
-        callError(error);
+        //callError(error);
     }
     return result;
 }
@@ -83,9 +78,8 @@ export async function getBlogData(blogId){
             result = response.data.data;
             store.commit('addMapBlog', {'blogId': blogId, 'blogData': result});
         }
-        else callError('网络错误');
     }catch (error){
-        callError(error);
+        //callError(error);
     }
     return result;
 }
@@ -103,9 +97,8 @@ export async function getCommentData(commentId){
             result = response.data.data;
             store.commit('addMapComment', {'commentId': commentId, 'commentData': result});
         }
-        else callError('网络错误');
     }catch (error){
-        callError(error);
+        //callError(error);
     }
     return result;
 }
@@ -123,13 +116,58 @@ export async function getReplyData(replyId){
             result = response.data.data;
             store.commit('addMapReply', {'replyId': replyId,'replyData': result});
         }
-        else callError('网络错误');
     }catch (error){
-        callError(error);
+        //callError(error);
     }
     return result;
 }
 
 export function dateF(num) {
     return dayjs(num).format('YYYY-MM-DD');
+}
+
+export async function deleteBlog(blogId){
+    try{
+        const response = await axios.delete(`blog/deleteBlog?blogId=${blogId}`);
+        if (response.status === 200){
+            callSuccess('删除帖子成功');
+        }
+    }catch(error){
+        //callError(error);
+    }
+}
+
+export async function deleteComment(commentId){
+    try{
+        const response = await axios.delete(`comment/deleteComment?commentId=${commentId}`);
+        if (response.status === 200){
+            callSuccess('删除评论成功');
+        }
+    }catch (error){
+        //callError(error);
+    }
+}
+
+export async function deleteReply(replyId){
+    try{
+        const response = await axios.delete(`reply/deleteReply?replyId=${replyId}`);
+        if (response.status === 200){
+            callSuccess('删除回复成功');
+        }
+    }catch (error){
+        // callError(error);
+    }
+}
+
+export async function getSubscribed(){
+    let result = null;
+    try{
+        const response = await axios.get('event/subscribed');
+        if (response.status === 200){
+            result = response.data.data;
+        }
+    }catch (error){
+        // callError(error);
+    }
+    return result;
 }

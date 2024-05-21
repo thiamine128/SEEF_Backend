@@ -39,7 +39,7 @@
             :user-id="authorId" :thumb-num="thumbNum" :is-favor="isFavor" :is-like="isLike"
             @callLike="callChangeLike" @callFavor="callChangeFavor"/>
             <recommend height-set="300px" r-title="今日推荐"/>
-            <recommend height-set="400px" r-title="关注列表"/>
+            <recommend height-set="400px" r-title="相关博客"/>
             <right-pin v-if="catalogShow" r-title="null" container="#md-hook" content-name="catalog"></right-pin>
 
         </div>

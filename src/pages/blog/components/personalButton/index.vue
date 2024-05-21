@@ -24,7 +24,7 @@ export default {
 .container{
     display: flex;
     flex-direction: row;
-    width: 50px;
+    min-width: 50px;
     height: 30px;
     background-color: rgba(22, 22, 22, 0.08);
     transition: background-color 0.5s;

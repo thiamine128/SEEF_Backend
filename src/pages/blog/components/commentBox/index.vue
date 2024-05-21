@@ -10,14 +10,20 @@
 
                 <div class="textSet">
                     <div :class="{ contentFont: true }" @click="addReply()"> {{content}} </div>
-                    <div :class="{ dateFont: true }"> 发布于{{postTime}} </div>
+                    <div :class="{ dateFont: true }"> 发布于{{postTime}}
+
+                        <img alt="404" src="@/assets/blog/cancel.png" v-if="nowLogin === userId"
+                             style="width: 15px; margin-left: 5px; cursor: pointer" @click="deleteComment">
+
+                    </div>
+
                 </div>
             </div>
 
             <div class="bottom-style">
 
                 <reply-box v-for="item in replyList" :user-id="item.userId" :to-id="item.toId"
-                :content="item.content"
+                :content="item.content" :reply-id="item.id"
                 @click="addReply(item.userId)"/>
 
             </div>
@@ -28,28 +34,40 @@
 
 <script>
 import ReplyBox from "@/pages/blog/components/replyBox/index.vue";
-import {getUserData} from "@/pages/blog/api";
+import {deleteBlog, deleteComment, getUserData} from "@/pages/blog/api";
+import store from "@/store/store";
 
 export default {
     name: "commentBox",
     components: {ReplyBox},
     props: ['userId', 'commentId', 'content', 'postTime', 'replyList'],
     methods:{
+
         addReply(to = -1){
             this.$emit('callReply', to, this.commentId);
         },
+
         async pullPersonalData(id){
             const personal_data = await getUserData(id);
             this.author = personal_data.name;
         },
 
+        async deleteComment(){
+            await deleteComment(this.commentId);
+            setTimeout(()=>{
+                location.reload();
+            }, 1000);
+        },
+
     },
     mounted() {
         this.pullPersonalData(this.userId);
+        this.nowLogin = store.getters.getData.id;
     },
     data(){
         return{
-            author: ''
+            author: '',
+            nowLogin: -1
         }
     }
 }
@@ -122,6 +140,10 @@ export default {
     color: gray;
     width: 700px;
     height: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: right;
 }
 .nameFont{
     font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
