@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.software.mapper.UserMapper">
+    <update id="update" parameterType="com.software.dto.UserUpdateDTO">
+        update users
+        <set>
+            <if test="nickname!=null">
+             nickname=#{nickname}
+         </if>
+            <if test="profile!=null">
+             ,profile=#{profile}
+         </if>
+            <if test="realName!=null">
+            ,real_name=#{realName}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+    <select id="getCourses" resultType="com.software.entity.Course">
+        select * from courses where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="getClasses" resultType="com.software.entity.TClass">
+        select * from classes where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+        #{id}
+        </foreach>
+    </select>
+
+    <insert id="addButchUser" >
+        insert into users (name, email, role, password) Values
+        <foreach collection="users" item="u" separator=",">
+            (#{u.name}, #{u.email}, #{u.role}, #{u.password})
+        </foreach>
+    </insert>
+
+</mapper>

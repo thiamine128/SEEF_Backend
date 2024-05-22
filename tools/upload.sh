@@ -1,0 +1,1 @@
+scp -v ../se_backend/se-server/target/se-server-1.0-SNAPSHOT.jar seproj@123.249.103.199:~/server.jar
