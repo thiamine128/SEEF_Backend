@@ -13,6 +13,7 @@ public class BlogPreviewPageQueryDTO implements Serializable {
     private int page;
     private int pageSize;
     private String keyword;
+    private Long userId;
     private List<Long> topicIds;
     private List<String> tags;
     private int previewLength;
