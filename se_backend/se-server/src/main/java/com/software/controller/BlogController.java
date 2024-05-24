@@ -12,6 +12,7 @@ import com.software.result.Result;
 import com.software.service.BlogService;
 import com.software.utils.AliOssUtil;
 import com.software.utils.BaseContext;
+import com.software.vo.BlogPreviewVO;
 import com.software.vo.BlogVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -146,8 +147,10 @@ public class BlogController {
     public Result recommend(@RequestParam int previewLength) throws TasteException {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         Long id = Long.parseLong(currentUser.get(JwtClaimsConstant.USER_ID).toString());
-        List<Long> recommendIds =blogService.recommend(Math.toIntExact(id),previewLength);
-        return Result.success(recommendIds);
+        List<BlogPreviewVO> recommends =blogService.recommend(Math.toIntExact(id),previewLength);
+        return Result.success(recommends);
     }
+
+
 
 }

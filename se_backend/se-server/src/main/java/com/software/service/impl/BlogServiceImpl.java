@@ -28,21 +28,20 @@ import org.apache.mahout.cf.taste.impl.model.GenericPreference;
 import org.apache.mahout.cf.taste.impl.model.GenericUserPreferenceArray;
 import org.apache.mahout.cf.taste.impl.neighborhood.NearestNUserNeighborhood;
 import org.apache.mahout.cf.taste.impl.recommender.GenericUserBasedRecommender;
+import org.apache.mahout.cf.taste.impl.similarity.TanimotoCoefficientSimilarity;
 import org.apache.mahout.cf.taste.impl.similarity.UncenteredCosineSimilarity;
 import org.apache.mahout.cf.taste.model.DataModel;
 import org.apache.mahout.cf.taste.model.PreferenceArray;
 import org.apache.mahout.cf.taste.neighborhood.UserNeighborhood;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.apache.mahout.cf.taste.recommender.Recommender;
+import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -131,6 +130,8 @@ public class BlogServiceImpl implements BlogService {
         Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
         return blogMapper.getFavourCategoryById(id,blogId);
     }
+
+
 
     @Override
     public Blog getDetail(Long blogId) {
@@ -242,7 +243,7 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public List<Long> recommend(Integer userId, int previewLength) throws TasteException {
+    public List<BlogPreviewVO> recommend(Integer userId, int previewLength) throws TasteException {
 
         Long id = Long.valueOf(userId);
         List<UserBlogOperation> userList = blogMapper.getAllUserPreference();
@@ -259,7 +260,7 @@ public class BlogServiceImpl implements BlogService {
         List<Long> itemIds = recommendedItems.stream().map(RecommendedItem::getItemID).collect(Collectors.toList());
         List<Blog> blogs=blogMapper.recommend(itemIds);
         List<BlogPreviewVO> results = blogs.stream().map(blog -> { return BlogPreviewVO.fromBlog((Blog) blog, previewLength, blogMapper.isLiked(((Blog) blog).getId(),id),blogMapper.isFavor(((Blog) blog).getId(),id),blogMapper.getFavourCategoryById(id,((Blog)blog).getId()));}).toList();
-        return itemIds;
+        return results;
 
     }
 
@@ -280,7 +281,6 @@ public class BlogServiceImpl implements BlogService {
         return new GenericDataModel(fastByIdMap);
 
     }
-
 
 
     @Override

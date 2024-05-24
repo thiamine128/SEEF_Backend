@@ -11,6 +11,8 @@ import java.util.List;
 
 @Mapper
 public interface BlogMapper {
+    @Select("select * from blogs")
+    List<Blog> getAllBlog();
     @Insert("insert into blogs (title, content, user_id, topic_id, tags, category_id) values (#{title}, #{content}, #{userId}, #{topicId}, #{tags}, #{categoryId})")
     void createBlog(String title, String content, Long userId, Long topicId, String tags, Long categoryId);
 
