@@ -3,19 +3,26 @@ package com.software.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.software.constant.JwtClaimsConstant;
+import com.software.constant.MessageConstant;
 import com.software.dto.*;
 import com.software.entity.Course;
 import com.software.entity.CourseClass;
+import com.software.entity.JoinClassRequest;
+import com.software.exception.InvalidRequestException;
+import com.software.exception.RequestSentException;
 import com.software.mapper.ClassMapper;
 import com.software.mapper.CourseMapper;
+import com.software.mapper.JoinClassRequestMapper;
 import com.software.result.PageResult;
 import com.software.service.CourseService;
 import com.software.utils.BaseContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -23,6 +30,8 @@ public class CourseServiceImpl implements CourseService {
     private CourseMapper courseMapper;
     @Autowired
     private ClassMapper classMapper;
+    @Autowired
+    private JoinClassRequestMapper joinClassRequestMapper;
     @Override
     public Course createCourse(CourseCreateDto courseCreateDto) {
         Course course = new Course();
@@ -119,5 +128,34 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Course getCourseById(Long id) {
         return classMapper.getCourseById(id);
+    }
+
+    @Override
+    public void requestJoinClass(Long studentId, Long classId) {
+        if (joinClassRequestMapper.canRequest(studentId, classId) == null) {
+            joinClassRequestMapper.newRequest(UUID.randomUUID().toString(), studentId, classId);
+        } else {
+            throw new RequestSentException(MessageConstant.REQUEST_SENT);
+        }
+    }
+
+    @Transactional
+    @Override
+    public void pendJoinClassRequest(String id, Integer state) {
+        if (state == null || !(state.equals(1) || state.equals(2)) || joinClassRequestMapper.updateState(id, state) == 0) {
+            throw new InvalidRequestException(MessageConstant.INVALID_REQUEST);
+        } else if (state.equals(1)) {
+            JoinClassRequest joinClassRequest = joinClassRequestMapper.getRequest(id);
+            Long courseId = classMapper.getCourse(joinClassRequest.getClassId());
+            classMapper.addStudent(joinClassRequest.getStudentId(), joinClassRequest.getClassId(), courseId);
+        }
+    }
+
+
+    @Override
+    public PageResult listJoinClassRequest(JoinClassRequestPageQueryDto joinClassRequestPageQueryDto) {
+        PageHelper.startPage(joinClassRequestPageQueryDto.getPage(), joinClassRequestPageQueryDto.getPageSize());
+        Page page = (Page) joinClassRequestMapper.pageQuery(joinClassRequestPageQueryDto.getCourseId());
+        return new PageResult(page.getTotal(), page.getResult());
     }
 }

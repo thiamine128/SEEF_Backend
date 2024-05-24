@@ -53,8 +53,8 @@ public interface BlogMapper {
     List<UserBlogOperation> getAllUserPreference();
 
     List<Blog> recommend(List<Long> ids);
-    @Update("update blogs set title =#{title}, context= #{context}, tags=#{tags}, category_id=#{categoryId}, topic_id=#{topicId} where id = #{blogId} and user_id=#{id}")
-    void updateBlog(String title, String context, Long id, Long topicId, String tags, Long categoryId, Long blogId);
+    @Update("update blogs set title =#{title}, content= #{content}, tags=#{tags}, category_id=#{categoryId}, topic_id=#{topicId} where id = #{blogId} and user_id=#{id}")
+    void updateBlog(String title, String content, Long id, Long topicId, String tags, Long categoryId, Long blogId);
     @Update("update blogs set read_users = read_users + 1 where id = #{blogId}")
     void increaseReadUsers(Long blogId);
 

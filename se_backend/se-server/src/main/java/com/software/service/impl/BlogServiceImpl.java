@@ -89,7 +89,7 @@ public class BlogServiceImpl implements BlogService {
             }
         });
         String tags = ";" + blogCreateDTO.getTags().stream().map(str -> str + ";").collect(Collectors.joining());
-        blogMapper.updateBlog(blogCreateDTO.getTitle(), blogCreateDTO.getContext(), id, blogCreateDTO.getTopicId(), tags,blogCreateDTO.getCategory_id(),blogCreateDTO.getBlogId());
+        blogMapper.updateBlog(blogCreateDTO.getTitle(), blogCreateDTO.getContent(), id, blogCreateDTO.getTopicId(), tags,blogCreateDTO.getCategory_id(),blogCreateDTO.getBlogId());
     }
 
     @Override

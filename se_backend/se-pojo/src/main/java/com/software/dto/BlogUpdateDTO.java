@@ -15,7 +15,7 @@ import java.util.List;
 public class BlogUpdateDTO {
     private Long blogId;
     private String title;
-    private String context;
+    private String content;
     private Long topicId;
     private Long category_id;
     private List<String> tags;
