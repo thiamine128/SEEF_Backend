@@ -147,7 +147,7 @@ public class BlogController {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         Long id = Long.parseLong(currentUser.get(JwtClaimsConstant.USER_ID).toString());
         List<Long> recommendIds =blogService.recommend(Math.toIntExact(id),previewLength);
-        return Result.success();
+        return Result.success(recommendIds);
     }
 
 }

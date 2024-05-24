@@ -3,7 +3,6 @@ package com.software.mapper;
 import com.github.pagehelper.Page;
 import com.software.dto.CoursePageQueryDto;
 import com.software.dto.CourseUpdateDto;
-import com.software.dto.TopicPageQueryDTO;
 import com.software.entity.Course;
 import com.software.entity.CourseClass;
 import org.apache.ibatis.annotations.Insert;
@@ -32,4 +31,6 @@ public interface CourseMapper {
 
     @Update("update courses set name=#{name}, introduction=#{introduction}, credit=#{credit}, summary=#{summary}, evaluation=#{evaluation} where id=#{id}")
     void updateCourse(CourseUpdateDto courseUpdateDto);
+    @Update("update courses set cover=#{s} where id=#{courseId}")
+    void updateCover(String s, Long courseId);
 }

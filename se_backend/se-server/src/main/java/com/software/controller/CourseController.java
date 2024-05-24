@@ -1,6 +1,7 @@
 package com.software.controller;
 
 import com.software.annotation.AuthCheck;
+import com.software.config.OssConfiguration;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
@@ -14,6 +15,7 @@ import com.software.service.CourseService;
 import com.software.service.UserService;
 import com.software.utils.AliOssUtil;
 import com.software.utils.BaseContext;
+import com.software.vo.OSSPostSignatureVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 @Tag(name = "课程接口")
@@ -163,5 +166,21 @@ public class CourseController {
     @AuthCheck(mustRole = {RoleConstant.ADMIN,RoleConstant.TEACHER})
     public Result getJoinClassRequests(@ParameterObject JoinClassRequestPageQueryDto joinClassRequestPageQueryDto) {
         return Result.success(courseService.listJoinClassRequest(joinClassRequestPageQueryDto));
+    }
+
+    @PostMapping("/addCourseCover")
+    @Operation(summary = "添加课程封面")
+    public Result addCourseCover(@RequestParam Long CourseId) throws UnsupportedEncodingException {
+
+        String objectName = "CourseCover/" + CourseId;
+        AliOssUtil.PostSignature postSignature = aliOssUtil.generatePostSignature(objectName, System.currentTimeMillis() + OssConfiguration.EXPIRE_SEC * 1000, 52428800);
+        OSSPostSignatureVO ossPostSignatureVO = OSSPostSignatureVO.builder()
+                .accessKeyId(postSignature.getAccessKeyId())
+                .objectName(postSignature.getObjectName())
+                .encodedPolicy(postSignature.getEncodedPolicy())
+                .postSignature(postSignature.getPostSignature())
+                .host(postSignature.getHost()).build();
+        courseService.updateCover(aliOssUtil.buildPathFromObjectName(objectName),CourseId);
+        return Result.success(ossPostSignatureVO);
     }
 }

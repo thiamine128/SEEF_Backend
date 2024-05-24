@@ -3,7 +3,6 @@ package com.software.service;
 import com.software.dto.*;
 import com.software.entity.Course;
 import com.software.entity.CourseClass;
-import com.software.entity.JoinClassRequest;
 import com.software.result.PageResult;
 
 import java.util.List;
@@ -27,4 +26,6 @@ public interface CourseService {
     void requestJoinClass(Long studentId, Long classId);
     void pendJoinClassRequest(String id, Integer state);
     PageResult listJoinClassRequest(JoinClassRequestPageQueryDto joinClassRequestPageQueryDto);
+
+    void updateCover(String s, Long courseId);
 }

@@ -158,4 +158,9 @@ public class CourseServiceImpl implements CourseService {
         Page page = (Page) joinClassRequestMapper.pageQuery(joinClassRequestPageQueryDto.getCourseId());
         return new PageResult(page.getTotal(), page.getResult());
     }
+
+    @Override
+    public void updateCover(String s, Long courseId) {
+        courseMapper.updateCover(s,courseId);
+    }
 }
