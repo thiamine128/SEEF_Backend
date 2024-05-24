@@ -16,6 +16,7 @@ import com.software.mapper.JoinClassRequestMapper;
 import com.software.result.PageResult;
 import com.software.service.CourseService;
 import com.software.utils.BaseContext;
+import com.software.vo.CourseClassVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,8 +73,10 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CourseClass> getClasses(ClassQueryDto classQueryDto) {
-        return courseMapper.getClasses(classQueryDto.getCourseId());
+    public List<CourseClassVO> getClasses(ClassQueryDto classQueryDto) {
+        return courseMapper.getClasses(classQueryDto.getCourseId()).stream().map(courseClass -> {
+            return CourseClassVO.fromCourseClass(courseClass, classMapper.getTeachers(courseClass.getId()));
+        }).toList();
     }
 
     @Override
@@ -116,8 +119,10 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public PageResult getUserClasses(UserClassesPageQueryDto userClassesPageQueryDto, Long userId) {
         PageHelper.startPage(userClassesPageQueryDto.getPage(), userClassesPageQueryDto.getPageSize());
-        Page page = (Page) classMapper.getUserCourses(userId);//后绪步骤实现
-        return new PageResult(page.getTotal(), page.getResult());
+        Page<Long> page = (Page<Long>) classMapper.getUserCourses(userId);//后绪步骤实现
+        return new PageResult(page.getTotal(), page.getResult().stream().map(courseClassId -> {
+            return CourseClassVO.fromCourseClass(classMapper.getCourseClass(courseClassId), classMapper.getTeachers(courseClassId));
+        }).toList());
     }
 
     @Override

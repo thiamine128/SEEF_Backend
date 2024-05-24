@@ -28,6 +28,9 @@
                     tags like concat('%;', #{tag}, ';%')
                 </foreach>
             </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
         </where>
         <if test="orderBy == 'popularity'">
             order by popularity / EXP(CAST((UNIX_TIMESTAMP() - UNIX_TIMESTAMP(create_time)) / 60 / 60 / 1000 as DOUBLE) / 10000)

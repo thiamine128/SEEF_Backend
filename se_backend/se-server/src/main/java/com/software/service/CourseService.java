@@ -4,6 +4,7 @@ import com.software.dto.*;
 import com.software.entity.Course;
 import com.software.entity.CourseClass;
 import com.software.result.PageResult;
+import com.software.vo.CourseClassVO;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface CourseService {
     void updateCourse(CourseUpdateDto courseUpdateDto);
     CourseClass addClass(ClassCreateDto classCreateDto);
     PageResult pageQuery(CoursePageQueryDto coursePageQueryDto);
-    List<CourseClass> getClasses(ClassQueryDto classQueryDto);
+    List<CourseClassVO> getClasses(ClassQueryDto classQueryDto);
     boolean hasPermission(Long courseId);
     Long getCourseByClass(Long classId);
     void addTeacherToClass(Long teacherId, Long classId);
