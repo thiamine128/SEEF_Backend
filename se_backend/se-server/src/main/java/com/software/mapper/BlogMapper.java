@@ -61,4 +61,10 @@ public interface BlogMapper {
     void updateFavourCategory(String category, Long id, Long categoryId);
     @Select("select * from user_favour_category where user_id = #{userId}")
     List<Category> getFavourCategoryList(Long userId);
+
+    @Update("update blogs set popularity = popularity + #{delta} where id = #{blogId}")
+    void updatePopularity(Long blogId, Long delta);
+
+    @Update("update blogs set read_users = read_users + 1 where id = #{blogId}")
+    void increaseReadUsers(Long blogId);
 }
