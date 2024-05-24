@@ -9,7 +9,8 @@ import java.util.List;
 
 public interface CourseService {
     Course createCourse(CourseCreateDto courseCreateDto);
-    void addClass(ClassCreateDto classCreateDto);
+    void updateCourse(CourseUpdateDto courseUpdateDto);
+    CourseClass addClass(ClassCreateDto classCreateDto);
     PageResult pageQuery(CoursePageQueryDto coursePageQueryDto);
     List<CourseClass> getClasses(ClassQueryDto classQueryDto);
     boolean hasPermission(Long courseId);
@@ -20,6 +21,6 @@ public interface CourseService {
     List<Long> getTeachers(Long courseId);
     List<Long> getTeachersInClass(Long classId);
     PageResult getUserClasses(UserClassesPageQueryDto userClassesPageQueryDto, Long userId);
-
+    void updateClass(ClassUpdateDto classUpdateDto);
     Course getCourseById(Long id);
 }

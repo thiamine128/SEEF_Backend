@@ -3,10 +3,10 @@ package com.software.dto;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Data
-public class CourseCreateDto {
+public class CourseUpdateDto {
+    private Long id;
     private String name;
     private String introduction;
     private BigDecimal credit;

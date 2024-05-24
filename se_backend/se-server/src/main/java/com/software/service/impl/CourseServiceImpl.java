@@ -29,6 +29,8 @@ public class CourseServiceImpl implements CourseService {
         course.setName(courseCreateDto.getName());
         course.setCredit(courseCreateDto.getCredit());
         course.setIntroduction(courseCreateDto.getIntroduction());
+        course.setSummary(courseCreateDto.getSummary());
+        course.setEvaluation(courseCreateDto.getEvaluation());
         courseMapper.create(course);
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
@@ -37,8 +39,19 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void addClass(ClassCreateDto classCreateDto) {
-        classMapper.addClass(classCreateDto.getCourseId(), classCreateDto.getName(), classCreateDto.getTime(), classCreateDto.getLocation());
+    public void updateCourse(CourseUpdateDto courseUpdateDto) {
+        courseMapper.updateCourse(courseUpdateDto);
+    }
+
+    @Override
+    public CourseClass addClass(ClassCreateDto classCreateDto) {
+        CourseClass courseClass = new CourseClass();
+        courseClass.setCourseId(classCreateDto.getCourseId());
+        courseClass.setName(classCreateDto.getName());
+        courseClass.setTime(classCreateDto.getTime());
+        courseClass.setLocation(classCreateDto.getLocation());
+        classMapper.addClass(courseClass);
+        return courseClass;
     }
 
     @Override
@@ -96,6 +109,11 @@ public class CourseServiceImpl implements CourseService {
         PageHelper.startPage(userClassesPageQueryDto.getPage(), userClassesPageQueryDto.getPageSize());
         Page page = (Page) classMapper.getUserCourses(userId);//后绪步骤实现
         return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    @Override
+    public void updateClass(ClassUpdateDto classUpdateDto) {
+        classMapper.updateClass(classUpdateDto);
     }
 
     @Override

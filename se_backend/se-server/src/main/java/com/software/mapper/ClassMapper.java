@@ -1,17 +1,16 @@
 package com.software.mapper;
 
+import com.software.dto.ClassUpdateDto;
+import com.software.dto.CourseUpdateDto;
 import com.software.entity.Course;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import com.software.entity.CourseClass;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 @Mapper
 public interface ClassMapper {
-    @Insert("insert into classes (course_id, name, time, location) values (#{course}, #{name}, #{time}, #{location})")
-    void addClass(Long course, String name, String time, String location);
+    void addClass(CourseClass courseClass);
     @Delete("delete from teacher_class where teacher_id=#{teacherId} and class_id=#{classId}")
     void deleteTeacher(Long classId, Long teacherId);
     @Insert("insert into teacher_class (class_id, teacher_id) values (#{classId}, #{teacher})")
@@ -27,4 +26,6 @@ public interface ClassMapper {
     List<Long> getTeachers(Long classId);
     @Select("select * from courses where id=#{id}")
     Course getCourseById(Long id);
+    @Update("update classes set name=#{name}, time=#{time}, location=#{location} where id=#{id}")
+    void updateClass(ClassUpdateDto classUpdateDto);
 }

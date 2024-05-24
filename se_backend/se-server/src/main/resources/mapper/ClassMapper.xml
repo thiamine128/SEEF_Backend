@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.software.mapper.ClassMapper">
+
+    <insert id="addClass" parameterType="com.software.entity.CourseClass" useGeneratedKeys="true" keyProperty="id">
+        insert into classes(name, course_id, time, location) values (#{name}, #{courseId}, #{time}, #{location})
+    </insert>
+
+</mapper>

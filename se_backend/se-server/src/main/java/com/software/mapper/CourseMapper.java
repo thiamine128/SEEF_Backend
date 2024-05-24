@@ -2,12 +2,14 @@ package com.software.mapper;
 
 import com.github.pagehelper.Page;
 import com.software.dto.CoursePageQueryDto;
+import com.software.dto.CourseUpdateDto;
 import com.software.dto.TopicPageQueryDTO;
 import com.software.entity.Course;
 import com.software.entity.CourseClass;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -27,4 +29,7 @@ public interface CourseMapper {
 
     @Select("select teacher_id from teacher_course where course_id=#{courseId}")
     List<Long> getTeachers(Long courseId);
+
+    @Update("update courses set name=#{name}, introduction=#{introduction}, credit=#{credit}, summary=#{summary}, evaluation=#{evaluation} where id=#{id}")
+    void updateCourse(CourseUpdateDto courseUpdateDto);
 }

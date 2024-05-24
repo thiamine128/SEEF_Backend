@@ -15,4 +15,6 @@ public class Course {
     private String introduction;
     private String cover;
     private BigDecimal credit;
+    private String summary;
+    private String evaluation;
 }

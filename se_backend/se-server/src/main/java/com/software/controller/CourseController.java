@@ -44,6 +44,28 @@ public class CourseController {
         return Result.success(courseService.createCourse(courseCreateDto));
     }
 
+    @PostMapping("/updateCourse")
+    @Operation(summary = "更新课程信息")
+    public Result updateCourse(@RequestBody CourseUpdateDto courseUpdateDto) {
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
+        if (!role.equals(RoleConstant.TEACHER)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+        if (!courseService.hasPermission(courseUpdateDto.getId())) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+        courseService.updateCourse(courseUpdateDto);
+        return Result.success();
+    }
+
+    @PostMapping("/updateClass")
+    @Operation(summary = "更新教学班信息")
+    public Result updateClass(@RequestBody ClassUpdateDto classUpdateDto) {
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
+        if (!role.equals(RoleConstant.TEACHER)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+        if (!courseService.hasPermission(classUpdateDto.getId())) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+        courseService.updateClass(classUpdateDto);
+        return Result.success();
+    }
+
     @PostMapping("/addClass")
     @Operation(summary = "添加教学班")
     public Result addClass(@RequestBody ClassCreateDto classCreateDto) {
@@ -51,8 +73,7 @@ public class CourseController {
         String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
         if (!role.equals(RoleConstant.TEACHER)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         if (!courseService.hasPermission(classCreateDto.getCourseId())) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
-        courseService.addClass(classCreateDto);
-        return Result.success();
+        return Result.success(courseService.addClass(classCreateDto));
     }
 
     @GetMapping("/listClass")
@@ -68,7 +89,7 @@ public class CourseController {
         return Result.success(pageResult);
     }
     @GetMapping("/getCourseById")
-    @Operation(summary = "根据名字查询课程")
+    @Operation(summary = "根据id查询课程")
     public Result<Course> getCourseById(@RequestParam Long id) {
         Course course = courseService.getCourseById(id);
         return Result.success(course);
