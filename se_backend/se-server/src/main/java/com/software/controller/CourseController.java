@@ -138,4 +138,30 @@ public class CourseController {
     public Result getTeachersInClass(@RequestParam Long classId) {
         return Result.success(courseService.getTeachersInClass(classId));
     }
+
+    @PostMapping("/requestJoinClass")
+    @Operation(summary = "向老师申请加入课程")
+    @AuthCheck(mustRole = {RoleConstant.STUDENT})
+    public Result requestJoinClass(@RequestBody RequestJoinClassDto requestJoinClassDto) {
+        Long id = Long.parseLong(BaseContext.getCurrentUser().get(JwtClaimsConstant.USER_ID).toString());
+        courseService.requestJoinClass(id, requestJoinClassDto.getClassId());
+        return Result.success();
+    }
+
+    @PostMapping("/pendJoinClassRequest")
+    @Operation(summary = "批量处理加入课程请求")
+    @AuthCheck(mustRole = {RoleConstant.ADMIN,RoleConstant.TEACHER})
+    public Result pendJoinClassRequest(@RequestBody JoinClassRequestPendDto joinClassRequestPendDto) {
+        for (String id : joinClassRequestPendDto.getIds()) {
+            courseService.pendJoinClassRequest(id, joinClassRequestPendDto.getState());
+        }
+        return Result.success();
+    }
+
+    @GetMapping("/getJoinClassRequests")
+    @Operation(summary = "加入课程请求列表")
+    @AuthCheck(mustRole = {RoleConstant.ADMIN,RoleConstant.TEACHER})
+    public Result getJoinClassRequests(@ParameterObject JoinClassRequestPageQueryDto joinClassRequestPageQueryDto) {
+        return Result.success(courseService.listJoinClassRequest(joinClassRequestPageQueryDto));
+    }
 }
