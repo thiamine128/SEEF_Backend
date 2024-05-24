@@ -4,6 +4,7 @@ import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
 import com.software.dto.CommentCreateDto;
+import com.software.entity.Comment;
 import com.software.exception.PermissionDeniedException;
 import com.software.result.Result;
 import com.software.service.CommentService;
@@ -44,7 +45,7 @@ public class CommentController {
 
     @GetMapping("/getComment")
     @Operation(summary = "获取评论")
-    public Result getComment(@RequestParam Long id) {
+    public Result<Comment> getComment(@RequestParam Long id) {
         return Result.success(commentService.getComment(id));
     }
 }

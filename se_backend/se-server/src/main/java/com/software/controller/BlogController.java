@@ -65,7 +65,7 @@ public class BlogController {
 
     @GetMapping("/viewComments")
     @Operation(summary = "获取评论")
-    public Result getComments(@RequestParam int page,@RequestParam int pageSize, @RequestParam Long blogId) {
+    public Result<PageResult> getComments(@RequestParam int page,@RequestParam int pageSize, @RequestParam Long blogId) {
         CommentPageQueryDto commentPageQueryDto = new CommentPageQueryDto(page, pageSize, blogId);
         return Result.success(blogService.viewComments(commentPageQueryDto));
     }
@@ -144,7 +144,7 @@ public class BlogController {
 
     @GetMapping("/recommend")
     @Operation(summary = "推荐")
-    public Result recommend(@RequestParam int previewLength) throws TasteException {
+    public Result<List<BlogPreviewVO>> recommend(@RequestParam int previewLength) throws TasteException {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         Long id = Long.parseLong(currentUser.get(JwtClaimsConstant.USER_ID).toString());
         List<BlogPreviewVO> recommends =blogService.recommend(Math.toIntExact(id),previewLength);

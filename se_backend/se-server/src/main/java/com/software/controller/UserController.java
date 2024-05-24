@@ -18,6 +18,7 @@ import com.software.utils.BaseContext;
 import com.software.utils.JwtUtil;
 import com.software.vo.LoginUserVO;
 import com.software.vo.OSSPostSignatureVO;
+import com.software.vo.UserProfileVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -151,14 +152,14 @@ public class UserController {
 
     @GetMapping()
     @Operation(summary = "获取资料")
-    public Result getProfile(@RequestParam Long userId) {
+    public Result<UserProfileVO> getProfile(@RequestParam Long userId) {
         Long id = Long.parseLong(BaseContext.getCurrentUser().get(JwtClaimsConstant.USER_ID).toString());
         return Result.success(userService.getProfile(userId, id));
     }
 
     @PostMapping("/requestUploadAvatar")
     @Operation(summary = "请求上传头像")
-    public Result requestUploadAvatar() throws UnsupportedEncodingException {
+    public Result<OSSPostSignatureVO> requestUploadAvatar() throws UnsupportedEncodingException {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         long id = (long) currentUser.get(JwtClaimsConstant.USER_ID);
         String username = userService.getUsername(id);
@@ -196,6 +197,6 @@ public class UserController {
         long id = (long) currentUser.get(JwtClaimsConstant.USER_ID);
         List<Long> classIds = userService.getClassIds(id);
         List<TClass> classes = userService.getClasses(classIds);
-        return Result.success();
+        return Result.success(classes);
     }
 }
