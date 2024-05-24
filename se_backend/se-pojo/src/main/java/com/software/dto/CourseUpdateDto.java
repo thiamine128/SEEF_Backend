@@ -10,6 +10,6 @@ public class CourseUpdateDto {
     private String name;
     private String introduction;
     private BigDecimal credit;
-    private String summary;
+    private String syllabus;
     private String evaluation;
 }

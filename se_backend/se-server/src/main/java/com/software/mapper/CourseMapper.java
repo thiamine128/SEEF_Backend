@@ -29,7 +29,7 @@ public interface CourseMapper {
     @Select("select teacher_id from teacher_course where course_id=#{courseId}")
     List<Long> getTeachers(Long courseId);
 
-    @Update("update courses set name=#{name}, introduction=#{introduction}, credit=#{credit}, summary=#{summary}, evaluation=#{evaluation} where id=#{id}")
+    @Update("update courses set name=#{name}, introduction=#{introduction}, credit=#{credit}, syllabus=#{syllabus}, evaluation=#{evaluation} where id=#{id}")
     void updateCourse(CourseUpdateDto courseUpdateDto);
     @Update("update courses set cover=#{s} where id=#{courseId}")
     void updateCover(String s, Long courseId);
