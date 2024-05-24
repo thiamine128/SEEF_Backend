@@ -26,8 +26,9 @@ public class BlogVO {
     private Boolean isLike;
     private Boolean isFavor;
     private Double popularity;
+    private String favourCategory;
 
-    public static BlogVO fromBlog(Blog blog,Boolean isLike,Boolean isFavor) {
+    public static BlogVO fromBlog(Blog blog,Boolean isLike,Boolean isFavor,String favorCategory) {
         String tags = blog.getTags();
         if (tags != null && !tags.isEmpty()) {
             tags = blog.getTags().substring(1);
@@ -50,6 +51,7 @@ public class BlogVO {
                 .topicId(blog.getTopicId())
                 .isLike(isLike)
                 .isFavor(isFavor)
-                .popularity(popularity).build();
+                .popularity(popularity)
+                .favourCategory(favorCategory).build();
     }
 }

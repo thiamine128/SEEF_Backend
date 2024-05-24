@@ -5,6 +5,7 @@ import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
 import com.software.dto.*;
+import com.software.entity.Blog;
 import com.software.exception.PermissionDeniedException;
 import com.software.result.PageResult;
 import com.software.result.Result;
@@ -57,7 +58,8 @@ public class BlogController {
     @Operation(summary = "浏览博客")
     public Result<BlogVO> getBlog(Long blogId) {
         blogService.increaseReadCnt(blogId);
-        return Result.success(BlogVO.fromBlog(blogService.getDetail(blogId),blogService.isLike(blogId),blogService.isFavor(blogId)));
+        String favourCategory = blogService.getFavourCategory(blogId);
+        return Result.success(BlogVO.fromBlog(blogService.getDetail(blogId),blogService.isLike(blogId),blogService.isFavor(blogId),favourCategory));
     }
 
     @GetMapping("/viewComments")
@@ -89,8 +91,8 @@ public class BlogController {
 
     @PostMapping("/favor")
     @Operation(summary = "（取消）收藏博客")
-    public Result favorBlog(@RequestParam Long blogId){
-        blogService.favor(blogId);
+    public Result favorBlog(@RequestParam Long blogId,@RequestParam String category){
+        blogService.favor(blogId,category);
         return Result.success();
     }
     @PostMapping("/createFavourCategory")

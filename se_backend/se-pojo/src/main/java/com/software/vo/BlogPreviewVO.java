@@ -26,8 +26,9 @@ public class BlogPreviewVO {
     private Long isLike;
     private Long isFavor;
     private double popularity;
+    private String category;
 
-    public static BlogPreviewVO fromBlog(Blog blog, int len, Long isLike, Long favor) {
+    public static BlogPreviewVO fromBlog(Blog blog, int len, Long isLike, Long favor, String category) {
         int sub = Math.min(blog.getContent().length(), len);
         String tags = blog.getTags();
         if (tags != null && !tags.isEmpty()) {
@@ -50,6 +51,7 @@ public class BlogPreviewVO {
                 .topicId(blog.getTopicId())
                 .isLike(isLike)
                 .isFavor(favor)
-                .popularity(popularity).build();
+                .popularity(popularity)
+                .category(category).build();
     }
 }

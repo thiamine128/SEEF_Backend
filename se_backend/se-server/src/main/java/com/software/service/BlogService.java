@@ -21,7 +21,7 @@ public interface BlogService {
 
     Boolean isLike(Long blogId);
 
-    void favor(Long blogId);
+    void favor(Long blogId, String category);
     Boolean isFavor(Long blogId);
 
     List<Long> getfavorBlogIds(Long id);
@@ -43,4 +43,6 @@ public interface BlogService {
     void updateFavourCategory(String newCategoryName, Long categoryId);
 
     List<Category> getFavourCategoryList(Long userId);
+
+    String getFavourCategory(Long blogId);
 }
