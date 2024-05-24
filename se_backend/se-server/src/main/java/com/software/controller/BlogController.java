@@ -57,8 +57,8 @@ public class BlogController {
 
     @GetMapping("/viewBlogs")
     @Operation(summary = "博客列表")
-    public Result<PageResult> viewBlogs(@RequestParam int page, @RequestParam int pageSize, @RequestParam(required = false) String keyword, @RequestParam(required = false) List<Long> topicIds,  @RequestParam(required = false) List<String> tags, @RequestParam int previewLength) {
-        BlogPreviewPageQueryDTO blogPageQueryDto = new BlogPreviewPageQueryDTO(page, pageSize, keyword, topicIds, tags, previewLength);
+    public Result<PageResult> viewBlogs(@RequestParam int page, @RequestParam int pageSize, @RequestParam(required = false) String keyword, @RequestParam(required = false) List<Long> topicIds,  @RequestParam(required = false) List<String> tags, @RequestParam int previewLength, @RequestParam(required = false) String orderBy, @RequestParam(required = false) String sort) {
+        BlogPreviewPageQueryDTO blogPageQueryDto = new BlogPreviewPageQueryDTO(page, pageSize, keyword, topicIds, tags, previewLength, orderBy, sort);
         PageResult pageResult = blogService.getBlogs(blogPageQueryDto);
         return Result.success(pageResult);
     }

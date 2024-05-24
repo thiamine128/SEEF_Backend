@@ -25,12 +25,17 @@ public class BlogVO {
     private Long topicId;
     private Boolean isLike;
     private Boolean isFavor;
+    private Double popularity;
 
     public static BlogVO fromBlog(Blog blog,Boolean isLike,Boolean isFavor) {
         String tags = blog.getTags();
         if (tags != null && !tags.isEmpty()) {
             tags = blog.getTags().substring(1);
         }
+        double popularity = blog.getPopularity();
+        double delta = (System.currentTimeMillis() - blog.getCreateTime().getTime()) / 60 / 60 / 1000;
+        popularity /= Math.exp(delta / 10000);
+
         return new BlogVOBuilder()
                 .id(blog.getId())
                 .title(blog.getTitle())
@@ -44,6 +49,7 @@ public class BlogVO {
                 .isDeleted(blog.isDeleted())
                 .topicId(blog.getTopicId())
                 .isLike(isLike)
-                .isFavor(isFavor).build();
+                .isFavor(isFavor)
+                .popularity(popularity).build();
     }
 }

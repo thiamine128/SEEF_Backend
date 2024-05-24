@@ -16,4 +16,6 @@ public class BlogPreviewPageQueryDTO implements Serializable {
     private List<Long> topicIds;
     private List<String> tags;
     private int previewLength;
+    private String orderBy;
+    private String sort;
 }

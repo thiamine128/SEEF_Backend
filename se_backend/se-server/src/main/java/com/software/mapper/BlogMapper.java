@@ -31,6 +31,8 @@ public interface BlogMapper {
     void increaseLikes(Long blogId);
     @Update("update blogs set thumb_num = thumb_num - 1 where id = #{blogId}")
     void decreaseLikes(Long blogId);
+    @Update("update blogs set popularity = popularity + #{delta} where id = #{blogId}")
+    void updatePopularity(Long blogId, Long delta);
     @Insert("insert into blog_favour (blog_id, user_id) values (#{blogId}, #{id})")
     void favor(Long blogId, Long id);
     @Delete("delete from blog_favour where blog_id=#{blogId} and user_id=#{id}")
@@ -53,5 +55,7 @@ public interface BlogMapper {
     List<Blog> recommend(List<Long> ids);
     @Update("update blogs set title =#{title}, context= #{context}, tags=#{tags}, category_id=#{categoryId}, topic_id=#{topicId} where id = #{blogId} and user_id=#{id}")
     void updateBlog(String title, String context, Long id, Long topicId, String tags, Long categoryId, Long blogId);
+    @Update("update blogs set read_users = read_users + 1 where id = #{blogId}")
+    void increaseReadUsers(Long blogId);
 
 }

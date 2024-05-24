@@ -1,5 +1,6 @@
 package com.software.service.impl;
 
+import com.software.config.WebConfiguration;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.dto.ReplyCreateDto;
@@ -7,6 +8,7 @@ import com.software.entity.Comment;
 import com.software.entity.Event;
 import com.software.entity.Reply;
 import com.software.exception.PermissionDeniedException;
+import com.software.mapper.BlogMapper;
 import com.software.mapper.ReplyMapper;
 import com.software.service.CommentService;
 import com.software.service.EventService;
@@ -24,6 +26,8 @@ public class ReplyServiceImpl implements ReplyService {
     @Autowired
     private ReplyMapper replyMapper;
     @Autowired
+    private BlogMapper blogMapper;
+    @Autowired
     private EventService eventService;
     @Autowired
     private CommentService commentService;
@@ -38,6 +42,7 @@ public class ReplyServiceImpl implements ReplyService {
         reply.setUserId(id);
         replyMapper.makeReply(reply);
         Comment comment = commentService.getComment(replyCreateDto.getCommentId());
+        blogMapper.updatePopularity(comment.getBlogId(), WebConfiguration.REPLY_SCORE);
         Event event = null;
         if (replyCreateDto.getTo() == null) {
             event = Event.replyComment(id, replyCreateDto.getCommentId(), comment.getUserId(), reply.getId());
@@ -49,6 +54,9 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     public void deleteReply(Long replyId) {
+        Reply reply = replyMapper.getReply(replyId);
+        Comment comment = commentService.getComment(reply.getCommentId());
+        blogMapper.updatePopularity(comment.getBlogId(), -WebConfiguration.REPLY_SCORE);
         replyMapper.deleteReply(replyId);
     }
 
