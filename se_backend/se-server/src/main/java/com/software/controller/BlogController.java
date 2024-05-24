@@ -1,15 +1,10 @@
 package com.software.controller;
 
 import com.software.annotation.AuthCheck;
-import com.software.config.OssConfiguration;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
-import com.software.dto.BlogCreateDTO;
-import com.software.dto.BlogPreviewPageQueryDTO;
-import com.software.dto.BlogUpdateDTO;
-import com.software.dto.CommentPageQueryDto;
-import com.software.exception.NoSuchTopicException;
+import com.software.dto.*;
 import com.software.exception.PermissionDeniedException;
 import com.software.result.PageResult;
 import com.software.result.Result;
@@ -17,20 +12,15 @@ import com.software.service.BlogService;
 import com.software.utils.AliOssUtil;
 import com.software.utils.BaseContext;
 import com.software.vo.BlogVO;
-import com.software.vo.OSSPostSignatureVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.mahout.cf.taste.common.TasteException;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
-import java.util.UUID;
 
 @Tag(name = "博客接口")
 @RestController
@@ -57,8 +47,8 @@ public class BlogController {
 
     @GetMapping("/viewBlogs")
     @Operation(summary = "博客列表")
-    public Result<PageResult> viewBlogs(@RequestParam int page, @RequestParam int pageSize, @RequestParam(required = false) String keyword, @RequestParam(required = false) List<Long> topicIds,  @RequestParam(required = false) List<String> tags, @RequestParam int previewLength, @RequestParam(required = false) String orderBy, @RequestParam(required = false) String sort) {
-        BlogPreviewPageQueryDTO blogPageQueryDto = new BlogPreviewPageQueryDTO(page, pageSize, keyword, topicIds, tags, previewLength, orderBy, sort);
+    public Result<PageResult> viewBlogs(@RequestParam int page, @RequestParam int pageSize, @RequestParam(required = false) String keyword, @RequestParam(required = false) Long userId, @RequestParam(required = false) List<Long> topicIds,  @RequestParam(required = false) List<String> tags, @RequestParam int previewLength) {
+        BlogPreviewPageQueryDTO blogPageQueryDto = new BlogPreviewPageQueryDTO(page, pageSize, keyword, userId, topicIds, tags, previewLength);
         PageResult pageResult = blogService.getBlogs(blogPageQueryDto);
         return Result.success(pageResult);
     }
@@ -103,6 +93,25 @@ public class BlogController {
         blogService.favor(blogId);
         return Result.success();
     }
+    @PostMapping("/createFavourCategory")
+    @Operation(summary = "创建收藏夹")
+    public Result createFavourCategory(@RequestParam String category){
+        if(category== null|| category.isBlank()){
+            throw new IllegalArgumentException("Invalid category");
+        }
+        blogService.createFavourCategory(category);
+        return Result.success();
+    }
+    @DeleteMapping("/deleteFavourCategory")
+    @Operation(summary = "删除收藏夹")
+    public Result deleteFavourCategory(@RequestParam String category){
+        if(category==null|| category.isBlank()){
+            throw new IllegalArgumentException("Invalid category");
+        }
+        blogService.deleteFavourCategory(category);
+        return Result.success();
+    }
+
 
     @GetMapping("/listFavor")
     @Operation(summary = "获取我的收藏")
@@ -113,6 +122,23 @@ public class BlogController {
         PageResult pageResult = blogService.listFavor(ids,page,pageSize, previewLength);
         return Result.success(pageResult);
     }
+    @PostMapping("updateFavourCategory")
+    @Operation(summary = "更新收藏夹名")
+    public Result updateCategory(@RequestParam String newCategoryName, @RequestParam Long categoryId){
+        if(newCategoryName== null|| newCategoryName.isBlank()){
+            throw new IllegalArgumentException("Invalid category");
+        }
+        blogService.updateFavourCategory(newCategoryName,categoryId);
+        return Result.success();
+    }
+    @GetMapping("/getFavourCategory")
+    @Operation(summary = "获得所有收藏夹")
+    public Result<List<Category>> getCategoryList(@RequestParam Long userId){
+        List<Category> result = blogService.getFavourCategoryList(userId);
+        return  Result.success(result);
+    }
+
+
     @GetMapping("/recommend")
     @Operation(summary = "推荐")
     public Result recommend(@RequestParam int previewLength) throws TasteException {

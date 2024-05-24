@@ -35,4 +35,12 @@ public interface BlogService {
     void update(BlogUpdateDTO blogCreateDTO);
 
     List<Category> getCategoryList(Long userId);
+
+    void createFavourCategory(String category);
+
+    void deleteFavourCategory(String category);
+
+    void updateFavourCategory(String newCategoryName, Long categoryId);
+
+    List<Category> getFavourCategoryList(Long userId);
 }

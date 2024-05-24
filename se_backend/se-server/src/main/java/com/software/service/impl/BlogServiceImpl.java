@@ -2,7 +2,6 @@ package com.software.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.software.config.WebConfiguration;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.OperationTypeConstant;
@@ -99,6 +98,33 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    public void createFavourCategory(String category) {
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
+        blogMapper.createFavourCategory(category,id);
+    }
+
+    @Override
+    public void deleteFavourCategory(String category) {
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
+        blogMapper.deleteFavourCategory(category,id);
+    }
+
+    @Override
+    public void updateFavourCategory(String newCategoryName, Long categoryId) {
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
+        blogMapper.updateFavourCategory(newCategoryName,id,categoryId);
+    }
+
+    @Override
+    public List<Category> getFavourCategoryList(Long userId) {
+        List <Category> categories = blogMapper.getFavourCategoryList(userId);
+        return categories;
+    }
+
+    @Override
     public Blog getDetail(Long blogId) {
         return blogMapper.getBlog(blogId);
     }
@@ -130,14 +156,12 @@ public class BlogServiceImpl implements BlogService {
             blogMapper.cancelLike(blogId, id);
             blogMapper.decreaseLikes(blogId);
             operationMapper.deleteOperation(id, blogId, OperationTypeConstant.LIKE);
-            blogMapper.updatePopularity(blogId, -WebConfiguration.LIKE_SCORE);
         }
         else{
             eventService.newEvent(Event.like(id, blogId, getDetail(blogId).getUserId()));
             blogMapper.like(blogId, id);
             blogMapper.increaseLikes(blogId);
             operationMapper.insertOperation(id,blogId, OperationTypeConstant.LIKE);
-            blogMapper.updatePopularity(blogId, WebConfiguration.LIKE_SCORE);
         }
     }
 
@@ -158,14 +182,12 @@ public class BlogServiceImpl implements BlogService {
             blogMapper.cancelFavor(blogId, id);
             blogMapper.decreaseFavors(blogId);
             operationMapper.deleteOperation(id, blogId, OperationTypeConstant.FAVOR);
-            blogMapper.updatePopularity(blogId, -WebConfiguration.FAVOUR_SCORE);
         }
         else{
             blogMapper.favor(blogId, id);
             blogMapper.increaseFavors(blogId);
             eventService.newEvent(Event.favour(id,blogId,getDetail(blogId).getUserId()));
             operationMapper.insertOperation(id,blogId, OperationTypeConstant.FAVOR);
-            blogMapper.updatePopularity(blogId, WebConfiguration.FAVOUR_SCORE);
         }
     }
 
@@ -194,18 +216,9 @@ public class BlogServiceImpl implements BlogService {
         }).toList());
     }
 
-    @Transactional
     @Override
     public void increaseReadCnt(Long blogId) {
         blogMapper.increaseReadCnt(blogId);
-        Map<String,Object> currentUser = BaseContext.getCurrentUser();
-        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
-        System.out.println(operationMapper.getRecord(id, blogId, OperationTypeConstant.VIEW));
-        if (operationMapper.getRecord(id, blogId, OperationTypeConstant.VIEW) == null) {
-            operationMapper.insertOperation(id, blogId, OperationTypeConstant.VIEW);
-            blogMapper.increaseReadUsers(blogId);
-            blogMapper.updatePopularity(blogId, WebConfiguration.READ_SCORE);
-        }
     }
 
     @Override

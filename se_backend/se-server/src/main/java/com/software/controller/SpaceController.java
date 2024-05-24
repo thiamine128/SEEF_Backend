@@ -28,24 +28,37 @@ public class SpaceController {
     private SpaceService spaceService;
     @PostMapping("/create")
     @Operation(summary = "创建分类")
-    public void createCategory(@RequestParam String category){
+    public Result createCategory(@RequestParam String category){
         if(category== null|| category.isBlank()){
             throw new IllegalArgumentException("Invalid category");
         }
         spaceService.createCategory(category);
+        return Result.success();
     }
     @DeleteMapping("/delete")
     @Operation(summary = "删除分类")
-    public void deleteCategory(@RequestParam String category){
+    public Result deleteCategory(@RequestParam String category){
         if(category== null|| category.isBlank()){
             throw new IllegalArgumentException("Invalid category");
         }
         spaceService.deleteCategory(category);
+        return Result.success();
     }
+
+    @PostMapping("update")
+    @Operation(summary = "更新分类名")
+    public Result updateCategory(@RequestParam String newCategoryName, @RequestParam Long categoryId){
+        if(newCategoryName== null|| newCategoryName.isBlank()){
+            throw new IllegalArgumentException("Invalid category");
+        }
+        spaceService.updateCategory(newCategoryName,categoryId);
+        return Result.success();
+    }
+
     @GetMapping("/getCategory")
     @Operation(summary = "获得所有分类")
     public Result<List<Category>> getCategoryList(@RequestParam Long userId){
         List<Category> result = blogService.getCategoryList(userId);
-        return  Result.success();
+        return  Result.success(result);
     }
 }

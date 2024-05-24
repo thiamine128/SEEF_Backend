@@ -11,4 +11,5 @@ public interface SpaceService {
     void deleteCategory(String category);
 
 
+    void updateCategory(String category, Long categoryId);
 }

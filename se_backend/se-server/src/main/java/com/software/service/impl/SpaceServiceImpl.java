@@ -31,4 +31,11 @@ public class SpaceServiceImpl implements SpaceService {
         Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
         spaceMapper.deleteCategory(category,id);
     }
+
+    @Override
+    public void updateCategory(String category, Long categoryId) {
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
+        spaceMapper.updateCategory(category,id,categoryId);
+    }
 }
