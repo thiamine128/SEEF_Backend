@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Tag(name = "关注接口")
 @RestController
 @RequestMapping("/api/event")
@@ -39,14 +41,14 @@ public class SubscribeController {
 
     @GetMapping("/subscribed")
     @Operation(summary = "关注列表")
-    public Result subscribed() {
+    public Result<List<Long>>  subscribed() {
         Long id = Long.parseLong(BaseContext.getCurrentUser().get(JwtClaimsConstant.USER_ID).toString());
         return Result.success(subscribeService.getSubscribed(id));
     }
 
     @GetMapping("/subscribers")
     @Operation(summary = "粉丝列表")
-    public Result subscribers() {
+    public Result<List<Long>> subscribers() {
         Long id = Long.parseLong(BaseContext.getCurrentUser().get(JwtClaimsConstant.USER_ID).toString());
         return Result.success(subscribeService.getSubscribers(id));
     }

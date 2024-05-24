@@ -5,6 +5,7 @@ import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
 import com.software.dto.ReplyCreateDto;
+import com.software.entity.Reply;
 import com.software.exception.PermissionDeniedException;
 import com.software.result.Result;
 import com.software.service.ReplyService;
@@ -43,7 +44,7 @@ public class ReplyController {
 
     @GetMapping("/getReply")
     @Operation(summary = "获取回复")
-    public Result getReply(Long id) {
+    public Result<Reply> getReply(Long id) {
         return Result.success(replyService.getReply(id));
     }
 }

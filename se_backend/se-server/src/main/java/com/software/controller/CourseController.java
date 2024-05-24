@@ -7,6 +7,7 @@ import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
 import com.software.dto.*;
 import com.software.entity.Course;
+import com.software.entity.CourseClass;
 import com.software.exception.InvalidUserException;
 import com.software.exception.PermissionDeniedException;
 import com.software.result.PageResult;
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Map;
 
 @Tag(name = "课程接口")
@@ -71,7 +73,7 @@ public class CourseController {
 
     @PostMapping("/addClass")
     @Operation(summary = "添加教学班")
-    public Result addClass(@RequestBody ClassCreateDto classCreateDto) {
+    public Result<CourseClass> addClass(@RequestBody ClassCreateDto classCreateDto) {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
         if (!role.equals(RoleConstant.TEACHER)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
@@ -81,13 +83,13 @@ public class CourseController {
 
     @GetMapping("/listClass")
     @Operation(summary = "查询教学班")
-    public Result pagedList(@ParameterObject ClassQueryDto classQueryDto) {
+    public Result<List<CourseClass>> pagedList(@ParameterObject ClassQueryDto classQueryDto) {
         return Result.success(courseService.getClasses(classQueryDto));
     }
 
     @GetMapping("/list")
     @Operation(summary = "根据名字查询课程")
-    public Result pagedList(@ParameterObject CoursePageQueryDto coursePageQueryDto) {
+    public Result<PageResult> pagedList(@ParameterObject CoursePageQueryDto coursePageQueryDto) {
         PageResult pageResult = courseService.pageQuery(coursePageQueryDto);//后绪步骤定义
         return Result.success(pageResult);
     }
@@ -101,7 +103,7 @@ public class CourseController {
 
     @GetMapping("/teachers")
     @Operation(summary = "查询课程组")
-    public Result getTeachers(@RequestParam Long courseId) {
+    public Result<List<Long>> getTeachers(@RequestParam Long courseId) {
         return Result.success(courseService.getTeachers(courseId));
     }
 
@@ -138,7 +140,7 @@ public class CourseController {
 
     @GetMapping("/getTeachersInClass")
     @Operation(summary = "查询教学班教师")
-    public Result getTeachersInClass(@RequestParam Long classId) {
+    public Result<List<Long>> getTeachersInClass(@RequestParam Long classId) {
         return Result.success(courseService.getTeachersInClass(classId));
     }
 
@@ -164,13 +166,13 @@ public class CourseController {
     @GetMapping("/getJoinClassRequests")
     @Operation(summary = "加入课程请求列表")
     @AuthCheck(mustRole = {RoleConstant.ADMIN,RoleConstant.TEACHER})
-    public Result getJoinClassRequests(@ParameterObject JoinClassRequestPageQueryDto joinClassRequestPageQueryDto) {
+    public Result<PageResult> getJoinClassRequests(@ParameterObject JoinClassRequestPageQueryDto joinClassRequestPageQueryDto) {
         return Result.success(courseService.listJoinClassRequest(joinClassRequestPageQueryDto));
     }
 
     @PostMapping("/addCourseCover")
     @Operation(summary = "添加课程封面")
-    public Result addCourseCover(@RequestParam Long CourseId) throws UnsupportedEncodingException {
+    public Result<OSSPostSignatureVO> addCourseCover(@RequestParam Long CourseId) throws UnsupportedEncodingException {
 
         String objectName = "CourseCover/" + CourseId;
         AliOssUtil.PostSignature postSignature = aliOssUtil.generatePostSignature(objectName, System.currentTimeMillis() + OssConfiguration.EXPIRE_SEC * 1000, 52428800);

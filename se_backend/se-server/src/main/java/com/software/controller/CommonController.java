@@ -1,5 +1,6 @@
 package com.software.controller;
 
+import cn.hutool.http.useragent.OS;
 import com.software.config.OssConfiguration;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
@@ -72,7 +73,7 @@ public class CommonController {
 
     @PostMapping("/requestUploadImage")
     @Operation(summary = "请求上传图片")
-    public Result requestUploadImage() throws UnsupportedEncodingException {
+    public Result<OSSPostSignatureVO> requestUploadImage() throws UnsupportedEncodingException {
         String objectName = "image/" + UUID.randomUUID();
         AliOssUtil.PostSignature postSignature = aliOssUtil.generatePostSignature(objectName, System.currentTimeMillis() + OssConfiguration.EXPIRE_SEC * 1000, 524288000);
         OSSPostSignatureVO ossPostSignatureVO = OSSPostSignatureVO.builder()

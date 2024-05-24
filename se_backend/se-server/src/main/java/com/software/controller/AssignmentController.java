@@ -8,6 +8,7 @@ import com.software.dto.AssignmentPublishDto;
 import com.software.dto.AssignmentClassQueryDto;
 import com.software.dto.AssignmentSubmitDto;
 import com.software.dto.HomeWorkFeedBackDTO;
+import com.software.entity.Assignment;
 import com.software.exception.PermissionDeniedException;
 import com.software.result.Result;
 import com.software.service.AssignmentService;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -40,7 +42,7 @@ public class AssignmentController {
 
     @PostMapping("/uploadAttachment")
     @Operation(summary = "上传作业附件")
-    public Result uploadAttachment() throws UnsupportedEncodingException {
+    public Result<OSSPostSignatureVO> uploadAttachment() throws UnsupportedEncodingException {
         String objectName = "assignment/" + UUID.randomUUID().toString();
         AliOssUtil.PostSignature postSignature = aliOssUtil.generatePostSignature(objectName, System.currentTimeMillis() + OssConfiguration.EXPIRE_SEC * 1000, 52428800);
         OSSPostSignatureVO ossPostSignatureVO = OSSPostSignatureVO.builder()
@@ -65,7 +67,7 @@ public class AssignmentController {
 
     @GetMapping("/listByClass")
     @Operation(summary = "班级作业")
-    public Result getAssignmentsInClass(@ParameterObject AssignmentClassQueryDto assignmentQueryDto) {
+    public Result<List<Assignment>> getAssignmentsInClass(@ParameterObject AssignmentClassQueryDto assignmentQueryDto) {
         return Result.success(assignmentService.getAssignmentsInClass(assignmentQueryDto.getClassId()));
     }
 
