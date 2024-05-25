@@ -67,4 +67,6 @@ public interface UserMapper {
     void addSubscribers(Long id);
     @Update("update users set subscribers=subscribers-1 where id=#{id}")
     void subSubscribers(Long id);
+    @Select("select * from users where name like CONCAT('%',#{username},'%')")
+    List<User> getUserByName(String userName);
 }

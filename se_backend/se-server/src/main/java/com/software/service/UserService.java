@@ -42,4 +42,6 @@ public interface UserService {
     List<TClass> getClasses(List<Long> classIds);
 
     UserProfileVO getProfile(Long userId, Long id);
+
+    List<User> getUserByName(String userName);
 }

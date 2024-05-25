@@ -1,13 +1,18 @@
 package com.software.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.software.constant.MessageConstant;
 import com.software.dto.AssignmentPublishDto;
+import com.software.dto.AssignmentQueryDto;
 import com.software.dto.AssignmentSubmitDto;
 import com.software.dto.HomeWorkFeedBackDTO;
 import com.software.entity.Assignment;
 import com.software.exception.AssignmentOverdueException;
 import com.software.mapper.AssignmentMapper;
+import com.software.result.PageResult;
 import com.software.service.AssignmentService;
+import com.software.vo.AssignmentVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,5 +46,10 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public void markHw(HomeWorkFeedBackDTO homeWorkFeedBackDTO) {
         assignmentMapper.markHw(homeWorkFeedBackDTO);
+    }
+
+    @Override
+    public List<AssignmentVO> getAllAssignments(AssignmentQueryDto assignmentQueryDto) {
+        return assignmentMapper.getAllAssignments(assignmentQueryDto);
     }
 }

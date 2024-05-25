@@ -5,6 +5,7 @@ import com.software.result.Result;
 import com.software.service.BlogService;
 import com.software.service.SpaceService;
 import com.software.service.UserService;
+import com.software.vo.CategoryVO;
 import com.software.vo.UserBlogCategoryVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -61,8 +62,8 @@ public class SpaceController {
 
     @GetMapping("/getALLCategory")
     @Operation(summary = "获得所有分类")
-    public Result<List<Category>> getCategoryList(@RequestParam Long userId){
-        List<Category> result = blogService.getCategoryList(userId);
+    public Result<List<CategoryVO>> getCategoryList(@RequestParam Long userId){
+        List<CategoryVO> result = blogService.getCategoryList(userId);
         return  Result.success(result);
     }
 

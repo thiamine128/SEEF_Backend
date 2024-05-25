@@ -11,6 +11,13 @@
     <packaging>jar</packaging>
     <artifactId>se-server</artifactId>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
 
         <dependency>
@@ -191,19 +198,17 @@
 
         </dependency>
 
-
-        <dependency>
-            <groupId>com.hankcs</groupId>
-            <artifactId>hanlp</artifactId>
-            <version>portable-1.8.4</version>
-        </dependency>
-
         <dependency>
             <groupId>org.commonmark</groupId>
             <artifactId>commonmark</artifactId>
             <version>0.17.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.shibing624</groupId>
+            <artifactId>similarity</artifactId>
+            <version>1.1.6</version>
+        </dependency>
 
     </dependencies>
     <build>

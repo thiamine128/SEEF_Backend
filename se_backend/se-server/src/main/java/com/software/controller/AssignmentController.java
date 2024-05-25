@@ -4,17 +4,16 @@ import com.software.config.OssConfiguration;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
-import com.software.dto.AssignmentPublishDto;
-import com.software.dto.AssignmentClassQueryDto;
-import com.software.dto.AssignmentSubmitDto;
-import com.software.dto.HomeWorkFeedBackDTO;
+import com.software.dto.*;
 import com.software.entity.Assignment;
 import com.software.exception.PermissionDeniedException;
+import com.software.result.PageResult;
 import com.software.result.Result;
 import com.software.service.AssignmentService;
 import com.software.service.CourseService;
 import com.software.utils.AliOssUtil;
 import com.software.utils.BaseContext;
+import com.software.vo.AssignmentVO;
 import com.software.vo.OSSPostSignatureVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -65,6 +64,14 @@ public class AssignmentController {
         return Result.success();
     }
 
+    @GetMapping("/all")
+    @Operation(summary = "获取全部作业")
+    public Result<List<AssignmentVO>> getAssignments(@RequestParam(required = false) Boolean showOutdated) {
+        Long id = Long.parseLong(BaseContext.getCurrentUser().get(JwtClaimsConstant.USER_ID).toString());
+        AssignmentQueryDto assignmentQueryDto = new AssignmentQueryDto(showOutdated != null && showOutdated, id);
+        return Result.success(assignmentService.getAllAssignments(assignmentQueryDto));
+    }
+
     @GetMapping("/listByClass")
     @Operation(summary = "班级作业")
     public Result<List<Assignment>> getAssignmentsInClass(@ParameterObject AssignmentClassQueryDto assignmentQueryDto) {
@@ -76,6 +83,7 @@ public class AssignmentController {
     public Result submitAssignment(@ParameterObject AssignmentSubmitDto assignmentSubmitDto) {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
+
         assignmentService.submitAssignment(id, assignmentSubmitDto);
         return Result.success();
     }

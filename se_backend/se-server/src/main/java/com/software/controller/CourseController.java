@@ -67,7 +67,7 @@ public class CourseController {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
         if (!role.equals(RoleConstant.TEACHER)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
-        if (!courseService.hasPermission(classUpdateDto.getId())) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+        if (!courseService.checkClassPermission(classUpdateDto.getId())) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         courseService.updateClass(classUpdateDto);
         return Result.success();
     }
@@ -83,7 +83,7 @@ public class CourseController {
     }
 
     @GetMapping("/listClass")
-    @Operation(summary = "查询教学班")
+    @Operation(summary = "查询课程教学班")
     public Result<List<CourseClassVO>> pagedList(@ParameterObject ClassQueryDto classQueryDto) {
         return Result.success(courseService.getClasses(classQueryDto));
     }
@@ -100,7 +100,6 @@ public class CourseController {
         Course course = courseService.getCourseById(id);
         return Result.success(course);
     }
-
 
     @GetMapping("/teachers")
     @Operation(summary = "查询课程组")
@@ -165,7 +164,7 @@ public class CourseController {
     }
 
     @GetMapping("/getJoinClassRequests")
-    @Operation(summary = "加入课程请求列表")
+    @Operation(summary = "获取加入课程请求列表")
     @AuthCheck(mustRole = {RoleConstant.ADMIN,RoleConstant.TEACHER})
     public Result<PageResult> getJoinClassRequests(@ParameterObject JoinClassRequestPageQueryDto joinClassRequestPageQueryDto) {
         return Result.success(courseService.listJoinClassRequest(joinClassRequestPageQueryDto));
@@ -186,4 +185,12 @@ public class CourseController {
         courseService.updateCover(aliOssUtil.buildPathFromObjectName(objectName),CourseId);
         return Result.success(ossPostSignatureVO);
     }
+
+    @GetMapping("/getClass")
+    @Operation(summary = "获取教学班信息")
+    public Result<CourseClassVO> getCourse(@RequestParam Long classId) {
+        return Result.success(courseService.getClass(classId));
+    }
+
+
 }

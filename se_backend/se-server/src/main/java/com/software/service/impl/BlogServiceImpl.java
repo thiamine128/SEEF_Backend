@@ -2,8 +2,6 @@ package com.software.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.hankcs.hanlp.mining.word2vec.DocVectorModel;
-import com.hankcs.hanlp.mining.word2vec.WordVectorModel;
 import com.software.config.WebConfiguration;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
@@ -21,6 +19,7 @@ import com.software.service.BlogService;
 import com.software.service.EventService;
 import com.software.utils.BaseContext;
 import com.software.vo.BlogPreviewVO;
+import com.software.vo.CategoryVO;
 import com.software.vo.CommentVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.mahout.cf.taste.common.TasteException;
@@ -30,18 +29,17 @@ import org.apache.mahout.cf.taste.impl.model.GenericPreference;
 import org.apache.mahout.cf.taste.impl.model.GenericUserPreferenceArray;
 import org.apache.mahout.cf.taste.impl.neighborhood.NearestNUserNeighborhood;
 import org.apache.mahout.cf.taste.impl.recommender.GenericUserBasedRecommender;
-import org.apache.mahout.cf.taste.impl.similarity.TanimotoCoefficientSimilarity;
 import org.apache.mahout.cf.taste.impl.similarity.UncenteredCosineSimilarity;
 import org.apache.mahout.cf.taste.model.DataModel;
 import org.apache.mahout.cf.taste.model.PreferenceArray;
 import org.apache.mahout.cf.taste.neighborhood.UserNeighborhood;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.apache.mahout.cf.taste.recommender.Recommender;
-import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.xm.similarity.text.CosineSimilarity;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -61,6 +59,8 @@ public class BlogServiceImpl implements BlogService {
     private EventService eventService;
     @Autowired
     private SpaceMapper spaceMapper;
+
+    private final CosineSimilarity cosineSimilarity = new CosineSimilarity();
 
     @Override
     public void create(BlogCreateDTO blogCreateDTO) {
@@ -94,8 +94,8 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public List<Category> getCategoryList(Long userId) {
-        List <Category> categories = spaceMapper.getCategoryList(userId);
+    public List<CategoryVO> getCategoryList(Long userId) {
+        List <CategoryVO> categories = spaceMapper.getCategoryList(userId);
         return categories;
     }
 
@@ -133,6 +133,44 @@ public class BlogServiceImpl implements BlogService {
         return blogMapper.getFavourCategoryById(id,blogId);
     }
 
+    @Override
+    public List<BlogPreviewVO> similar(Long blogId, Long count, int previewLength) {
+        Blog target = blogMapper.getBlog(blogId);
+        String content = target.getContent();
+        String title = target.getTitle();
+        String tags = target.getTags();
+        List<Blog> blogs = blogMapper.getAllBlog();
+        TreeSet<BlogSimilarity> treeSet = new TreeSet<>(new Comparator<BlogSimilarity>() {
+            @Override
+            public int compare(BlogSimilarity p1, BlogSimilarity p2) {
+                if (p1.similarity < p2.similarity)
+                    return 1;
+                else
+                    return -1;
+            }
+        });
+        for (Blog blog : blogs) {
+            if (blog.getId().equals(blogId)) continue;
+            BlogSimilarity blogSimilarity = new BlogSimilarity();
+            double contentSimilarity = cosineSimilarity.getSimilarity(content, blog.getContent());
+            double titleSimilarity = cosineSimilarity.getSimilarity(title, blog.getTitle());
+            double tagsSimilarity = cosineSimilarity.getSimilarity(tags, blog.getTags());
+            blogSimilarity.similarity = titleSimilarity + 4 * contentSimilarity + tagsSimilarity;
+            blogSimilarity.blog = blog;
+            treeSet.add(blogSimilarity);
+            if (treeSet.size() > count) {
+                treeSet.pollLast();
+            }
+        }
+        Long id = Long.parseLong(BaseContext.getCurrentUser().get(JwtClaimsConstant.USER_ID).toString());
+        List<BlogPreviewVO> results = treeSet.stream().map(bs -> bs.blog).map(blog -> { return BlogPreviewVO.fromBlog((Blog) blog, previewLength, blogMapper.isLiked(((Blog) blog).getId(),id),blogMapper.isFavor(((Blog) blog).getId(),id),blogMapper.getFavourCategoryById(id,((Blog)blog).getId()));}).toList();
+        return results;
+    }
+
+    static class BlogSimilarity {
+        public Blog blog;
+        public double similarity;
+    }
 
 
     @Override

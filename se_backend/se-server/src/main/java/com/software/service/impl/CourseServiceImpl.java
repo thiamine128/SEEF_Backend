@@ -1,5 +1,9 @@
 package com.software.service.impl;
 
+import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.software.constant.JwtClaimsConstant;
@@ -60,6 +64,7 @@ public class CourseServiceImpl implements CourseService {
         courseClass.setName(classCreateDto.getName());
         courseClass.setTime(classCreateDto.getTime());
         courseClass.setLocation(classCreateDto.getLocation());
+        courseClass.setTimeData(JSONObject.parseArray(JSON.toJSONString(classCreateDto.getTimeData())));
         classMapper.addClass(courseClass);
         return courseClass;
     }
@@ -74,8 +79,9 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<CourseClassVO> getClasses(ClassQueryDto classQueryDto) {
+        Long id = Long.parseLong(BaseContext.getCurrentUser().get(JwtClaimsConstant.USER_ID).toString());
         return courseMapper.getClasses(classQueryDto.getCourseId()).stream().map(courseClass -> {
-            return CourseClassVO.fromCourseClass(courseClass, classMapper.getTeachers(courseClass.getId()));
+            return CourseClassVO.fromCourseClass(courseClass, classMapper.getTeachers(courseClass.getId()), checkClassPermission(courseClass.getId()));
         }).toList();
     }
 
@@ -84,6 +90,13 @@ public class CourseServiceImpl implements CourseService {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
         return courseMapper.checkTeacher(id, courseId) != null;
+    }
+
+    @Override
+    public boolean checkClassPermission(Long classId) {
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
+        return classMapper.checkTeacher(id, classId) != null;
     }
 
     @Override
@@ -121,8 +134,13 @@ public class CourseServiceImpl implements CourseService {
         PageHelper.startPage(userClassesPageQueryDto.getPage(), userClassesPageQueryDto.getPageSize());
         Page<Long> page = (Page<Long>) classMapper.getUserCourses(userId);//后绪步骤实现
         return new PageResult(page.getTotal(), page.getResult().stream().map(courseClassId -> {
-            return CourseClassVO.fromCourseClass(classMapper.getCourseClass(courseClassId), classMapper.getTeachers(courseClassId));
+            return CourseClassVO.fromCourseClass(classMapper.getCourseClass(courseClassId), classMapper.getTeachers(courseClassId), checkClassPermission(courseClassId));
         }).toList());
+    }
+
+    @Override
+    public List<Long> getAllUserClasses(Long userId) {
+        return classMapper.getUserCourses(userId);
     }
 
     @Override
@@ -167,5 +185,10 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public void updateCover(String s, Long courseId) {
         courseMapper.updateCover(s,courseId);
+    }
+
+    @Override
+    public CourseClassVO getClass(Long classId) {
+        return CourseClassVO.fromCourseClass(classMapper.getCourseClass(classId), classMapper.getTeachers(classId), checkClassPermission(classId));
     }
 }

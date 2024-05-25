@@ -11,6 +11,7 @@ import com.software.entity.TClass;
 import com.software.entity.User;
 import com.software.properties.JwtProperties;
 import com.software.result.Result;
+import com.software.service.SubscribeService;
 import com.software.service.UserService;
 import com.software.service.impl.EmailUtil;
 import com.software.utils.AliOssUtil;
@@ -27,6 +28,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +56,9 @@ public class UserController {
     private RedisTemplate redisTemplate;
     @Autowired
     private AliOssUtil aliOssUtil;
+
+    @Autowired
+    private  SubscribeService subscribeService;
 
     @PostMapping("/login")
     @Operation(summary = "用户登录")
@@ -96,6 +101,7 @@ public class UserController {
         //登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
         claims.put(JwtClaimsConstant.USER_ID, user.getId());
+        claims.put(JwtClaimsConstant.USER_ROLE,user.getRole());
         String token = JwtUtil.createJWT(
                 jwtProperties.getAdminSecretKey(),
                 jwtProperties.getAdminTtl(),
@@ -198,5 +204,19 @@ public class UserController {
         List<Long> classIds = userService.getClassIds(id);
         List<TClass> classes = userService.getClasses(classIds);
         return Result.success(classes);
+    }
+
+    @GetMapping("/searchUser")
+    public Result<List<UserProfileVO>> searchUser(@RequestParam String userName){
+        List<User> users = userService.getUserByName(userName);
+        List<UserProfileVO> result = new ArrayList<UserProfileVO>();
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        long id = (long) currentUser.get(JwtClaimsConstant.USER_ID);
+
+        for(User user:users){
+            result.add(UserProfileVO.fromUser(user,subscribeService.isSubscribed(user.getId(), id)));
+        }
+
+        return Result.success(result);
     }
 }

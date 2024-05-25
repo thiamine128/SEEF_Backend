@@ -15,6 +15,7 @@ public interface CourseService {
     PageResult pageQuery(CoursePageQueryDto coursePageQueryDto);
     List<CourseClassVO> getClasses(ClassQueryDto classQueryDto);
     boolean hasPermission(Long courseId);
+    boolean checkClassPermission(Long classId);
     Long getCourseByClass(Long classId);
     void addTeacherToClass(Long teacherId, Long classId);
     void addTeacherToCourse(Long teacherId, Long courseId);
@@ -22,6 +23,7 @@ public interface CourseService {
     List<Long> getTeachers(Long courseId);
     List<Long> getTeachersInClass(Long classId);
     PageResult getUserClasses(UserClassesPageQueryDto userClassesPageQueryDto, Long userId);
+    List<Long> getAllUserClasses(Long userId);
     void updateClass(ClassUpdateDto classUpdateDto);
     Course getCourseById(Long id);
     void requestJoinClass(Long studentId, Long classId);
@@ -29,4 +31,5 @@ public interface CourseService {
     PageResult listJoinClassRequest(JoinClassRequestPageQueryDto joinClassRequestPageQueryDto);
 
     void updateCover(String s, Long courseId);
+    CourseClassVO getClass(Long classId);
 }

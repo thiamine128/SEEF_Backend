@@ -4,7 +4,14 @@
 <mapper namespace="com.software.mapper.ClassMapper">
 
     <insert id="addClass" parameterType="com.software.entity.CourseClass" useGeneratedKeys="true" keyProperty="id">
-        insert into classes(name, course_id, time, location) values (#{name}, #{courseId}, #{time}, #{location})
+        insert into classes(name, course_id, time, location, time_data) values (#{name}, #{courseId}, #{time}, #{location}, #{timeData, typeHandler=com.software.handler.ArrayTypeHandler})
     </insert>
 
+    <update id="updateClass" parameterType="com.software.dto.ClassUpdateDto">
+        update classes set name=#{name}, time=#{time}, location=#{location}, time_data=#{timeData, typeHandler=com.software.handler.ArrayTypeHandler} where id=#{id}
+    </update>
+    
+    <resultMap id="ClassResultMap" type="com.software.entity.CourseClass">
+        <result column="time_data" property="timeData" typeHandler="com.software.handler.ArrayTypeHandler" />
+    </resultMap>
 </mapper>

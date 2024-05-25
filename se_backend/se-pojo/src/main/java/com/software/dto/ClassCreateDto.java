@@ -10,4 +10,5 @@ public class ClassCreateDto {
     private Long courseId;
     private String time;
     private String location;
+    private List<ClassTime> timeData;
 }

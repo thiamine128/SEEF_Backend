@@ -194,6 +194,11 @@ public class UserServiceImpl implements UserService {
         return UserProfileVO.fromUser(user, subscribeService.isSubscribed(user.getId(), id));
     }
 
+    @Override
+    public List<User> getUserByName(String userName) {
+        return userMapper.getUserByName(userName);
+    }
+
 
     private void verifyCodeOrThrow(String email, String code) {
         if (Boolean.FALSE.equals(redisTemplate.hasKey(email)))

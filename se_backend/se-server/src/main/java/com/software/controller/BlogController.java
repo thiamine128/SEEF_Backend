@@ -92,7 +92,7 @@ public class BlogController {
 
     @PostMapping("/favor")
     @Operation(summary = "（取消）收藏博客")
-    public Result favorBlog(@RequestParam Long blogId,@RequestParam String category){
+    public Result favorBlog(@RequestParam Long blogId,@RequestParam(required = false) String category){
         blogService.favor(blogId,category);
         return Result.success();
     }
@@ -151,6 +151,9 @@ public class BlogController {
         return Result.success(recommends);
     }
 
-
-
+    @GetMapping("/similar")
+    @Operation(summary = "相关博客")
+    public Result<List<BlogPreviewVO>> similar(@RequestParam Long blogId, @RequestParam Long count, @RequestParam int previewLength) {
+        return Result.success(blogService.similar(blogId, count, previewLength));
+    }
 }
