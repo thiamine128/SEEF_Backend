@@ -20,4 +20,6 @@ public interface SpaceMapper {
     List<Category> getCategoryList(Long userId);
     @Update("update user_blog_category set category_name = #{category} where user_id = #{id} and id = #{categoryId}")
     void updateCategory(String category, Long id, Long categoryId);
+    @Select("select * from user_blog_category where id = #{categoryId}")
+    Category getCategoryById(Long categoryId);
 }

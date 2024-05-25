@@ -4,6 +4,8 @@ import com.software.dto.Category;
 import com.software.result.Result;
 import com.software.service.BlogService;
 import com.software.service.SpaceService;
+import com.software.service.UserService;
+import com.software.vo.UserBlogCategoryVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,8 @@ public class SpaceController {
     private BlogService blogService;
     @Autowired
     private SpaceService spaceService;
+    @Autowired
+    UserService userService;
     @PostMapping("/create")
     @Operation(summary = "创建分类")
     public Result createCategory(@RequestParam String category){
@@ -55,10 +59,19 @@ public class SpaceController {
         return Result.success();
     }
 
-    @GetMapping("/getCategory")
+    @GetMapping("/getALLCategory")
     @Operation(summary = "获得所有分类")
     public Result<List<Category>> getCategoryList(@RequestParam Long userId){
         List<Category> result = blogService.getCategoryList(userId);
         return  Result.success(result);
+    }
+
+    @GetMapping("/getCategory")
+    @Operation(summary = "根据categorieId获取分类名")
+    public Result<UserBlogCategoryVO> getCategoryById(@RequestParam Long categoryId){
+        Category category = spaceService.getCategoryById(categoryId);
+        String userName = userService.getUsername(category.getUserId());
+        UserBlogCategoryVO result = new UserBlogCategoryVO(category.getCategoryName(), category.getUserId(),userName);
+        return Result.success(result);
     }
 }

@@ -1,6 +1,7 @@
 package com.software.service.impl;
 
 import com.software.constant.JwtClaimsConstant;
+import com.software.dto.Category;
 import com.software.mapper.SpaceMapper;
 import com.software.service.SpaceService;
 import com.software.utils.BaseContext;
@@ -37,5 +38,10 @@ public class SpaceServiceImpl implements SpaceService {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
         spaceMapper.updateCategory(category,id,categoryId);
+    }
+
+    @Override
+    public Category getCategoryById(Long categoryId) {
+        return spaceMapper.getCategoryById(categoryId);
     }
 }

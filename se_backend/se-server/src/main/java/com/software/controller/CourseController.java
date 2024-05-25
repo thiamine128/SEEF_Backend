@@ -16,6 +16,7 @@ import com.software.service.CourseService;
 import com.software.service.UserService;
 import com.software.utils.AliOssUtil;
 import com.software.utils.BaseContext;
+import com.software.vo.CourseClassVO;
 import com.software.vo.OSSPostSignatureVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -83,7 +84,7 @@ public class CourseController {
 
     @GetMapping("/listClass")
     @Operation(summary = "查询教学班")
-    public Result<List<CourseClass>> pagedList(@ParameterObject ClassQueryDto classQueryDto) {
+    public Result<List<CourseClassVO>> pagedList(@ParameterObject ClassQueryDto classQueryDto) {
         return Result.success(courseService.getClasses(classQueryDto));
     }
 

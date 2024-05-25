@@ -39,7 +39,7 @@ public class CourseServiceImpl implements CourseService {
         course.setName(courseCreateDto.getName());
         course.setCredit(courseCreateDto.getCredit());
         course.setIntroduction(courseCreateDto.getIntroduction());
-        course.setSummary(courseCreateDto.getSummary());
+        course.setSyllabus(courseCreateDto.getSyllabus());
         course.setEvaluation(courseCreateDto.getEvaluation());
         courseMapper.create(course);
         Map<String,Object> currentUser = BaseContext.getCurrentUser();

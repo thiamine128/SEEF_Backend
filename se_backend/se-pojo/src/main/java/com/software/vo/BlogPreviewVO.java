@@ -26,7 +26,8 @@ public class BlogPreviewVO {
     private Long isLike;
     private Long isFavor;
     private double popularity;
-    private String category;
+    private String favourCategory;
+    private Long categoryId;
 
     public static BlogPreviewVO fromBlog(Blog blog, int len, Long isLike, Long favor, String category) {
         int sub = Math.min(blog.getContent().length(), len);
@@ -52,6 +53,7 @@ public class BlogPreviewVO {
                 .isLike(isLike)
                 .isFavor(favor)
                 .popularity(popularity)
-                .category(category).build();
+                .favourCategory(category)
+                .categoryId(blog.getCategoryId()).build();
     }
 }
