@@ -1,6 +1,5 @@
-package com.software.dto;
+package com.software.vo;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -9,11 +8,10 @@ import lombok.Data;
  * @date
  */
 @Data
-@AllArgsConstructor
-public class Category {
+public class CategoryVO {
     private Long id;
 
-    private Long userId;
-
     private String categoryName;
+
+    private Long userId;
 }

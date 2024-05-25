@@ -5,6 +5,7 @@ import com.software.entity.Blog;
 import com.software.entity.UserBlogOperation;
 import com.software.result.PageResult;
 import com.software.vo.BlogPreviewVO;
+import com.software.vo.CategoryVO;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.model.DataModel;
 
@@ -43,7 +44,7 @@ public interface BlogService {
 
     void update(BlogUpdateDTO blogCreateDTO);
 
-    List<Category> getCategoryList(Long userId);
+    List<CategoryVO> getCategoryList(Long userId);
 
     void createFavourCategory(String category);
 

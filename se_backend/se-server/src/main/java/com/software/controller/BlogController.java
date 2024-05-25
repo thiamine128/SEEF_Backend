@@ -92,7 +92,7 @@ public class BlogController {
 
     @PostMapping("/favor")
     @Operation(summary = "（取消）收藏博客")
-    public Result favorBlog(@RequestParam Long blogId,@RequestParam String category){
+    public Result favorBlog(@RequestParam Long blogId,@RequestParam(required = false) String category){
         blogService.favor(blogId,category);
         return Result.success();
     }

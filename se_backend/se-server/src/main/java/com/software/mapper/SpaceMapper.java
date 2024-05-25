@@ -1,6 +1,7 @@
 package com.software.mapper;
 
 import com.software.dto.Category;
+import com.software.vo.CategoryVO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface SpaceMapper {
     @Delete("delete from user_blog_category where category_name = #{category} and user_id = #{id}")
     void deleteCategory(String category, Long id);
     @Select("select * from user_blog_category where user_id = #{userId}")
-    List<Category> getCategoryList(Long userId);
+    List<CategoryVO> getCategoryList(Long userId);
     @Update("update user_blog_category set category_name = #{category} where user_id = #{id} and id = #{categoryId}")
     void updateCategory(String category, Long id, Long categoryId);
     @Select("select * from user_blog_category where id = #{categoryId}")
