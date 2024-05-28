@@ -31,4 +31,9 @@ public class TAServiceImpl implements TAService {
     public List<User> getCourseTA(Long courseId) {
         return taMapper.getCourseTA(courseId);
     }
+
+    @Override
+    public List<Long> getMyClass(long id) {
+       return taMapper.getMyClassIds(id);
+    }
 }

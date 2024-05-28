@@ -83,7 +83,6 @@ public class AdminController {
         if (!fileName.matches("^.+\\.(?i)(xls)$") && !fileName.matches("^.+\\.(?i)(xlsx)$")) {
             return Result.error("文件格式不正确");
         }
-
         Workbook wb = null;
         if (fileName.matches("^.+\\.(?i)(xlsx)$")) {
             //xlsx格式
@@ -98,7 +97,6 @@ public class AdminController {
             Sheet sheet = wb.getSheetAt(0);
             if (sheet != null) {
                 boolean firstRow = true;
-
                 boolean isThrow = false;
                 //判断是否重复
                 List<String> emailList=new ArrayList<>();

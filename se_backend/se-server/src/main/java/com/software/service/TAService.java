@@ -10,9 +10,12 @@ import java.util.List;
  * @date
  */
 public interface TAService {
+
     void addTA(Long studentId, Long classId, Long courseId);
     
     void deleteTA(Long studentId, Long classId, Long courseId);
 
     List<User> getCourseTA(Long courseId);
+
+    List<Long> getMyClass(long id);
 }

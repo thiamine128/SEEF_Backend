@@ -21,4 +21,6 @@ public interface TAMapper {
     void removeTA(Long studentId, Long classId, Long courseId);
     @Select("SELECT *  FROM student_class_management scm , users u WHERE scm.student_id = u.id and scm.course_id =#{courseId}")
     List<User> getCourseTA(Long courseId);
+    @Select("select class_id from student_class_management where student_id = #{id}")
+    List<Long> getMyClassIds(long id);
 }
