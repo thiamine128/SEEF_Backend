@@ -22,7 +22,7 @@ public interface CourseService {
     void removeTeacherFromClass(Long teacherId, Long classId);
     List<Long> getTeachers(Long courseId);
     List<Long> getTeachersInClass(Long classId);
-    PageResult getUserClasses(UserClassesPageQueryDto userClassesPageQueryDto, Long userId);
+    List<CourseClassVO> getUserClasses(Long userId);
     List<Long> getAllUserClasses(Long userId);
     void updateClass(ClassUpdateDto classUpdateDto);
     Course getCourseById(Long id);

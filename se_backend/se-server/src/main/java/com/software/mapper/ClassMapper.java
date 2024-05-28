@@ -1,10 +1,8 @@
 package com.software.mapper;
 
 import com.software.dto.ClassUpdateDto;
-import com.software.dto.CourseUpdateDto;
 import com.software.entity.Course;
 import com.software.entity.CourseClass;
-import com.software.vo.CourseClassVO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -24,7 +22,7 @@ public interface ClassMapper {
     CourseClass getCourseClass(Long classId);
 
     @Select("select class_id from enrollments where student_id=#{studentId}")
-    List<Long> getUserCourses(Long studentId);
+    List<Long> getUserClasses(Long studentId);
 
     @Select("select teacher_id from teacher_class where class_id=#{classId}")
     List<Long> getTeachers(Long classId);

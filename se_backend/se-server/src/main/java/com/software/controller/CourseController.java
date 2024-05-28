@@ -192,5 +192,10 @@ public class CourseController {
         return Result.success(courseService.getClass(classId));
     }
 
-
+    @GetMapping("/getMyClasses")
+    @Operation(summary = "获取我的教学班")
+    public Result<List<CourseClassVO>> getMyClasses() {
+        Long id = Long.parseLong(BaseContext.getCurrentUser().get(JwtClaimsConstant.USER_ID).toString());
+        return Result.success(courseService.getUserClasses(id));
+    }
 }

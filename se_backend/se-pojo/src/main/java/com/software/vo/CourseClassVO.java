@@ -20,8 +20,9 @@ public class CourseClassVO {
     private List<Long> teachers;
     private Boolean hasPermission;
     private JSONArray timeData;
+    private String courseName;
 
-    public static CourseClassVO fromCourseClass(CourseClass courseClass, List<Long> teachers, Boolean hasPermission) {
+    public static CourseClassVO fromCourseClass(CourseClass courseClass, List<Long> teachers, Boolean hasPermission, String courseName) {
         return new CourseClassVOBuilder().id(courseClass.getId())
                 .courseId(courseClass.getCourseId())
                 .name(courseClass.getName())
@@ -29,6 +30,7 @@ public class CourseClassVO {
                 .location(courseClass.getLocation())
                 .teachers(teachers)
                 .hasPermission(hasPermission)
-                .timeData(courseClass.getTimeData()).build();
+                .timeData(courseClass.getTimeData())
+                .courseName(courseName).build();
     }
 }
