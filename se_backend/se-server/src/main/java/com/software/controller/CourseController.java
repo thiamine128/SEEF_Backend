@@ -17,6 +17,7 @@ import com.software.service.UserService;
 import com.software.utils.AliOssUtil;
 import com.software.utils.BaseContext;
 import com.software.vo.CourseClassVO;
+import com.software.vo.CourseVO;
 import com.software.vo.OSSPostSignatureVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -96,9 +97,9 @@ public class CourseController {
     }
     @GetMapping("/getCourseById")
     @Operation(summary = "根据id查询课程")
-    public Result<Course> getCourseById(@RequestParam Long id) {
+    public Result<CourseVO> getCourseById(@RequestParam Long id) {
         Course course = courseService.getCourseById(id);
-        return Result.success(course);
+        return Result.success(CourseVO.fromCourse(course, courseService.hasPermission(id)));
     }
 
     @GetMapping("/teachers")
