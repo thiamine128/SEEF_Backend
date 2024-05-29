@@ -35,4 +35,6 @@ public interface ClassMapper {
 
     @Insert("select teacher_id from teacher_class where teacher_id=#{id} and class_id=#{classId}")
     Long checkTeacher(Long id, Long classId);
+    @Select("select id from classes where name =#{name}")
+    Long getClassIdByName(String name);
 }

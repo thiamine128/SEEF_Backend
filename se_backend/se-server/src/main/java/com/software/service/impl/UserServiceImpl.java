@@ -199,6 +199,11 @@ public class UserServiceImpl implements UserService {
         return userMapper.getUserByName(userName);
     }
 
+    @Override
+    public User getByACCount(String userAccount) {
+        return userMapper.getByAccount(userAccount);
+    }
+
 
     private void verifyCodeOrThrow(String email, String code) {
         if (Boolean.FALSE.equals(redisTemplate.hasKey(email)))

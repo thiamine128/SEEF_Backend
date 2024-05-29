@@ -19,7 +19,7 @@ public interface TAMapper {
     void addTA(Long studentId, Long classId, Long courseId);
     @Delete("delete from student_class_management where student_id = #{studentId} and class_id = #{classId} and course_id = #{courseId}")
     void removeTA(Long studentId, Long classId, Long courseId);
-    @Select("SELECT *  FROM student_class_management scm , users u WHERE scm.student_id = u.id and scm.course_id =#{courseId}")
+    @Select("SELECT *  FROM student_class_management scm , users u WHERE scm.student_id = u.id and scm.class_id =#{courseId}")
     List<User> getCourseTA(Long courseId);
     @Select("select class_id from student_class_management where student_id = #{id}")
     List<Long> getMyClassIds(long id);

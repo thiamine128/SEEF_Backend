@@ -5,6 +5,12 @@
     <insert id="create" parameterType="com.software.entity.Course" useGeneratedKeys="true" keyProperty="id">
         insert into courses(name, introduction, credit, syllabus, evaluation) values (#{name}, #{introduction}, #{credit}, #{syllabus}, #{evaluation})
     </insert>
+    <insert id="addButchStudents">
+        insert into enrollments (student_id, class_id, course_id) values
+        <foreach collection="students" item="s" separator=",">
+            (#{s.studentId},#{s.classId},#{s.courseId})
+        </foreach>
+    </insert>
 
     <select id="pageQuery" resultType="com.software.entity.Course">
         select * from sedb.courses d

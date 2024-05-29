@@ -9,6 +9,7 @@ import com.software.constant.MessageConstant;
 import com.software.dto.*;
 import com.software.entity.Course;
 import com.software.entity.CourseClass;
+import com.software.entity.Enrollment;
 import com.software.entity.JoinClassRequest;
 import com.software.exception.InvalidRequestException;
 import com.software.exception.RequestSentException;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -190,5 +192,26 @@ public class CourseServiceImpl implements CourseService {
     public CourseClassVO getClass(Long classId) {
         CourseClass courseClass = classMapper.getCourseClass(classId);
         return CourseClassVO.fromCourseClass(courseClass, classMapper.getTeachers(classId), checkClassPermission(classId), getCourseById(courseClass.getCourseId()).getName());
+    }
+
+    @Override
+    public Course getCourseByName(String name) {
+        return courseMapper.getCourseByName(name);
+    }
+
+    @Override
+    public Long getClassIdByName(String name) {
+        return classMapper.getClassIdByName(name);
+    }
+
+    @Override
+    public void addButchStudents(List<JoinClassDTO> students) {
+        List<Enrollment> enrollments = new ArrayList<>();
+        for(JoinClassDTO req:students)
+        {
+            Enrollment e = new Enrollment(req.getUserId(),null,req.getClassId(),req.getCourseId());
+            enrollments.add(e);
+        }
+        courseMapper.addButchStudents(enrollments);
     }
 }

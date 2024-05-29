@@ -1,13 +1,16 @@
 package com.software.controller;
 
+import com.alibaba.druid.util.StringUtils;
 import com.software.annotation.AuthCheck;
 import com.software.config.OssConfiguration;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
+import com.software.constant.PasswordConstant;
 import com.software.constant.RoleConstant;
 import com.software.dto.*;
 import com.software.entity.Course;
 import com.software.entity.CourseClass;
+import com.software.entity.User;
 import com.software.exception.InvalidUserException;
 import com.software.exception.PermissionDeniedException;
 import com.software.result.PageResult;
@@ -22,13 +25,23 @@ import com.software.vo.OSSPostSignatureVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.software.controller.admin.AdminController.isRowEmpty;
 
 @Tag(name = "课程接口")
 @RestController
@@ -198,5 +211,164 @@ public class CourseController {
     public Result<List<CourseClassVO>> getMyClasses() {
         Long id = Long.parseLong(BaseContext.getCurrentUser().get(JwtClaimsConstant.USER_ID).toString());
         return Result.success(courseService.getUserClasses(id));
+    }
+
+    @PostMapping("/addButchStudentToClass")
+    @Operation(summary = "批量加入学生到课程中")
+    public Result addStudents(MultipartFile file) throws IOException {
+        if(file == null){
+            return Result.error("File cannot be null");
+        }
+        InputStream is = file.getInputStream();
+        String fileName=file.getOriginalFilename();
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+
+        if (!fileName.matches("^.+\\.(?i)(xls)$") && !fileName.matches("^.+\\.(?i)(xlsx)$")) {
+            return Result.error("文件格式不正确");
+        }
+        Workbook wb = null;
+        if (fileName.matches("^.+\\.(?i)(xlsx)$")) {
+            //xlsx格式
+            wb = new XSSFWorkbook(is);
+        } else {
+            //xls格式
+            wb = new HSSFWorkbook(is);
+        }
+        List<JoinClassDTO> studentList = new ArrayList<>();
+        if (wb != null) {
+            //默认读取第一个sheet
+            Sheet sheet = wb.getSheetAt(0);
+            if (sheet != null) {
+                boolean firstRow = true;
+                boolean isThrow = false;
+                //判断是否重复
+                List<String> emailList=new ArrayList<>();
+                List<String> nameList=new ArrayList<>();
+                try {
+                    if (sheet.getLastRowNum() > 0) {
+                        for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
+                            //循环行
+                            //User teacher = new User();
+                            JoinClassDTO student= new JoinClassDTO();
+                            Row row = sheet.getRow(i);
+                            //首行  提取注解
+                            if (firstRow) {
+                                if (row.getCell(0).getStringCellValue().equals("account")
+                                        && row.getCell(1).getStringCellValue().equals("course")
+                                        && row.getCell(1).getStringCellValue().equals("class")
+                                )
+                                {log.info("success");} else {
+                                    return Result.error("格式不正确，请下载模板进行参考");
+                                }
+                                firstRow = false;
+                                log.info("SUCCESSFUL");
+                            } else {
+                                Cell cell = row.getCell(0);
+                                log.info("11SUCCESSFUL");
+                                //忽略空白行
+                                if (row == null || isRowEmpty(row)) {
+                                    log.info("3");
+                                    continue;
+                                }
+                                log.info("11SUCCESSFUL");
+                                int theRow = i + 1;
+                                log.info("value:{}",theRow);
+                                if (row.getCell(0) != null) {
+                                    log.info("1");
+                                    row.getCell(0).setCellType(CellType.STRING);
+
+                                    String name = row.getCell(0).getStringCellValue();
+                                    if (StringUtils.isEmpty(name)) {
+                                        isThrow = true;
+                                        return Result.error("导入失败(第" + theRow + "行,姓名不能为空)");
+
+                                    } else {
+                                        if (!nameList.isEmpty() && nameList.size() > 0) {
+                                            //判断是否重复
+                                            if (nameList.contains(name)) {
+                                                isThrow = true;
+                                                return Result.error("导入失败(第" + theRow + "行,name" + name + "有重复)");
+
+                                            } else {
+                                                nameList.add(name);
+                                                User u =userService.getByACCount(name);
+                                                if(u==null)
+                                                  return  Result.error("导入失败(第" + theRow + "行,学生" + name + "不存在)");
+                                                 student.setUserId(u.getId());
+                                            }
+                                        } else {
+                                            nameList.add(name);
+                                            User u =userService.getByACCount(name);
+                                            if(u==null)
+                                                Result.error("导入失败(第" + theRow + "行,name" + name + "不存在)");
+                                            student.setUserId(u.getId());
+                                        }
+                                    }
+                                } else {
+                                    log.info("2");
+                                    isThrow = true;
+                                    return Result.error("导入失败(第" + theRow + "行,姓名不能为空)");
+
+                                }
+
+                                if (row.getCell(1) != null) {
+                                    row.getCell(1).setCellType(CellType.STRING);
+                                    String course = row.getCell(1).getStringCellValue();
+                                    if (StringUtils.isEmpty(course)) {
+                                        isThrow = true;
+                                        return Result.error("导入失败(第" + theRow + "行,课程不能为空)");
+                                    } else {
+                                            Course c = courseService.getCourseByName(course);
+                                            if(c==null)
+                                                return Result.error("导入失败(第" + theRow + "行,课程不存在)");
+                                            student.setCourseId(c.getId());
+                                    }
+                                } else {
+                                    isThrow = true;
+                                    return Result.error("导入失败(第" + theRow + "行,课程不能为空)");
+                                }
+
+                                if (row.getCell(2) != null) {
+                                    row.getCell(2).setCellType(CellType.STRING);
+                                    String SClass = row.getCell(2).getStringCellValue();
+                                    if (StringUtils.isEmpty(SClass)) {
+                                        isThrow = true;
+                                        return Result.error("导入失败(第" + theRow + "行,班级不能为空)");
+                                    } else {
+                                        Long classId = courseService.getClassIdByName(SClass);
+                                        if(classId==null)
+                                            return Result.error("导入失败(第" + theRow + "行,班级" + SClass + "不存在)");
+                                        student.setClassId(classId);
+                                    }
+                                } else {
+                                    isThrow = true;
+                                    return Result.error("导入失败(第" + theRow + "行,班级不能为空)");
+                                }
+
+
+                                studentList.add(student);
+
+                            }
+                            if (isThrow) {
+                                break;
+                            }
+                        }
+                    } else {
+                        isThrow = true;
+                        return Result.error("导入失败,数据为空");
+                    }
+
+                } catch (Exception e) {
+                    log.info(e.getMessage());
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        if( studentList.size()>500){
+            return Result.error("表格过大");
+        }
+        log.info("SUCCESSFUL");
+        courseService.addButchStudents(studentList);
+        return Result.success();
     }
 }

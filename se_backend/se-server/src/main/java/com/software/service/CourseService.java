@@ -32,4 +32,9 @@ public interface CourseService {
 
     void updateCover(String s, Long courseId);
     CourseClassVO getClass(Long classId);
+
+    Course getCourseByName(String name);
+
+    Long getClassIdByName(String name);
+    void addButchStudents(List<JoinClassDTO> students);
 }

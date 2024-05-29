@@ -150,6 +150,7 @@ public class AdminController {
                                                 teacher.setName(name);
                                             }
                                         } else {
+                                            nameList.add(name);
                                             teacher.setName(name);
                                         }
                                     }
@@ -178,6 +179,7 @@ public class AdminController {
                                                 teacher.setEmail(email);
                                             }
                                         } else {
+                                            emailList.add(email);
                                             teacher.setEmail(email);
                                         }
                                     }

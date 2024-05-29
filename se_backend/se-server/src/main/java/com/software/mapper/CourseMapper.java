@@ -5,6 +5,7 @@ import com.software.dto.CoursePageQueryDto;
 import com.software.dto.CourseUpdateDto;
 import com.software.entity.Course;
 import com.software.entity.CourseClass;
+import com.software.entity.Enrollment;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -33,4 +34,8 @@ public interface CourseMapper {
     void updateCourse(CourseUpdateDto courseUpdateDto);
     @Update("update courses set cover=#{s} where id=#{courseId}")
     void updateCover(String s, Long courseId);
+    @Select("select * from courses where name =#{courseName}")
+    Course getCourseByName(String courseName);
+
+    void addButchStudents(List<Enrollment> enrollments);
 }

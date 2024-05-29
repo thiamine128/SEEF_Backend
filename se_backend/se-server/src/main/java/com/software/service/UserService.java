@@ -44,4 +44,6 @@ public interface UserService {
     UserProfileVO getProfile(Long userId, Long id);
 
     List<User> getUserByName(String userName);
+
+    User getByACCount(String userAccount);
 }
