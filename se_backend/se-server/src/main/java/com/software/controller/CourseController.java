@@ -255,9 +255,11 @@ public class CourseController {
                             if (firstRow) {
                                 if (row.getCell(0).getStringCellValue().equals("account")
                                         && row.getCell(1).getStringCellValue().equals("course")
-                                        && row.getCell(1).getStringCellValue().equals("class")
+                                        && row.getCell(2).getStringCellValue().equals("class")
                                 )
-                                {log.info("success");} else {
+                                {log.info("success");}
+                                else {
+                                    log.info(row.getCell(1).getStringCellValue());
                                     return Result.error("格式不正确，请下载模板进行参考");
                                 }
                                 firstRow = false;
@@ -344,8 +346,6 @@ public class CourseController {
                                     isThrow = true;
                                     return Result.error("导入失败(第" + theRow + "行,班级不能为空)");
                                 }
-
-
                                 studentList.add(student);
 
                             }
@@ -370,5 +370,13 @@ public class CourseController {
         log.info("SUCCESSFUL");
         courseService.addButchStudents(studentList);
         return Result.success();
+    }
+
+    @PostMapping
+    @Operation(summary = "批量删除教学班中学生")
+    public Result deleteButchStudents(List<DeleteStudentReqDTO> students){
+        courseService.deleteBathcStudents(students);
+
+        return  Result.success();
     }
 }

@@ -3,13 +3,11 @@ package com.software.mapper;
 import com.github.pagehelper.Page;
 import com.software.dto.CoursePageQueryDto;
 import com.software.dto.CourseUpdateDto;
+import com.software.dto.DeleteStudentReqDTO;
 import com.software.entity.Course;
 import com.software.entity.CourseClass;
 import com.software.entity.Enrollment;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -37,5 +35,8 @@ public interface CourseMapper {
     @Select("select * from courses where name =#{courseName}")
     Course getCourseByName(String courseName);
 
-    void addButchStudents(List<Enrollment> enrollments);
+    void addButchStudents(List<Enrollment> students);
+
+    @Delete("delete from enrollments where student_id=#{studentId} and class_id =#{classId}")
+    void deleteStudent(Long studentId, Long classId);
 }
