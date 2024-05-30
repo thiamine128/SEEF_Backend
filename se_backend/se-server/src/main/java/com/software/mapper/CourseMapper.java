@@ -37,5 +37,5 @@ public interface CourseMapper {
     @Select("select * from courses where name =#{courseName}")
     Course getCourseByName(String courseName);
 
-    void addButchStudents(List<Enrollment> enrollments);
+    void addButchStudents(List<Enrollment> students);
 }
