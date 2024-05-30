@@ -8,6 +8,7 @@ import com.software.dto.AssignmentQueryDto;
 import com.software.dto.AssignmentSubmitDto;
 import com.software.dto.HomeWorkFeedBackDTO;
 import com.software.entity.Assignment;
+import com.software.entity.StudentAssignment;
 import com.software.exception.AssignmentOverdueException;
 import com.software.mapper.AssignmentMapper;
 import com.software.result.PageResult;
@@ -51,5 +52,10 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public List<AssignmentVO> getAllAssignments(AssignmentQueryDto assignmentQueryDto) {
         return assignmentMapper.getAllAssignments(assignmentQueryDto);
+    }
+
+    @Override
+    public List<StudentAssignment> getStudentAssignments(Long assignmentId) {
+        return assignmentMapper.getStudentAssignments(assignmentId);
     }
 }

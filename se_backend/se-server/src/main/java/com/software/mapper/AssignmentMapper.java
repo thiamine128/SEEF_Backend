@@ -4,6 +4,7 @@ import com.software.dto.AssignmentPublishDto;
 import com.software.dto.AssignmentQueryDto;
 import com.software.dto.HomeWorkFeedBackDTO;
 import com.software.entity.Assignment;
+import com.software.entity.StudentAssignment;
 import com.software.vo.AssignmentVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -26,4 +27,6 @@ public interface AssignmentMapper {
     @Update("update student_assignment set grade = #{grade}, feedback = #{feedback} where assignment_id = #{assignmentId} and student_id = #{studentId}")
     void markHw(HomeWorkFeedBackDTO homeWorkFeedBackDTO);
     List<AssignmentVO> getAllAssignments(AssignmentQueryDto assignmentQueryDto);
+    @Select("select * from student_assignment where assignment_id=#{assignmentId}")
+    List<StudentAssignment> getStudentAssignments(Long assignmentId);
 }

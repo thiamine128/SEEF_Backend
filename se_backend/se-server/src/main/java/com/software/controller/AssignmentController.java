@@ -6,6 +6,7 @@ import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
 import com.software.dto.*;
 import com.software.entity.Assignment;
+import com.software.entity.StudentAssignment;
 import com.software.exception.PermissionDeniedException;
 import com.software.result.PageResult;
 import com.software.result.Result;
@@ -93,5 +94,11 @@ public class AssignmentController {
     public Result markHw(@RequestBody HomeWorkFeedBackDTO homeWorkFeedBackDTO) {
         assignmentService.markHw(homeWorkFeedBackDTO);
         return Result.success();
+    }
+
+    @GetMapping("/studentAssignment")
+    @Operation(summary = "获取学生作业")
+    public Result<List<StudentAssignment>> studentAssignment(@RequestParam Long assignmentId) {
+        return Result.success(assignmentService.getStudentAssignments(assignmentId));
     }
 }
