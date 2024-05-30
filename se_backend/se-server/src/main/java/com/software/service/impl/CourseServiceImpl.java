@@ -214,4 +214,11 @@ public class CourseServiceImpl implements CourseService {
         }
         courseMapper.addButchStudents(enrollments);
     }
+
+    @Override
+    public void deleteBathcStudents(List<DeleteStudentReqDTO> students) {
+        for(DeleteStudentReqDTO student:students){
+        courseMapper.deleteStudent(student.getStudentId(),student.getClassId());
+        }
+    }
 }

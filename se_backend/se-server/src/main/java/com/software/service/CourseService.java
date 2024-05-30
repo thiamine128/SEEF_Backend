@@ -37,4 +37,6 @@ public interface CourseService {
 
     Long getClassIdByName(String name);
     void addButchStudents(List<JoinClassDTO> students);
+
+    void deleteBathcStudents(List<DeleteStudentReqDTO> students);
 }

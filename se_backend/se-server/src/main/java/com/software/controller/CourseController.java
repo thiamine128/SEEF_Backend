@@ -371,4 +371,12 @@ public class CourseController {
         courseService.addButchStudents(studentList);
         return Result.success();
     }
+
+    @PostMapping
+    @Operation(summary = "批量删除教学班中学生")
+    public Result deleteButchStudents(List<DeleteStudentReqDTO> students){
+        courseService.deleteBathcStudents(students);
+
+        return  Result.success();
+    }
 }
