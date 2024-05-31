@@ -69,11 +69,11 @@ public class TAController {
     }
     @GetMapping("/listCourseTA")
     @Operation(summary = "查询班级助教")
-    public Result<List<UserProfileVO>> getCourseTA(@RequestParam Long classId){
+    public Result<List<UserProfileVO>> getCourseTA(@RequestParam Long courseId){
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         long id = (long) currentUser.get(JwtClaimsConstant.USER_ID);
         List<UserProfileVO> result = new ArrayList<UserProfileVO>();
-        List<User> tas= taService.getCourseTA(classId);
+        List<User> tas= taService.getCourseTA(courseId);
         for(User user : tas){
             result.add(UserProfileVO.fromUser(user,subscribeService.isSubscribed(user.getId(), id)));
         }
