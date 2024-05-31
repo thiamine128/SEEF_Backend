@@ -20,7 +20,7 @@ public interface JoinClassRequestMapper {
     @Select("select student_id from join_class_requests where student_id=#{studentId} and class_id=#{classId} and (state=0 or state=1)")
     Long canRequest(Long studentId, Long classId);
 
-    @Select("select r.id, r.student_id, r.class_id, r.state from join_class_requests r left join classes c on r.class_id = c.id where c.course_id = #{courseId}")
+    @Select("select r.id, r.student_id, r.class_id, r.state from join_class_requests r left join classes c on r.class_id = c.id where r.state=0 and c.course_id = #{courseId}")
     Page<JoinClassRequest> pageQuery(Long courseId);
 
     @Select("select * from join_class_requests where id=#{id}")
