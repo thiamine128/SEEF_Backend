@@ -124,6 +124,8 @@ public class BlogController {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         Long id = Long.parseLong(currentUser.get(JwtClaimsConstant.USER_ID).toString());
         List<Long> ids = blogService.getfavorBlogIds(id);
+        if(ids.isEmpty())
+            return Result.success();
         PageResult pageResult = blogService.listFavor(ids,page,pageSize, previewLength);
         return Result.success(pageResult);
     }

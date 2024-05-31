@@ -68,7 +68,7 @@ public class TAController {
         return Result.success();
     }
     @GetMapping("/listCourseTA")
-    @Operation(summary = "查询课程助教")
+    @Operation(summary = "查询班级助教")
     public Result<List<UserProfileVO>> getCourseTA(@RequestParam Long courseId){
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         long id = (long) currentUser.get(JwtClaimsConstant.USER_ID);

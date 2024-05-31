@@ -39,4 +39,6 @@ public interface CourseService {
     void addButchStudents(List<JoinClassDTO> students);
 
     void deleteBathcStudents(List<DeleteStudentReqDTO> students);
+
+    List<CourseClassVO> getTeacherClass(Long teacherId);
 }

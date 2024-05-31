@@ -43,7 +43,7 @@ public interface BlogMapper {
     void decreaseFavors(Long blogId);
     @Select("select blog_id from blog_favour where blog_id=#{blogId} and user_id=#{id}")
     Long isFavor(Long blogId, Long id);
-    @Select("select blog_id from blog_favour where user_id=#{id} ")
+    @Select("select blog_id from blog_favour where user_id=#{id}")
     List<Long> getFavorBlogIds(Long id);
 
     Page<Blog> favorPageQuery(List<Long> ids, int pages, int pageSize);
