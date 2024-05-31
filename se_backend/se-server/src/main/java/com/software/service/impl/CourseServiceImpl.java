@@ -96,9 +96,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public boolean checkClassPermission(Long classId) {
-        Map<String,Object> currentUser = BaseContext.getCurrentUser();
-        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
-        return classMapper.checkTeacher(id, classId) != null;
+        return hasPermission(getCourseByClass(classId));
     }
 
     @Override

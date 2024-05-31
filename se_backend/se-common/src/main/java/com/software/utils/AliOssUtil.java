@@ -127,25 +127,20 @@ public class AliOssUtil {
         try {
             ListObjectsRequest listObjectsRequest = new ListObjectsRequest(bucketName);
 
-            // 设置正斜线（/）为文件夹的分隔符。
-            listObjectsRequest.setDelimiter("/");
-
             // 列出fun目录下的所有文件和文件夹。
             listObjectsRequest.setPrefix(path);
             ObjectListing listing = ossClient.listObjects(listObjectsRequest);
             // 遍历所有文件。
             // objectSummaries的列表中给出的是fun目录下的文件。
             for (OSSObjectSummary objectSummary : listing.getObjectSummaries()) {
-                String url = buildPathFromObjectName(objectSummary.getKey());
-                System.out.println(objectSummary.getKey());
+                String url = objectSummary.getKey();
                 result.add(url);
             }
 
             // 遍历所有commonPrefix。
             // commonPrefixs列表中显示的是fun目录下的所有子文件夹。由于fun/movie/001.avi和fun/movie/007.avi属于fun文件夹下的movie目录，因此这两个文件未在列表中。
             for (String commonPrefix : listing.getCommonPrefixes()) {
-                System.out.println(commonPrefix);
-                String url = buildPathFromObjectName(commonPrefix);
+                String url = commonPrefix;
                 result.add(url);
             }
 
