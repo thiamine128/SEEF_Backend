@@ -11,6 +11,7 @@ import com.software.dto.*;
 import com.software.entity.Course;
 import com.software.entity.CourseClass;
 import com.software.entity.User;
+import com.software.exception.InvalidParameterException;
 import com.software.exception.InvalidUserException;
 import com.software.exception.PermissionDeniedException;
 import com.software.result.PageResult;
@@ -57,10 +58,13 @@ public class CourseController {
 
     @PostMapping("/create")
     @Operation(summary = "创建课程")
+    @AuthCheck(mustRole = {RoleConstant.TEACHER,RoleConstant.ADMIN})
     public Result createCourse(@RequestBody CourseCreateDto courseCreateDto) {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
-        if (!role.equals(RoleConstant.TEACHER)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+       // if (!role.equals(RoleConstant.TEACHER)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+        if(courseCreateDto.getName()==null||courseCreateDto.getName().isBlank()||courseCreateDto.getEvaluation().isBlank())
+            throw new InvalidParameterException(MessageConstant.PARAMETER_BLANK);
         return Result.success(courseService.createCourse(courseCreateDto));
     }
 
@@ -91,6 +95,7 @@ public class CourseController {
     public Result<CourseClass> addClass(@RequestBody ClassCreateDto classCreateDto) {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
+        if(classCreateDto.getName().isBlank()||classCreateDto.getLocation().isBlank()||classCreateDto.getTime().isBlank()) throw new InvalidParameterException(MessageConstant.PARAMETER_BLANK);
         if (!role.equals(RoleConstant.TEACHER)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         if (!courseService.hasPermission(classCreateDto.getCourseId())) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         return Result.success(courseService.addClass(classCreateDto));

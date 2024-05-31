@@ -7,6 +7,7 @@ import com.software.constant.RoleConstant;
 import com.software.dto.*;
 import com.software.entity.Assignment;
 import com.software.entity.StudentAssignment;
+import com.software.exception.InvalidParameterException;
 import com.software.exception.PermissionDeniedException;
 import com.software.result.PageResult;
 import com.software.result.Result;
@@ -61,6 +62,7 @@ public class AssignmentController {
         String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
         if (!role.equals(RoleConstant.TEACHER)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         if (!courseService.hasPermission(courseService.getCourseByClass(assignmentPublishDto.getClassId()))) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+        if(assignmentPublishDto.getTitle().isBlank()) throw new InvalidParameterException(MessageConstant.PARAMETER_BLANK);
         assignmentService.publishAssignment(assignmentPublishDto);
         return Result.success();
     }
