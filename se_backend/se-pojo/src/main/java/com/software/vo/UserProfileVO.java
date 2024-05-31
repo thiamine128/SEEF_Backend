@@ -19,6 +19,7 @@ public class UserProfileVO {
     private Date createTime;
     private Long subscribers;
     private Boolean subscribed;
+    private String realName;
 
     public static UserProfileVO fromUser(User user, Boolean subscribed) {
         return new UserProfileVOBuilder()
@@ -31,6 +32,7 @@ public class UserProfileVO {
                 .nickname(user.getNickname())
                 .id(user.getId())
                 .subscribers(user.getSubscribers())
-                .role(user.getRole()).build();
+                .role(user.getRole())
+                .realName(user.getRealName()).build();
     }
 }
