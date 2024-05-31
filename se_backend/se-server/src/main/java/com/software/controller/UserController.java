@@ -9,6 +9,7 @@ import com.software.dto.*;
 import com.software.entity.Course;
 import com.software.entity.TClass;
 import com.software.entity.User;
+import com.software.exception.InvalidParameterException;
 import com.software.properties.JwtProperties;
 import com.software.result.Result;
 import com.software.service.SubscribeService;
@@ -142,7 +143,7 @@ public class UserController {
     @PostMapping("/register")
     @Operation(summary = "注册")
     public Result register(@RequestBody UserRegisterDTO userRegisterDTO){
-
+        if(userRegisterDTO.getName().isBlank()||userRegisterDTO.getPassword().isBlank())throw new InvalidParameterException(MessageConstant.PARAMETER_BLANK);
         userService.register(userRegisterDTO);
 
         return Result.success();

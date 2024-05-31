@@ -20,7 +20,7 @@ public interface AssignmentMapper {
     void publishAssignment(AssignmentPublishDto assignmentPublishDto);
     @Select("select * from assignments where class_id=#{classId}")
     List<Assignment> getAssignmentsInClass(Long classId);
-    @Insert("insert into student_assignment (student_id, assignment_id, assignment_file, assignment_context, submission_time) values (#{studentId}, #{assignmentId}, #{assignmentFile}, #{assignmentContext}, NOW())")
+    @Insert("insert into student_assignment (student_id, assignment_id, assignment_file, assignment_context, submission_time) values (#{studentId}, #{assignmentId}, #{assignmentFile}, #{assignmentContext}, NOW()) ON DUPLICATE KEY UPDATE assignment_file=#{assignmentFile}, assignment_context =#{assignmentContext}, submission_time= NOW()")
     void submitAssignment(Long studentId, Long assignmentId, String assignmentFile, String assignmentContext);
     @Select("select due_date from assignments where id=#{assignmentId}")
     Date getDueDate(Long assignmentId);

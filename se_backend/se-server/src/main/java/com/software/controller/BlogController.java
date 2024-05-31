@@ -6,6 +6,7 @@ import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
 import com.software.dto.*;
 import com.software.entity.Blog;
+import com.software.exception.InvalidParameterException;
 import com.software.exception.PermissionDeniedException;
 import com.software.result.PageResult;
 import com.software.result.Result;
@@ -37,6 +38,7 @@ public class BlogController {
     @PostMapping("/create")
     @Operation(summary = "创建博客")
     public Result createBlog(@RequestBody BlogCreateDTO blogCreateDTO) {
+        if(blogCreateDTO.getTitle().isBlank()||blogCreateDTO.getContext().isBlank()) throw new InvalidParameterException(MessageConstant.PARAMETER_BLANK);
         blogService.create(blogCreateDTO);
         return Result.success();
     }
@@ -100,7 +102,7 @@ public class BlogController {
     @Operation(summary = "创建收藏夹")
     public Result createFavourCategory(@RequestParam String category){
         if(category== null|| category.isBlank()){
-            throw new IllegalArgumentException("Invalid category");
+            throw new InvalidParameterException(MessageConstant.PARAMETER_BLANK);
         }
         blogService.createFavourCategory(category);
         return Result.success();
@@ -109,7 +111,7 @@ public class BlogController {
     @Operation(summary = "删除收藏夹")
     public Result deleteFavourCategory(@RequestParam String category){
         if(category==null|| category.isBlank()){
-            throw new IllegalArgumentException("Invalid category");
+            throw new InvalidParameterException(MessageConstant.PARAMETER_BLANK);
         }
         blogService.deleteFavourCategory(category);
         return Result.success();
@@ -129,7 +131,7 @@ public class BlogController {
     @Operation(summary = "更新收藏夹名")
     public Result updateCategory(@RequestParam String newCategoryName, @RequestParam Long categoryId){
         if(newCategoryName== null|| newCategoryName.isBlank()){
-            throw new IllegalArgumentException("Invalid category");
+            throw new InvalidParameterException(MessageConstant.PARAMETER_BLANK);
         }
         blogService.updateFavourCategory(newCategoryName,categoryId);
         return Result.success();

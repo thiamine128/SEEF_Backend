@@ -1,6 +1,8 @@
 package com.software.controller;
 
+import com.software.constant.MessageConstant;
 import com.software.dto.Category;
+import com.software.exception.InvalidParameterException;
 import com.software.result.Result;
 import com.software.service.BlogService;
 import com.software.service.SpaceService;
@@ -35,7 +37,7 @@ public class SpaceController {
     @Operation(summary = "创建分类")
     public Result createCategory(@RequestParam String category){
         if(category== null|| category.isBlank()){
-            throw new IllegalArgumentException("Invalid category");
+            throw new InvalidParameterException(MessageConstant.PARAMETER_BLANK);
         }
         spaceService.createCategory(category);
         return Result.success();
@@ -44,7 +46,7 @@ public class SpaceController {
     @Operation(summary = "删除分类")
     public Result deleteCategory(@RequestParam String category){
         if(category== null|| category.isBlank()){
-            throw new IllegalArgumentException("Invalid category");
+            throw new InvalidParameterException(MessageConstant.PARAMETER_BLANK);
         }
         spaceService.deleteCategory(category);
         return Result.success();
@@ -54,7 +56,7 @@ public class SpaceController {
     @Operation(summary = "更新分类名")
     public Result updateCategory(@RequestParam String newCategoryName, @RequestParam Long categoryId){
         if(newCategoryName== null|| newCategoryName.isBlank()){
-            throw new IllegalArgumentException("Invalid category");
+            throw new InvalidParameterException(MessageConstant.PARAMETER_BLANK);
         }
         spaceService.updateCategory(newCategoryName,categoryId);
         return Result.success();
