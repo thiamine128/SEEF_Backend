@@ -20,4 +20,10 @@
             </if>
         </where>
     </select>
+    <select id="getTeacherClasses" resultType="com.software.entity.CourseClass">
+        select * from classes where id in
+        <foreach collection="classIds" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
 </mapper>

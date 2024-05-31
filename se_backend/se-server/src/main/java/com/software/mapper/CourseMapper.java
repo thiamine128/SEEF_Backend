@@ -9,6 +9,7 @@ import com.software.entity.CourseClass;
 import com.software.entity.Enrollment;
 import org.apache.ibatis.annotations.*;
 
+import java.util.Collection;
 import java.util.List;
 
 @Mapper
@@ -39,4 +40,8 @@ public interface CourseMapper {
 
     @Delete("delete from enrollments where student_id=#{studentId} and class_id =#{classId}")
     void deleteStudent(Long studentId, Long classId);
+    @Select("select class_id from teacher_class where teacher_id = #{teacherId}")
+    List<Long> getClassesId(Long teacherId);
+
+    List<CourseClass> getTeacherClasses(List<Long> classIds);
 }

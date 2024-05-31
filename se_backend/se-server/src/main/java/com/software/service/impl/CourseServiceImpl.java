@@ -219,4 +219,14 @@ public class CourseServiceImpl implements CourseService {
         courseMapper.deleteStudent(student.getStudentId(),student.getClassId());
         }
     }
+
+    @Override
+    public List<CourseClassVO> getTeacherClass(Long teacherId) {
+        List<Long> classIds = courseMapper.getClassesId(teacherId);
+        if(classIds.isEmpty())
+            return null;
+        return courseMapper.getTeacherClasses(classIds).stream().map(courseClass -> {
+            return CourseClassVO.fromCourseClass(courseClass, classMapper.getTeachers(courseClass.getId()), true, getCourseById(courseClass.getCourseId()).getName());
+        }).toList();
+    }
 }

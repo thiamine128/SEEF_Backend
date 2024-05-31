@@ -107,6 +107,13 @@ public class CourseController {
         return Result.success(courseService.getClasses(classQueryDto));
     }
 
+    @GetMapping("/listTeacherClass")
+    @Operation(summary = "获取教师的教学班")
+    public Result<List<CourseClassVO>> teacherClass(@RequestParam Long teacherId){
+        List<CourseClassVO> result = courseService.getTeacherClass(teacherId);
+        return Result.success(result);
+    }
+
     @GetMapping("/list")
     @Operation(summary = "根据名字查询课程")
     public Result<PageResult> pagedList(@ParameterObject CoursePageQueryDto coursePageQueryDto) {
