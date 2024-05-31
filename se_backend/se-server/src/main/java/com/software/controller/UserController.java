@@ -194,6 +194,8 @@ public class UserController {
         long id = (long) currentUser.get(JwtClaimsConstant.USER_ID);
         String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
         List<Long> courseIds = userService.getCourseIds(role,id);
+        if(courseIds.isEmpty())
+            return Result.success();
         List<Course> courses = userService.getCourses(courseIds);
         return Result.success(courses);
     }
