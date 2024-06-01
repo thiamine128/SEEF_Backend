@@ -17,6 +17,31 @@ axios.interceptors.request.use(config => {
     return Promise.reject(error);
 }); //请求头token设置
 
+axios.instance.interceptors.response.use(
+    result=>{
+        if(result.data.code === 1)
+        {
+            return result.data;
+        }
+        //alert(result.data.message?result.data.message:'服务异常');
+        ElMessage.error(result.data.message?result.data.message:'服务异常');
+       return Promise.reject(result.data)
+    },
+    err=>{
+        //判断相应状态码
+        if(err.response.status===401){
+            ElMessage.error('请先登录')
+            router.push('/login');
+        }else {
+                ElMessage.error('服务异常')
+        }
+
+    
+        return Promise.reject(err);//异步的状态转化成失败的状态
+    }
+)
+
+
 const app = createApp(App);
 app.use(App);
 app.use(ElementPlus);
