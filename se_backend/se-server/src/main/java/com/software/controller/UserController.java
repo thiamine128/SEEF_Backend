@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 /**
  * @author
@@ -143,8 +144,12 @@ public class UserController {
     @PostMapping("/register")
     @Operation(summary = "注册")
     public Result register(@RequestBody UserRegisterDTO userRegisterDTO){
-        if(userRegisterDTO.getName().isBlank()||userRegisterDTO.getPassword().isBlank())throw new InvalidParameterException(MessageConstant.PARAMETER_BLANK);
-        userService.register(userRegisterDTO);
+        if(userRegisterDTO.getName().isBlank()||userRegisterDTO.getPassword().isBlank()||userRegisterDTO.getNickName().isBlank())throw new InvalidParameterException(MessageConstant.PARAMETER_BLANK);
+        String name = userRegisterDTO.getName();
+        String pattern = "^[a-zA-Z0-9]+$";
+        if(!Pattern.matches(pattern,name))
+            return Result.error("账号应只包含数字和英文");
+            userService.register(userRegisterDTO);
 
         return Result.success();
     }
@@ -210,6 +215,7 @@ public class UserController {
     }
 
     @GetMapping("/searchUser")
+    @Operation(summary = "根据学/工号查询用户")
     public Result<List<UserProfileVO>> searchUser(@RequestParam String userName){
         List<User> users = userService.getUserByName(userName);
         List<UserProfileVO> result = new ArrayList<UserProfileVO>();
@@ -222,4 +228,6 @@ public class UserController {
 
         return Result.success(result);
     }
+
+
 }

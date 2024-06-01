@@ -111,8 +111,8 @@ public class AdminController {
                             Row row = sheet.getRow(i);
                             //首行  提取注解
                             if (firstRow) {
-                                if (row.getCell(0).getStringCellValue().equals("name")
-                                        && row.getCell(1).getStringCellValue().equals("email")
+                                if (row.getCell(0).getStringCellValue().equals("工号")
+                                        && row.getCell(1).getStringCellValue().equals("邮箱")
                                        )
                                 {log.info("success");} else {
                                     return Result.error("格式不正确，请下载模板进行参考");
@@ -258,8 +258,8 @@ public class AdminController {
                             Row row = sheet.getRow(i);
                             //首行  提取注解
                             if (firstRow) {
-                                if (row.getCell(0).getStringCellValue().equals("name")
-                                        && row.getCell(1).getStringCellValue().equals("email")
+                                if (row.getCell(0).getStringCellValue().equals("学号")
+                                        && row.getCell(1).getStringCellValue().equals("邮箱")
                                 )
                                 {log.info("success");} else {
                                     return Result.error("格式不正确，请下载模板进行参考");

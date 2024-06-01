@@ -2,6 +2,7 @@ package com.software.service.impl;
 
 import com.software.entity.User;
 import com.software.mapper.TAMapper;
+import com.software.mapper.UserMapper;
 import com.software.service.TAService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,13 @@ import java.util.List;
 public class TAServiceImpl implements TAService {
     @Autowired
     TAMapper taMapper;
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
-    public void addTA(Long studentId, Long classId, Long courseId) {
-        taMapper.addTA(studentId, classId, courseId);
+    public void addTA(String studentAccount, Long classId, Long courseId) {
+        Long id = userMapper.getIdByName(studentAccount);
+        taMapper.addTA(id, classId, courseId);
     }
 
     @Override

@@ -9,6 +9,7 @@ import lombok.Data;
  */
 @Data
 public class UserRegisterDTO {
+
     private String name;
 
     private String email;
@@ -16,4 +17,6 @@ public class UserRegisterDTO {
     private String verificationCode;
 
     private String password;
+
+    private String nickName;
 }

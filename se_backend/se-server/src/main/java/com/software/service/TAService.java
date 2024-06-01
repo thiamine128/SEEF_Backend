@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface TAService {
 
-    void addTA(Long studentId, Long classId, Long courseId);
+    void addTA(String studentId, Long classId, Long courseId);
     
     void deleteTA(Long studentId, Long classId, Long courseId);
 

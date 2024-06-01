@@ -265,9 +265,9 @@ public class CourseController {
                             Row row = sheet.getRow(i);
                             //首行  提取注解
                             if (firstRow) {
-                                if (row.getCell(0).getStringCellValue().equals("account")
-                                        && row.getCell(1).getStringCellValue().equals("course")
-                                        && row.getCell(2).getStringCellValue().equals("class")
+                                if (row.getCell(0).getStringCellValue().equals("学号")
+                                        && row.getCell(1).getStringCellValue().equals("课程名")
+                                        && row.getCell(2).getStringCellValue().equals("班级名")
                                 )
                                 {log.info("success");}
                                 else {
@@ -294,14 +294,14 @@ public class CourseController {
                                     String name = row.getCell(0).getStringCellValue();
                                     if (StringUtils.isEmpty(name)) {
                                         isThrow = true;
-                                        return Result.error("导入失败(第" + theRow + "行,姓名不能为空)");
+                                        return Result.error("导入失败(第" + theRow + "行,不能为空)");
 
                                     } else {
                                         if (!nameList.isEmpty() && nameList.size() > 0) {
                                             //判断是否重复
                                             if (nameList.contains(name)) {
                                                 isThrow = true;
-                                                return Result.error("导入失败(第" + theRow + "行,name" + name + "有重复)");
+                                                return Result.error("导入失败(第" + theRow + "行,学号" + name + "有重复)");
 
                                             } else {
                                                 nameList.add(name);
@@ -314,7 +314,7 @@ public class CourseController {
                                             nameList.add(name);
                                             User u =userService.getByACCount(name);
                                             if(u==null)
-                                                Result.error("导入失败(第" + theRow + "行,name" + name + "不存在)");
+                                                Result.error("导入失败(第" + theRow + "行,学号" + name + "不存在)");
                                             student.setUserId(u.getId());
                                         }
                                     }

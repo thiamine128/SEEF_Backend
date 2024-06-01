@@ -10,6 +10,7 @@ import com.software.entity.User;
 import com.software.result.Result;
 import com.software.service.SubscribeService;
 import com.software.service.TAService;
+import com.software.service.UserService;
 import com.software.utils.BaseContext;
 import com.software.vo.CourseClassVO;
 import com.software.vo.UserProfileVO;
@@ -37,21 +38,24 @@ public class TAController {
     private TAService taService;
     @Autowired
     private SubscribeService subscribeService;
+    @Autowired
+    private UserService userService;
     @PostMapping("/addTA")
     @Operation(summary = "添加助教")
     @AuthCheck(mustRole = {RoleConstant.TEACHER})
-    public Result addTA(@RequestParam Long studentId, @RequestParam Long classId, @RequestParam Long courseId){
-        taService.addTA(studentId, classId, courseId);
+    public Result addTA(@RequestParam String studentAccount, @RequestParam Long classId, @RequestParam Long courseId){
+        //User u = userService.getUserByName(account);
+        taService.addTA(studentAccount, classId, courseId);
         return Result.success();
     }
-    @PostMapping("/addButchTA")
-    @Operation(summary = "批量添加助教")
-    @AuthCheck(mustRole = {RoleConstant.TEACHER})
-    public Result addButchTA(@RequestBody List<AddTADTO> addTADTOs){
-        for(AddTADTO student:addTADTOs)
-            taService.addTA(student.getStudentId(), student.getClassId(), student.getCourseId());
-        return Result.success();
-    }
+//    @PostMapping("/addButchTA")
+//    @Operation(summary = "批量添加助教")
+//    @AuthCheck(mustRole = {RoleConstant.TEACHER})
+//    public Result addButchTA(@RequestBody List<AddTADTO> addTADTOs){
+//        for(AddTADTO student:addTADTOs)
+//            taService.addTA(student.getStudentId(), student.getClassId(), student.getCourseId());
+//        return Result.success();
+//    }
     @DeleteMapping("/deleteTA")
     @Operation(summary = "删除助教")
     @AuthCheck(mustRole = {RoleConstant.TEACHER})
