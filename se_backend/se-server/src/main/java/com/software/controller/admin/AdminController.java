@@ -113,6 +113,7 @@ public class AdminController {
                             if (firstRow) {
                                 if (row.getCell(0).getStringCellValue().equals("工号")
                                         && row.getCell(1).getStringCellValue().equals("邮箱")
+                                         && row.getCell(2).getStringCellValue().equals("姓名")
                                        )
                                 {log.info("success");} else {
                                     return Result.error("格式不正确，请下载模板进行参考");
@@ -188,6 +189,21 @@ public class AdminController {
                                     isThrow = true;
                                     return Result.error("导入失败(第" + theRow + "行,邮箱不能为空)");
                                 }
+                                if (row.getCell(2) != null) {
+                                    row.getCell(2).setCellType(CellType.STRING);
+                                    String realName = row.getCell(2).getStringCellValue();
+                                    if (StringUtils.isEmpty(realName)) {
+                                        isThrow = true;
+                                        return Result.error("导入失败(第" + theRow + "行,姓名不能为空)");
+                                    } else {
+                                            teacher.setRealName(realName);
+                                    }
+                                } else {
+                                    isThrow = true;
+                                    return Result.error("导入失败(第" + theRow + "行,姓名不能为空)");
+                                }
+
+
                                 teacher.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
                                 teacherList.add(teacher);
                             }
@@ -260,6 +276,7 @@ public class AdminController {
                             if (firstRow) {
                                 if (row.getCell(0).getStringCellValue().equals("学号")
                                         && row.getCell(1).getStringCellValue().equals("邮箱")
+                                        && row.getCell(2).getStringCellValue().equals("姓名")
                                 )
                                 {log.info("success");} else {
                                     return Result.error("格式不正确，请下载模板进行参考");
@@ -335,6 +352,24 @@ public class AdminController {
                                     isThrow = true;
                                     return Result.error("导入失败(第" + theRow + "行,邮箱不能为空)");
                                 }
+
+
+                                if (row.getCell(2) != null) {
+                                    row.getCell(2).setCellType(CellType.STRING);
+                                    String realName = row.getCell(2).getStringCellValue();
+                                    if (StringUtils.isEmpty(realName)) {
+                                        isThrow = true;
+                                        return Result.error("导入失败(第" + theRow + "行,姓名不能为空)");
+                                    } else {
+                                        teacher.setRealName(realName);
+                                    }
+                                } else {
+                                    isThrow = true;
+                                    return Result.error("导入失败(第" + theRow + "行,姓名不能为空)");
+                                }
+
+
+
                                 teacher.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
                                 teacherList.add(teacher);
                             }

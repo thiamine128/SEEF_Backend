@@ -32,9 +32,9 @@
     </select>
 
     <insert id="addButchUser" >
-        insert into users (name, email, role, password) Values
+        insert into users (name, email, role, password, real_name) Values
         <foreach collection="users" item="u" separator=",">
-            (#{u.name}, #{u.email}, #{u.role}, #{u.password})
+            (#{u.name}, #{u.email}, #{u.role}, #{u.password}, (#{u.realName}))
         </foreach>
     </insert>
 

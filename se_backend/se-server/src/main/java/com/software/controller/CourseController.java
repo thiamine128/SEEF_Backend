@@ -124,6 +124,8 @@ public class CourseController {
     @Operation(summary = "根据id查询课程")
     public Result<CourseVO> getCourseById(@RequestParam Long id) {
         Course course = courseService.getCourseById(id);
+        if(course == null)
+            return Result.success(null);
         return Result.success(CourseVO.fromCourse(course, courseService.hasPermission(id)));
     }
 
@@ -136,7 +138,9 @@ public class CourseController {
     @PostMapping("/addTeacher")
     @Operation(summary = "添加教师到课程组")
     @AuthCheck(mustRole = {RoleConstant.ADMIN,RoleConstant.TEACHER})
-    public Result addTeacher(@RequestParam Long teacherId, @RequestParam Long courseId) {
+    public Result addTeacher(@RequestParam String teacherAccount, @RequestParam Long courseId) {
+        User u = userService.getByACCount(teacherAccount);
+        Long teacherId = u.getId();
         if (!courseService.hasPermission(courseId)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         if (!userService.isTeacher(teacherId)) throw new InvalidUserException(MessageConstant.INVALID_USER);
         courseService.addTeacherToCourse(teacherId, courseId);
@@ -146,8 +150,10 @@ public class CourseController {
     @PostMapping("/addTeacherToClass")
     @Operation(summary = "分配教师到教学班")
     @AuthCheck(mustRole = {RoleConstant.ADMIN,RoleConstant.TEACHER})
-    public Result addTeacherToClass(@RequestParam Long teacherId, @RequestParam Long classId) {
+    public Result addTeacherToClass(@RequestParam String teacherAccount, @RequestParam Long classId) {
         Long courseId = courseService.getCourseByClass(classId);
+        User u = userService.getByACCount(teacherAccount);
+        Long teacherId = u.getId();
         if (!courseService.hasPermission(courseId)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         if (!userService.isTeacher(teacherId)) throw new InvalidUserException(MessageConstant.INVALID_USER);
         courseService.addTeacherToClass(teacherId, classId);
@@ -157,7 +163,9 @@ public class CourseController {
     @DeleteMapping("/deleteTeacherFromClass")
     @Operation(summary = "取消教学班教师分配")
     @AuthCheck(mustRole = {RoleConstant.ADMIN,RoleConstant.TEACHER})
-    public Result deleteTeacherFromClass(@RequestParam Long teacherId, @RequestParam Long classId) {
+    public Result deleteTeacherFromClass(@RequestParam String teacherAccount, @RequestParam Long classId) {
+        User u = userService.getByACCount(teacherAccount);
+        Long teacherId = u.getId();
         Long courseId = courseService.getCourseByClass(classId);
         if (!courseService.hasPermission(courseId)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         courseService.removeTeacherFromClass(teacherId, classId);
