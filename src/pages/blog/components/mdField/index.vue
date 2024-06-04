@@ -1,5 +1,5 @@
 <template>
-    <div class="textSet">
+    <div :class="{textSet: true}">
         <div class="marginSet">
             <markdown :source="inputContent" :plugins="plugins"/>
         </div>

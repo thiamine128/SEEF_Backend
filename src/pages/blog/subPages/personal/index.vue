@@ -1,14 +1,18 @@
 <template>
     <div class="content-container">
         <div class="personal-container">
-            <img class="portraitSet" :src="my_avatar" @error="altImg">
+            <img class="portraitSet" :src="my_avatar" @error="altImg" @click="uploadUserAvatar">
             <div class="textSet">
                 <div class="nameSet">
                     <div :class="{ nameFont: true }"> {{my_name}} </div>
 
-                    <personal-button v-if="showSubscribe" class="subscribeSet"
-                     :img-path="require('@/assets/blog/subscribe.png')"
-                     :content="buttonName" @click="subscribeUser"/>
+                    <personal-button v-if="noPermit" class="subscribeSet"
+                                     :img-path="require('@/assets/blog/subscribe.png')"
+                                     :content="buttonName" @click="subscribeUser"/>
+
+                    <personal-button v-if="!noPermit" class="subscribeSet"
+                                     :img-path="require('@/assets/blog/cancel.png')"
+                                     content="登出" @click="logoutFunc"/>
 
                 </div>
                 <div :class="{ contentFont: true }"> {{email}} </div>
@@ -16,13 +20,21 @@
             </div>
         </div>
         <div class="navStyle">
-            <div class="select">
-                {{introduction}}
+            <div class="select" @click="isEdit = !noPermit" v-click-outside="handleOutsideProfile">
+                <div v-if="!isEdit" style="margin-left: 30px; text-align: left; width: 100%; height: 100%">
+                    {{introduction}}
+                </div>
+
+                <textarea v-if="isEdit && !noPermit" v-model="introduction"
+                  style="padding-left: 30px; padding-right: 30px; text-align: left; color: #8e8e8e;
+                  width: 95%; height: 100%; border: none; outline: none; background-color: rgba(0, 0, 0, 0)"/>
+
             </div>
+
             <div class="show">
                 <div class="like" >
-                    <div :class="{ contentFont: true }"> 点赞 </div>
-                    <div :class="{ contentFont: true }"> {{likes}} </div>
+                    <div :class="{ contentFont: true }"> 热度 </div>
+                    <div :class="{ contentFont: true }"> {{ popularity }}</div>
                 </div>
                 <div class="like" >
                     <div :class="{ contentFont: true }"> 关注 </div>
@@ -38,16 +50,34 @@
 
         <div class="infoStyle">
 
-            <div ref="pieChart" style="width: 40%; height: 400px; margin: auto;"></div>
-            <personal-card  class="cardSet60" height-set="500px" r-title="发布文章"/>
+            <personal-card  class="cardSet40" height-set="500px"  r-title="发布文章" :show-change="!noPermit"
+            @addSpace="callSpaceCreate"/>
+
+            <div ref="pieChart" style="width: 60%; height: 400px; margin: auto;"></div>
+
 
         </div>
 
-        <div class="infoStyle" style="height: 400px">
+        <div v-if="!noPermit" class="infoStyle" style="height: 870px">
 
-            <personal-card  style="width: 50%" height-set="400px" r-title="关注列表"/>
-            <personal-card  style="width: 50%" height-set="400px" r-title="收藏列表"/>
+            <div style="display: flex;flex-direction: column; width: 40%">
+                <personal-card  style="width: 100%; border: none" height-set="435px" r-title="收藏列表" :show-change="!noPermit"
+                @addCategory="callCategoryCreate"/>
+                <personal-card  style="width: 100%; border: none" height-set="435px" r-title="关注列表"/>
+            </div>
 
+            <article-list style="width: 60%; border-radius: 0; border: none"
+            height-set="870px" r-title="热门文章 Blogs"
+            :list-set="hotspotList" select="article" :total-page="hotspotPageSize"
+            @page-change="pullArticles"></article-list>
+
+        </div>
+
+        <div v-if="noPermit" class="infoStyle" style="height: 870px">
+            <article-list style="width: 100%; border-radius: 0; border: none"
+                          height-set="870px" r-title="热门文章 Blogs"
+                          :list-set="hotspotList" select="article" :total-page="hotspotPageSize"
+                          @page-change="pullArticles"></article-list>
         </div>
 
     </div>
@@ -59,33 +89,37 @@ import personalButton from "@/pages/blog/components/personalButton/index.vue";
 import PersonalCard from "@/pages/blog/components/personalCard/index.vue";
 import * as echarts from 'echarts';
 import dayjs from "dayjs";
-import {callError} from "@/callMessage";
+import {callError, callInfo} from "@/callMessage";
 import store from "@/store/store";
-import {getUserData, subscribe_func, unSubscribe_func} from "@/pages/blog/api";
+import {getUserData, subscribe_func, unSubscribe_func, uploadAvatar} from "@/pages/blog/api";
+import {ref} from "vue";
+import articleList from "@/pages/blog/components/articleList/index.vue";
 
 export default {
 
     name: "personal",
-    components: {PersonalCard, personalButton},
+    components: {articleList, PersonalCard, personalButton},
     data(){
         return{
             my_avatar: require('@/assets/blog/user.png'),
             my_name: '',
             createTime: 0,
             email: '', //邮箱，现在还没有返回
-            likes: 0, //博客获得的总点赞数
+            popularity: 0, //热度
             subscribes: 0, //关注（关注别人）的总数
             articles: 0, //发布的文章总数
-            articleList: [], //发表的文章具体信息，要分页
-            subscribeList: [], //关注博主的具体信息，要分页，且要有收藏夹
-            collectList: [], //收藏的文章的具体信息，要分页，且要有收藏夹
             introduction: '该用户没有留下简介......',
-            isSubscribe: false //是否关注过
+            past_introduction: '该用户没有留下简介......',
+            isSubscribe: false, //是否关注过
+            isEdit: false,
+
+            hotspotPageSize: 1,
+            hotspotList: []
         }
     },
     computed:{
 
-        showSubscribe(){
+        noPermit(){
             return store.getters.getData.id != this.$route.params.userId;
         },
 
@@ -95,6 +129,51 @@ export default {
 
     },
     methods:{
+
+        logoutFunc(){
+            store.dispatch('logout');
+        },
+
+        async pullArticles(pageNum){
+            try{
+                const response = await this.$http.get(
+                    `blog/viewBlogs?page=${pageNum}&pageSize=6&previewLength=500&userId=${this.$route.params.userId}&orderBy=popularity&sort=desc`
+                );
+                console.log(response);
+                if (response.status === 200) {
+                    this.hotspotList = response.data.data.records;
+                    this.hotspotPageSize = Math.ceil(response.data.data.total / 6);
+                    this.articles = response.data.data.total;
+                    this.popularity = Math.floor(this.hotspotList[0].popularity);
+                } else callError('网络错误');
+            }catch (error){}
+        },
+
+        callSpaceCreate(){
+            this.$emit('callFloat', '', 4);
+        },
+
+        callCategoryCreate(pageNum){
+            this.$emit('callFloat', '', 6);
+        },
+
+        async handleOutsideProfile(event){
+            if (this.isEdit){
+                this.isEdit = false;
+                if (this.introduction.length > 150){
+                    callInfo('简介过长');
+                    this.introduction = '该用户没有留下简介......';
+                }else if (this.introduction.length === 0){
+                    this.introduction = '该用户没有留下简介......';
+                }else if (this.introduction !== this.past_introduction){
+                    await this.$http.post('user/update', {
+                        "profile": this.introduction
+                    });
+                    callInfo('个人简介已修改');
+                    this.past_introduction = this.introduction;
+                }
+            }
+        },
 
         altImg(e){
             this.my_avatar = require('@/assets/blog/user.png');
@@ -106,61 +185,102 @@ export default {
 
         async pullPersonalData(){
             const personal_data = await getUserData(this.$route.params.userId, false);
+            console.log('personal_data:');
+            console.log(personal_data);
             try{
-                this.my_avatar = require(personal_data.avatar);
-            }catch (e){}
+                personal_data.avatar = personal_data.avatar + '?t=' + new Date().getTime();
+                this.my_avatar = ref(personal_data.avatar);
+            }catch (e){
+                console.error(e);
+            }
             this.my_name = personal_data.name;
             this.createTime = personal_data.createTime;
             this.email = personal_data.email;
             this.isSubscribe = personal_data.subscribed;
-            if (personal_data.profile) this.introduction = personal_data.profile;
-
+            this.subscribes = personal_data.subscribers;
+            if (personal_data.profile){
+                this.introduction = personal_data.profile;
+                this.past_introduction = this.introduction;
+            }
         },
 
         subscribeUser(){
             if (this.isSubscribe) unSubscribe_func(this.$route.params.userId);
             else subscribe_func(this.$route.params.userId);
             this.isSubscribe = !this.isSubscribe;
+        },
+
+        uploadUserAvatar(){
+            if (!this.noPermit) uploadAvatar();
+            else callInfo('只允许修改自己的头像');
         }
 
     },
 
-    mounted() {
+    async mounted() {
 
-        this.pullPersonalData();
+        try {
+            await this.pullPersonalData();
+            await this.pullArticles(1);
 
-        const myChart = echarts.init(this.$refs.pieChart);
-        const pieData = [
-            { value: 1, name: '开发' },
-            { value: 2, name: '维护' },
-            { value: 3, name: '测试' },
-            { value: 4, name: 'BUG修复' },
-            { value: 5, name: '其他' },
-        ];
+            const myChart = echarts.init(this.$refs.pieChart);
+            const pieData = [
+                // { value: 1, name: 'C++' },
+                // { value: 2, name: 'linux' },
+            ];
 
-        // 配置项
-        const option = {
-            title: {
-                text: '文章贡献数据统计', // 设置标题文本
-                left: 'center', // 标题位置
-                textStyle: {
-                    color: '#333', // 标题颜色
-                    fontSize: 18, // 标题字体大小
-                },
-            },
-            series: [
-                {
-                    type: 'pie',
-                    radius: '55%',
-                    data: pieData,
-                },
-            ],
-            legend: {
-                show: true, // 显示图例
-                bottom: '0', //图例位置
+            let sumT = 0, chartInput = 0, cnt = 0;
+            const tagsMap = new Map();
+            for (let b of this.hotspotList) {
+                if (b.tags) {
+                    for (let t of b.tags) {
+                        if ((t + '').length > 0) {
+                            if (tagsMap[t]) tagsMap[t]++;
+                            else tagsMap[t] = 1;
+                            sumT++;
+                        }
+
+                    }
+                }
             }
-        };
-        myChart.setOption(option);
+
+            for (let prop in tagsMap) {
+                cnt++;
+                if (cnt <= 4) {
+                    pieData.push({value: tagsMap[prop], name: prop});
+                    chartInput += tagsMap[prop];
+                }
+            }
+
+            if (sumT - chartInput > 0) pieData.push({value: sumT - chartInput, name: '其他'});
+
+            // 配置项
+            const option = {
+                title: {
+                    text: '文章贡献数据统计', // 设置标题文本
+                    left: 'center', // 标题位置
+                    textStyle: {
+                        color: '#333', // 标题颜色
+                        fontSize: 18, // 标题字体大小
+                    },
+                },
+                series: [
+                    {
+                        type: 'pie',
+                        radius: '55%',
+                        data: pieData,
+                    },
+                ],
+                legend: {
+                    show: true,
+                    bottom: '0',
+                }
+            };
+            myChart.setOption(option);
+        }catch (e) {
+            callError(e);
+            this.$router.push('/blog/');
+        }
     },
 }
 </script>
@@ -185,8 +305,6 @@ export default {
 .select{
     width: 800px;
     height: 100%;
-    margin-left: 30px;
-    text-align: left;
 }
 .cardSet40{
     width: 40%;

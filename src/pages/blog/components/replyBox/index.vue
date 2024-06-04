@@ -1,7 +1,7 @@
 <template>
     <div class="replySet">
         <div class="nameFont"> <strong> {{name}}：</strong> {{content}}
-            <strong v-if="userId === nowLogin && !dShow" style="margin-left: 5px; color: #ffb1b1;
+            <strong v-if="(userId === nowLogin || isAdmin) && !dShow" style="margin-left: 5px; color: #ffb1b1;
             cursor: pointer" @click.stop="deleteReply">删除</strong>
         </div>
     </div>
@@ -43,6 +43,11 @@ export default {
         this.nowLogin = store.getters.getData.id;
 
         this.pullPersonalData();
+    },
+    computed:{
+        isAdmin(){
+            return store.getters.getData.role === 'admin';
+        },
     }
 }
 </script>

@@ -16,10 +16,11 @@
                 <recommend-button v-if="rTitle === '关注列表'"
                 v-for="item in subscribed" :r-name="item.name" @click="callPersonalFunc(item.id)"/>
 
-                <recommend-button v-if="rTitle === '热门博主'"
-                v-for="item in users" :r-name="item.name" @click="callPersonalFunc(item.id)"/>
+                <recommend-button v-if="rTitle === '热门博主'" :hot-set="1"
+                v-for="item in users" :r-name="item.name" :user-id="item.id" @click="callPersonalFunc(item.id)"/>
 
-                <recommend-button v-if="rTitle === '相关博客'"
+                <recommend-button v-if="rTitle === '相关博客'" :bold-set="true" :abstract="item.abstract" :tag-list="item.tags"
+                :create-time="item.createTime" :author="item.author"
                 v-for="item in blogs" :r-name="item.name" @click="callBlogFunc(item.id)"/>
 
             </div>
@@ -29,7 +30,7 @@
 
 <script>
 import recommendButton from "@/pages/blog/components/recommendButton/index.vue";
-import {getBlogData, getSubscribed, getUserData} from "@/pages/blog/api";
+import {dateF, getBlogData, getSubscribed, getUserData} from "@/pages/blog/api";
 export default {
     name: "recommend",
     props: ['heightSet', 'rTitle'],
@@ -44,11 +45,17 @@ export default {
         },
 
         callPersonalFunc(userId){
-            this.$router.push(`/blog/personal/${userId}`);
+            this.$router.push(`/blog/`);
+            setTimeout(()=>{
+                this.$router.push(`/blog/personal/${userId}`);
+            }, 100);
         },
 
         callBlogFunc(blogId){
-            this.$router.push(`/blog/article/${this.blogId}`);
+            this.$router.push(`/blog/`);
+            setTimeout(()=>{
+                this.$router.push(`/blog/article/${blogId}`);
+            }, 100);
         }
 
     },
@@ -73,10 +80,12 @@ export default {
             },
 
             recommendList: [
-                {name: '自编码器'}, {name: 'CNN'},
+                {name: 'linux'}, {name: 'CNN'},
                 {name: '高等代数'}, {name: 'ChatGPT'},
                 {name: '图论'}, {name: '软件工程'},
-                {name: 'python'}, {name: 'Java'}
+                {name: 'python'}, {name: 'Java'},
+                {name: '数学分析'}, {name: 'SQL'},
+                {name: '操作系统'}
             ],
 
             blogs: [], //相关博客
@@ -88,29 +97,37 @@ export default {
     async mounted() {
         this.frameStyle.height = this.heightSet;
 
-        try{
-            const subscribed_init = await getSubscribed();
-            for (let sb of subscribed_init){
-                const userData = await getUserData(sb);
-                this.subscribed.push({'name': userData.name, 'id': sb});
-            }
-        }catch(error){}
+        if (this.rTitle === '关注列表'){
+            try{
+                const subscribed_init = await getSubscribed();
+                for (let sb of subscribed_init){
+                    const userData = await getUserData(sb);
+                    this.subscribed.push({'name': userData.name, 'id': sb});
+                }
+            }catch(error){}
+        }
 
-        try{
-            const users_init = [1,2,3,4,5,6,7,8,9,10];
-            for (let sb of users_init){
-                const userData = await getUserData(sb);
-                this.users.push({'name': userData.name, 'id': sb});
-            }
-        }catch (error){}
+        if (this.rTitle === '热门博主'){
+            try{
+                const users_init = [22371182, 22371183, 22371184, 22371185, 22371186, 22371187, 22371188];
+                for (let sb of users_init){
+                    const userData = await getUserData(sb);
+                    this.users.push({'name': userData.name, 'id': sb});
+                }
+            }catch (error){}
+        }
 
-        try{
-            const blogs_init = [1,2,3,4,5,6,7,8,9,10];
-            for (let sb of blogs_init){
-                const blogData = await getBlogData(sb);
-                this.blogs.push({'name': blogData.title, 'id': sb});
-            }
-        }catch (error){}
+        if (this.rTitle === '相关博客'){
+            try{
+
+                const response = await this.$http.get(`blog/similar?blogId=${this.$route.params.id}&count=10&previewLength=30`);
+                for (let b of response.data.data){
+                    const userData = await getUserData(b.userId);
+                    this.blogs.push({'name': b.title, 'id': b.id, 'abstract': b.preview, 'tags': b.tags, 'author': userData.name, 'createTime': dateF(b.createTime)});
+                }
+
+            }catch (error){}
+        }
 
     }
 }
@@ -129,6 +146,7 @@ export default {
     font-weight: bold;
     font-size: 17px;
     text-align: center;
+    color: #0c82e9;
 }
 .moreFont{
     font-family: 'rage', sans-serif;
@@ -151,4 +169,5 @@ export default {
 hr{
     width: 100%;
 }
+
 </style>

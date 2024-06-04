@@ -37,8 +37,9 @@
 
             <personal-box v-if="personalShow" :create-time="postTime"
             :user-id="authorId" :thumb-num="thumbNum" :is-favor="isFavor" :is-like="isLike"
-            @callLike="callChangeLike" @callFavor="callChangeFavor"/>
-            <recommend height-set="300px" r-title="今日推荐"/>
+            :md-title="title" :content="content"
+            @callLike="callChangeLike" @callFavor="callChangeFavor" @callMyFavorList="callFavorList"/>
+            <recommend height-set="400px" r-title="今日推荐"/>
             <recommend height-set="400px" r-title="相关博客"/>
             <right-pin v-if="catalogShow" r-title="null" container="#md-hook" content-name="catalog"></right-pin>
 
@@ -64,32 +65,42 @@ export default {
     components: {CommentBox, Catalog, PersonalBox, recommend, blogTitle, mdField, rightPin},
     async mounted() {
 
-        const blog_Data = await getBlogData(this.$route.params.id);
-        console.log(blog_Data);
-        this.content = blog_Data.context;
-        this.updateTime = this.dateF(blog_Data.updateTIme);
-        this.postTime = this.dateF(blog_Data.createTime);
-        this.title = blog_Data.title;
-        this.authorId = blog_Data.userId;
-        this.thumbNum = blog_Data.thumbNum;
-        this.isLike = blog_Data.isLike;
-        this.isFavor = blog_Data.isFavor;
-        await this.pageChange();
+        try{
+            const blog_Data = await getBlogData(this.$route.params.id, false);
+            console.log(blog_Data);
+            this.content = blog_Data.context;
+            this.updateTime = this.dateF(blog_Data.updateTIme);
+            this.postTime = this.dateF(blog_Data.createTime);
+            this.title = blog_Data.title;
+            this.authorId = blog_Data.userId;
+            this.thumbNum = blog_Data.thumbNum;
+            this.isLike = blog_Data.isLike;
+            this.isFavor = blog_Data.isFavor;
+            await this.pageChange();
 
-        setTimeout(()=>{
-            this.catalogShow = true;
-            this.personalShow = true;
-        }, 500);
+            setTimeout(()=>{
+                this.catalogShow = true;
+                this.personalShow = true;
+            }, 500);
+        }catch (e){
+            callError(e);
+            this.$router.push('/blog/');
+        }
     },
     data(){
         return{
             content: '', title: '', postTime: '1919-8-10', updateTime: '1919-8-10',
             totalPage: 1, currentPos: 1, comments: [], commentNum: 0,
             catalogShow: false, authorId: -1, personalShow: false,
-            thumbNum: -1, isFavor: false, isLike: false
+            thumbNum: -1, isFavor: false, isLike: false,
+            intervalId: ref(null),
         }
     },
     methods:{
+
+        callFavorList(){
+            this.$emit('callFloat', '', 7);
+        },
 
         callChangeFavor(){
             this.isFavor = !this.isFavor;

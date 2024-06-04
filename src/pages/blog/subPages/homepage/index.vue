@@ -1,6 +1,6 @@
 <template>
 
-    <img src="@/assets/blog/homehead.png" style="width: 1200px; margin-top: 25px" alt="404">
+    <img src="@/assets/blog/homehead.png" :class="{homeHead1: !anime, homeHead2: anime}" alt="404">
 
     <div class="content-container">
 
@@ -8,19 +8,19 @@
 
             <md-field style="min-height: 0; margin-bottom: 10px" :input-content="broadcast_content"></md-field>
 
-            <article-list height-set="740px" r-title="~Topic~ 所有专区"
+            <article-list height-set="740px" r-title="所有专区 Topic"
                           :list-set="sectionList" select="section" :total-page="sectionTotalPage"
                           @page-change="getSections"/>
 
-            <article-list height-set="880px" r-title="~Blog~ 所有博客"
+            <article-list height-set="870px" r-title="所有博客 Blog"
                           :list-set="articleList" select="article" :total-page="articleTotalPage"
                           @page-change="getArticles"></article-list>
 
         </div>
         <div class="content-right">
             <img alt="404" src="@/assets/blog/advertisement.png" style="width: 100%;">
-            <recommend height-set="300px" r-title="今日推荐"/>
-            <recommend height-set="400px" r-title="关注列表"/>
+            <recommend height-set="300px" r-title="关注列表"/>
+            <recommend height-set="400px" r-title="今日推荐"/>
             <right-pin r-title="热门博主" content-name="recommend"></right-pin>
         </div>
     </div>
@@ -45,7 +45,8 @@ export default {
             sectionList: [],
             sectionTotalPage: 1,
             articleList: [],
-            articleTotalPage: 1
+            articleTotalPage: 1,
+            anime: true
         }
     },
     mounted() {
@@ -81,7 +82,7 @@ export default {
         async getArticles(pageNum){
             try{
                 const response = await this.$http.get(
-                    `blog/viewBlogs?page=${pageNum}&pageSize=6&previewLength=500`
+                    `blog/viewBlogs?page=${pageNum}&pageSize=6&previewLength=500&orderBy=popularity&sort=desc`
                 );
                 console.log(response);
                 if (response.status === 200) {
@@ -98,6 +99,16 @@ export default {
 </script>
 
 <style scoped>
+.homeHead1{
+    width: 0;
+    margin-top: 25px;
+    transition: width 0.5s;
+}
+.homeHead2{
+    width: 1200px;
+    margin-top: 25px;
+    transition: width 0.5s;
+}
 .content-container{
     display: flex;
     flex-direction: row;

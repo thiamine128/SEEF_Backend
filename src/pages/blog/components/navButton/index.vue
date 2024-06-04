@@ -2,8 +2,8 @@
     <div class="col"
          @mouseenter="hover = true"
          @mouseleave="hover = false"
-         @mouseover="hover = true">
-        <a  :href="dest" class="linkStyle">
+         @mouseover="hover = true" @click="goto">
+        <a class="linkStyle">
             <div v-if="buttonName !== '动态' || !badgeSet" :class="{ customFont: true }">{{buttonName}}</div>
             <el-badge v-if="buttonName === '动态' && badgeSet " :value="badgeValue" :max="99" type="primary">
                 <div :class="{ customFont: true }">{{buttonName}}</div>
@@ -15,6 +15,7 @@
 <script>
 import store from "@/store/store";
 import {callError} from "@/callMessage";
+import {fetchTopic} from "@/pages/blog/api";
 export default {
     name: "navButton",
     props: ['buttonName', 'dest'],
@@ -24,6 +25,12 @@ export default {
         }
     },
     methods:{
+
+        goto(){
+            if(this.dest === '/logout') store.dispatch('logout');
+            else this.$router.push(this.dest);
+        },
+
         async getEventCount(){
             try{
 
@@ -41,6 +48,7 @@ export default {
             }catch(error){
                 callError(error);
             }
+
         }
     },
     mounted() {

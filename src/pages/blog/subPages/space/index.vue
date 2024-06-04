@@ -3,17 +3,18 @@
         <div class="content-left">
 <!--            <article-list height-set="1000px" r-title="动态 Wonderful Space"></article-list>-->
 
-            <div v-if="eventList.length === 0" style="width: 100%; height: 1000px; display: flex; background-color: rgba(255, 255, 255, 0.9);">
-                <div style="margin: auto; font-weight: bold; font-size: 32px">
+            <div style="width: 100%; min-height: 700px; display: flex; background-color: rgba(255, 255, 255, 0.9); flex-direction: column">
+
+                <div v-if="eventList.length === 0" style="margin: auto; font-weight: bold; font-size: 32px; color: rgba(15,15,15,0.3)">
                     当前还没有动态信息
                 </div>
-            </div>
 
-            <space-box v-for="item in eventList" :event-block="item" />
+                <space-box v-for="item in eventList" :event-block="item" />
+            </div>
 
         </div>
         <div class="content-right">
-            <img alt="404" src="@/assets/blog/advertisement.png" style="width: 100%;">
+            <img alt="404" src="@/assets/blog/advertisement4.png" style="width: 100%;">
             <recommend height-set="400px" r-title="关注列表"/>
         </div>
     </div>
@@ -34,6 +35,7 @@ export default {
         }
     },
     mounted() {
+        document.documentElement.scrollTop = 0;
         this.pullUnreadEvent();
     },
     methods:{
