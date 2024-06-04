@@ -28,7 +28,28 @@
                     tags like concat('%;', #{tag}, ';%')
                 </foreach>
             </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
         </where>
+        <if test="orderBy == 'popularity'">
+            order by popularity / EXP(CAST((UNIX_TIMESTAMP() - UNIX_TIMESTAMP(create_time)) / 60 / 60 / 1000 as DOUBLE) / 10000)
+            <if test="sort != null">
+                ${sort}
+            </if>
+        </if>
+        <if test="orderBy == 'createTime'">
+            order by create_time
+            <if test="sort != null">
+                ${sort}
+            </if>
+        </if>
+        <if test="orderBy == 'updateTime'">
+            order by update_time
+            <if test="sort != null">
+                ${sort}
+            </if>
+        </if>
     </select>
 
     <select id="getAllUserPreference" resultType="com.software.entity.UserBlogOperation">

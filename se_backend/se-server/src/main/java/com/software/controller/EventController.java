@@ -1,6 +1,7 @@
 package com.software.controller;
 
 import com.software.constant.JwtClaimsConstant;
+import com.software.entity.Event;
 import com.software.result.Result;
 import com.software.service.EventService;
 import com.software.utils.BaseContext;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Tag(name = "事件接口")
 @RestController
 @RequestMapping("/api/event")
@@ -23,14 +26,14 @@ public class EventController {
 
     @GetMapping("/pull")
     @Operation(summary = "拉取事件")
-    public Result pullEvents() {
+    public Result<List<Event>> pullEvents() {
         Long id = Long.parseLong(BaseContext.getCurrentUser().get(JwtClaimsConstant.USER_ID).toString());
         return Result.success(eventService.pullEvents(id));
     }
 
     @GetMapping("/eventCount")
     @Operation(summary = "事件数量")
-    public Result getCount() {
+    public Result<Long> getCount() {
         Long id = Long.parseLong(BaseContext.getCurrentUser().get(JwtClaimsConstant.USER_ID).toString());
         return Result.success(eventService.getCnt(id));
     }

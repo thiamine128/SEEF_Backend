@@ -7,6 +7,7 @@ import com.software.constant.RoleConstant;
 import com.software.dto.BlogPreviewPageQueryDTO;
 import com.software.dto.TopicCreateDto;
 import com.software.dto.TopicPageQueryDTO;
+import com.software.exception.InvalidParameterException;
 import com.software.exception.PermissionDeniedException;
 import com.software.result.PageResult;
 import com.software.result.Result;
@@ -32,6 +33,7 @@ public class TopicController {
     @PostMapping("/create")
     @Operation(summary = "创建板块")
     public Result createTopic(@RequestBody TopicCreateDto topicCreateDto) {
+        if(topicCreateDto.getName().isBlank()||topicCreateDto.getIntroduction().isBlank())throw new InvalidParameterException(MessageConstant.PARAMETER_BLANK);
         topicService.createTopic(topicCreateDto);
         return Result.success();
     }
@@ -39,7 +41,7 @@ public class TopicController {
     @GetMapping("/pagedList")
     @Operation(summary = "板块分页查询")
     public Result<PageResult> getPagedList(@ParameterObject TopicPageQueryDTO topicPageQueryDTO){
-        //TopicPageQueryDTO topicPageQueryDTO = new TopicPageQueryDTO(page, pageSize, name);
+
         log.info("topic分页查询:{}", topicPageQueryDTO);
         PageResult pageResult = topicService.pageQuery(topicPageQueryDTO);//后绪步骤定义
         return Result.success(pageResult);

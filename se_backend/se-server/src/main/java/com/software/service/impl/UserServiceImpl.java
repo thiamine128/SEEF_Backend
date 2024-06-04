@@ -1,9 +1,6 @@
 package com.software.service.impl;
 
-import com.software.constant.JwtClaimsConstant;
-import com.software.constant.MessageConstant;
-import com.software.constant.RoleConstant;
-import com.software.constant.StatusConstant;
+import com.software.constant.*;
 import com.software.dto.*;
 import com.software.entity.Course;
 import com.software.entity.TClass;
@@ -23,6 +20,7 @@ import org.springframework.util.DigestUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * @author
@@ -108,10 +106,12 @@ public class UserServiceImpl implements UserService {
     public void register(UserRegisterDTO userRegisterDTO) {
         verifyCodeOrThrow(userRegisterDTO.getEmail(), userRegisterDTO.getVerificationCode());
         User user = new User();
+        String pattern = "^[a-zA-Z0-9]+$";
         user.setName(userRegisterDTO.getName());
         user.setPassword(DigestUtils.md5DigestAsHex(userRegisterDTO.getPassword().getBytes()));
         user.setEmail(userRegisterDTO.getEmail());
         user.setRole(RoleConstant.STUDENT);
+        user.setNickname(userRegisterDTO.getNickName());
         userMapper.insert(user);
         redisTemplate.delete(userRegisterDTO.getEmail());
     }
@@ -192,6 +192,16 @@ public class UserServiceImpl implements UserService {
         if (user == null) throw new InvalidUserException(MessageConstant.INVALID_USER);
 
         return UserProfileVO.fromUser(user, subscribeService.isSubscribed(user.getId(), id));
+    }
+
+    @Override
+    public List<User> getUserByName(String userName) {
+        return userMapper.getUserByName(userName);
+    }
+
+    @Override
+    public User getByACCount(String userAccount) {
+        return userMapper.getByAccount(userAccount);
     }
 
 

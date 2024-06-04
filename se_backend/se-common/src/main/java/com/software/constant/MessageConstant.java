@@ -22,4 +22,7 @@ public class MessageConstant {
     public static final String INVALID_CHARACTER = "存在非法字符";
     public static final String EMPTY_TAG = "标签不能为空";
     public static final String INVALID_USER = "用户不合法";
+    public static final String REQUEST_SENT = "请求已发送";
+    public static final String INVALID_REQUEST = "请求错误";
+    public static final String PARAMETER_BLANK = "内容不能为空";
 }

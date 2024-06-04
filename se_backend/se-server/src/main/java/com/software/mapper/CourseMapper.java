@@ -2,13 +2,14 @@ package com.software.mapper;
 
 import com.github.pagehelper.Page;
 import com.software.dto.CoursePageQueryDto;
-import com.software.dto.TopicPageQueryDTO;
+import com.software.dto.CourseUpdateDto;
+import com.software.dto.DeleteStudentReqDTO;
 import com.software.entity.Course;
 import com.software.entity.CourseClass;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import com.software.entity.Enrollment;
+import org.apache.ibatis.annotations.*;
 
+import java.util.Collection;
 import java.util.List;
 
 @Mapper
@@ -27,4 +28,20 @@ public interface CourseMapper {
 
     @Select("select teacher_id from teacher_course where course_id=#{courseId}")
     List<Long> getTeachers(Long courseId);
+
+    @Update("update courses set name=#{name}, introduction=#{introduction}, credit=#{credit}, syllabus=#{syllabus}, evaluation=#{evaluation} where id=#{id}")
+    void updateCourse(CourseUpdateDto courseUpdateDto);
+    @Update("update courses set cover=#{s} where id=#{courseId}")
+    void updateCover(String s, Long courseId);
+    @Select("select * from courses where name =#{courseName}")
+    Course getCourseByName(String courseName);
+
+    void addButchStudents(List<Enrollment> students);
+
+    @Delete("delete from enrollments where student_id=#{studentId} and class_id =#{classId}")
+    void deleteStudent(Long studentId, Long classId);
+    @Select("select class_id from teacher_class where teacher_id = #{teacherId}")
+    List<Long> getClassesId(Long teacherId);
+
+    List<CourseClass> getTeacherClasses(List<Long> classIds);
 }

@@ -22,4 +22,5 @@ public class Blog {
     private boolean isDeleted;
     private Long topicId;
     private Long categoryId;
+    private Long popularity;
 }

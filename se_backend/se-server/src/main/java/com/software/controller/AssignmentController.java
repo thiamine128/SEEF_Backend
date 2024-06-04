@@ -4,16 +4,18 @@ import com.software.config.OssConfiguration;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
-import com.software.dto.AssignmentPublishDto;
-import com.software.dto.AssignmentClassQueryDto;
-import com.software.dto.AssignmentSubmitDto;
-import com.software.dto.HomeWorkFeedBackDTO;
+import com.software.dto.*;
+import com.software.entity.Assignment;
+import com.software.entity.StudentAssignment;
+import com.software.exception.InvalidParameterException;
 import com.software.exception.PermissionDeniedException;
+import com.software.result.PageResult;
 import com.software.result.Result;
 import com.software.service.AssignmentService;
 import com.software.service.CourseService;
 import com.software.utils.AliOssUtil;
 import com.software.utils.BaseContext;
+import com.software.vo.AssignmentVO;
 import com.software.vo.OSSPostSignatureVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -40,7 +43,7 @@ public class AssignmentController {
 
     @PostMapping("/uploadAttachment")
     @Operation(summary = "上传作业附件")
-    public Result uploadAttachment() throws UnsupportedEncodingException {
+    public Result<OSSPostSignatureVO> uploadAttachment() throws UnsupportedEncodingException {
         String objectName = "assignment/" + UUID.randomUUID().toString();
         AliOssUtil.PostSignature postSignature = aliOssUtil.generatePostSignature(objectName, System.currentTimeMillis() + OssConfiguration.EXPIRE_SEC * 1000, 52428800);
         OSSPostSignatureVO ossPostSignatureVO = OSSPostSignatureVO.builder()
@@ -59,13 +62,22 @@ public class AssignmentController {
         String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
         if (!role.equals(RoleConstant.TEACHER)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         if (!courseService.hasPermission(courseService.getCourseByClass(assignmentPublishDto.getClassId()))) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
+        if(assignmentPublishDto.getTitle().isBlank()) throw new InvalidParameterException(MessageConstant.PARAMETER_BLANK);
         assignmentService.publishAssignment(assignmentPublishDto);
         return Result.success();
     }
 
+    @GetMapping("/all")
+    @Operation(summary = "获取全部作业")
+    public Result<List<AssignmentVO>> getAssignments(@RequestParam(required = false) Boolean showOutdated) {
+        Long id = Long.parseLong(BaseContext.getCurrentUser().get(JwtClaimsConstant.USER_ID).toString());
+        AssignmentQueryDto assignmentQueryDto = new AssignmentQueryDto(showOutdated != null && showOutdated, id);
+        return Result.success(assignmentService.getAllAssignments(assignmentQueryDto));
+    }
+
     @GetMapping("/listByClass")
     @Operation(summary = "班级作业")
-    public Result getAssignmentsInClass(@ParameterObject AssignmentClassQueryDto assignmentQueryDto) {
+    public Result<List<Assignment>> getAssignmentsInClass(@ParameterObject AssignmentClassQueryDto assignmentQueryDto) {
         return Result.success(assignmentService.getAssignmentsInClass(assignmentQueryDto.getClassId()));
     }
 
@@ -74,6 +86,7 @@ public class AssignmentController {
     public Result submitAssignment(@ParameterObject AssignmentSubmitDto assignmentSubmitDto) {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
+
         assignmentService.submitAssignment(id, assignmentSubmitDto);
         return Result.success();
     }
@@ -83,5 +96,11 @@ public class AssignmentController {
     public Result markHw(@RequestBody HomeWorkFeedBackDTO homeWorkFeedBackDTO) {
         assignmentService.markHw(homeWorkFeedBackDTO);
         return Result.success();
+    }
+
+    @GetMapping("/studentAssignment")
+    @Operation(summary = "获取学生作业")
+    public Result<List<StudentAssignment>> studentAssignment(@RequestParam Long assignmentId) {
+        return Result.success(assignmentService.getStudentAssignments(assignmentId));
     }
 }

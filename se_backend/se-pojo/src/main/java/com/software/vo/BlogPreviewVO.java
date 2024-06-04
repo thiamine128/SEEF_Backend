@@ -25,13 +25,19 @@ public class BlogPreviewVO {
     private Long topicId;
     private Long isLike;
     private Long isFavor;
+    private double popularity;
+    private String favourCategory;
+    private Long categoryId;
 
-    public static BlogPreviewVO fromBlog(Blog blog, int len, Long isLike, Long favor) {
+    public static BlogPreviewVO fromBlog(Blog blog, int len, Long isLike, Long favor, String category) {
         int sub = Math.min(blog.getContent().length(), len);
         String tags = blog.getTags();
         if (tags != null && !tags.isEmpty()) {
             tags = blog.getTags().substring(1);
         }
+        double popularity = blog.getPopularity();
+        double delta = (System.currentTimeMillis() - blog.getCreateTime().getTime()) / 60 / 60 / 1000;
+        popularity *= Math.exp(-delta / 10000);
         return new BlogPreviewVOBuilder()
                 .id(blog.getId())
                 .title(blog.getTitle())
@@ -45,6 +51,9 @@ public class BlogPreviewVO {
                 .isDeleted(blog.isDeleted())
                 .topicId(blog.getTopicId())
                 .isLike(isLike)
-                .isFavor(favor).build();
+                .isFavor(favor)
+                .popularity(popularity)
+                .favourCategory(category)
+                .categoryId(blog.getCategoryId()).build();
     }
 }

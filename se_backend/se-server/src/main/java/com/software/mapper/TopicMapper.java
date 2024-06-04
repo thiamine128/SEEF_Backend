@@ -16,6 +16,6 @@ public interface TopicMapper {
     void createTopic(TopicCreateDto topicCreateDto);
 
     Page<TopicVO> pageQuery(TopicPageQueryDTO topicPageQueryDTO);
-    @Update("update topics set is_deleted=true where id=#{topicId}")
+    @Delete("delete from topics where id=#{topicId}")
     void deleteTopic(Integer topicId);
 }

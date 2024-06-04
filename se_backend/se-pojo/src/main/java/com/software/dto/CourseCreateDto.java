@@ -10,4 +10,6 @@ public class CourseCreateDto {
     private String name;
     private String introduction;
     private BigDecimal credit;
+    private String syllabus;
+    private String evaluation;
 }

@@ -1,5 +1,7 @@
 package com.software.service;
 
+import com.software.dto.Category;
+
 /**
  * @author
  * @Description：
@@ -11,4 +13,7 @@ public interface SpaceService {
     void deleteCategory(String category);
 
 
+    void updateCategory(String category, Long categoryId);
+
+    Category getCategoryById(Long categoryId);
 }

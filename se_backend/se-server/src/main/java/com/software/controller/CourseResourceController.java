@@ -39,10 +39,10 @@ public class CourseResourceController {
     @Operation(summary = "获取资料")
     public Result<List<String>> getDocuments(@RequestParam String currentDirectory, @RequestParam Long courseId){
         String id = courseId.toString();
-        if(currentDirectory.endsWith("/") || currentDirectory.startsWith("/")){
-            throw new IllegalArgumentException("头尾不能包含斜杠");
+        if(!currentDirectory.startsWith("/") || !currentDirectory.endsWith("/")){
+            throw new IllegalArgumentException("目录必须以/开头，以/结束");
         }
-        String path = "course_resource/"+id+"/"+currentDirectory+"/";
+        String path = "course_resource/"+id+currentDirectory;
         List<String> result = aliOssUtil.getDocument(path);
         return Result.success(result);
     }
@@ -54,7 +54,10 @@ public class CourseResourceController {
         String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
         if ((!role.equals(RoleConstant.ADMIN))&&(!role.equals(RoleConstant.TEACHER)))
         {throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);}
-        String objectName = "course_resource/"+id+"/"+currentDirectory+"/"+filename;
+        if(!currentDirectory.startsWith("/") || !currentDirectory.endsWith("/")){
+            throw new IllegalArgumentException("目录必须以/开头，以/结束");
+        }
+        String objectName = "course_resource/"+id+currentDirectory+filename;
         AliOssUtil.PostSignature postSignature = aliOssUtil.generatePostSignature(objectName, System.currentTimeMillis() + OssConfiguration.EXPIRE_SEC * 1000, 52428800);
         OSSPostSignatureVO ossPostSignatureVO = OSSPostSignatureVO.builder()
                 .accessKeyId(postSignature.getAccessKeyId())
@@ -72,7 +75,10 @@ public class CourseResourceController {
         String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
         if ((!role.equals(RoleConstant.ADMIN))&&(!role.equals(RoleConstant.TEACHER)))
         {throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);}
-        String objectName = "course_resource/"+id+"/"+currentDirectory+"/"+filename;
+        if(!currentDirectory.startsWith("/") || !currentDirectory.endsWith("/")){
+            throw new IllegalArgumentException("目录必须以/开头，以/结束");
+        }
+        String objectName = "course_resource/"+id+currentDirectory+filename;
         aliOssUtil.delete(objectName);
         return Result.success();
     }
@@ -85,10 +91,16 @@ public class CourseResourceController {
 //        if ((!role.equals(RoleConstant.ADMIN))&&(!role.equals(RoleConstant.TEACHER)))
 //        {throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);}
         String id = makeDirectoryDTO.getCourseId().toString();
-        if(makeDirectoryDTO.getCurrentDirectory().startsWith("/")||makeDirectoryDTO.getCurrentDirectory().endsWith("/")||makeDirectoryDTO.getNewDirectory().endsWith("/")){
-            throw new IllegalArgumentException("头尾不能包含斜杠");
+        if (makeDirectoryDTO.getNewDirectory().isEmpty()) {
+            throw new IllegalArgumentException("目录名不能为空");
         }
-        String path = "course_resource/"+id+"/"+makeDirectoryDTO.getCurrentDirectory()+"/"+makeDirectoryDTO.getNewDirectory()+"/";
+        if (makeDirectoryDTO.getNewDirectory().contains("/")) {
+            throw new IllegalArgumentException("新目录名不能包含/");
+        }
+        if(!makeDirectoryDTO.getCurrentDirectory().startsWith("/") || !makeDirectoryDTO.getCurrentDirectory().endsWith("/")){
+            throw new IllegalArgumentException("目录必须以/开头，以/结束");
+        }
+        String path = "course_resource/"+id+makeDirectoryDTO.getCurrentDirectory()+makeDirectoryDTO.getNewDirectory()+"/";
         aliOssUtil.mkdir(path);
         return Result.success();
     }

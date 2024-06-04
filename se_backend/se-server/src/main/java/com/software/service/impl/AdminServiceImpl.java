@@ -2,6 +2,7 @@ package com.software.service.impl;
 
 import com.software.constant.PasswordConstant;
 import com.software.constant.RoleConstant;
+import com.software.constant.UserConstant;
 import com.software.dto.AdminDTO;
 import com.software.dto.TeacherDTO;
 import com.software.entity.User;
@@ -33,6 +34,7 @@ public class AdminServiceImpl implements AdminService {
         BeanUtils.copyProperties(adminDTO,user);
         user.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
         user.setRole(RoleConstant.ADMIN);
+        user.setNickname(UserConstant.DEFAULT_NICKNAME);;
         userMapper.insert(user);
     }
 
@@ -42,6 +44,7 @@ public class AdminServiceImpl implements AdminService {
         BeanUtils.copyProperties(teacherDTO,user);
         user.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
         user.setRole(RoleConstant.TEACHER);
+        user.setNickname(UserConstant.DEFAULT_NICKNAME);
         userMapper.insert(user);
     }
     @Transactional

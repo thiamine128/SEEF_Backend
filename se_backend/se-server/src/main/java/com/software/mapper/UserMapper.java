@@ -29,7 +29,7 @@ public interface UserMapper {
     @Select("select * from users where email= #{email}")
     User getByEmail(String email);
 
-    @Insert("insert into users (name, password, email, role) values (#{name}, #{password}, #{email}, #{role})")
+    @Insert("insert into users (id, name, password, email, role, nickname) values (#{id}, #{name}, #{password}, #{email}, #{role}, #{nickname})")
     void insert(User user);
 
     @Update("update users set avatar=#{avatarUrl},update_time=now() where id=#{id}")
@@ -67,4 +67,8 @@ public interface UserMapper {
     void addSubscribers(Long id);
     @Update("update users set subscribers=subscribers-1 where id=#{id}")
     void subSubscribers(Long id);
+    @Select("select * from users where name like CONCAT('%',#{username},'%')")
+    List<User> getUserByName(String userName);
+    @Select("select id from users where name = #{studentAccount}")
+    Long getIdByName(String studentAccount);
 }

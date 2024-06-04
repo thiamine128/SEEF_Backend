@@ -52,8 +52,8 @@ public class JwtTokenUserInterceptor implements HandlerInterceptor {
             Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
             Long userId = Long.valueOf(claims.get(JwtClaimsConstant.USER_ID).toString());
             String userRole = String.valueOf(claims.get(JwtClaimsConstant.USER_ROLE).toString());
-            log.info("当前用户id：", userId);
-            log.info("当前用户身份", userRole);
+            log.info("当前用户id：{}", userId);
+            log.info("当前用户身份{}", userRole);
             Map<String,Object> currentUser = new HashMap<String,Object>();
             currentUser.put(JwtClaimsConstant.USER_ROLE,userRole);
             currentUser.put(JwtClaimsConstant.USER_ID,userId);

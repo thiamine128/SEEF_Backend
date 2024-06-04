@@ -3,6 +3,7 @@ package com.software.mapper;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * @author
@@ -15,5 +16,6 @@ public interface OperationMapper {
     public void insertOperation(Long userId, Long blogId, Integer operationType);
     @Delete("delete from user_blog_operation where user_id=#{userId} and blog_id=#{blogId} and operation_type=#{operationType}")
     public void deleteOperation(Long userId, Long blogId, Integer operationType);
-
+    @Select("select user_id from user_blog_operation where user_id=#{userId} and blog_id=#{blogId} and operation_type=#{operationType}")
+    Long getRecord(Long userId, Long blogId, Integer operationType);
 }

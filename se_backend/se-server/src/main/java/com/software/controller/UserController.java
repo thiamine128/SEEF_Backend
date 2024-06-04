@@ -9,8 +9,10 @@ import com.software.dto.*;
 import com.software.entity.Course;
 import com.software.entity.TClass;
 import com.software.entity.User;
+import com.software.exception.InvalidParameterException;
 import com.software.properties.JwtProperties;
 import com.software.result.Result;
+import com.software.service.SubscribeService;
 import com.software.service.UserService;
 import com.software.service.impl.EmailUtil;
 import com.software.utils.AliOssUtil;
@@ -18,6 +20,7 @@ import com.software.utils.BaseContext;
 import com.software.utils.JwtUtil;
 import com.software.vo.LoginUserVO;
 import com.software.vo.OSSPostSignatureVO;
+import com.software.vo.UserProfileVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +29,12 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 /**
  * @author
@@ -53,6 +58,9 @@ public class UserController {
     private RedisTemplate redisTemplate;
     @Autowired
     private AliOssUtil aliOssUtil;
+
+    @Autowired
+    private  SubscribeService subscribeService;
 
     @PostMapping("/login")
     @Operation(summary = "用户登录")
@@ -95,6 +103,7 @@ public class UserController {
         //登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
         claims.put(JwtClaimsConstant.USER_ID, user.getId());
+        claims.put(JwtClaimsConstant.USER_ROLE,user.getRole());
         String token = JwtUtil.createJWT(
                 jwtProperties.getAdminSecretKey(),
                 jwtProperties.getAdminTtl(),
@@ -135,8 +144,12 @@ public class UserController {
     @PostMapping("/register")
     @Operation(summary = "注册")
     public Result register(@RequestBody UserRegisterDTO userRegisterDTO){
-
-        userService.register(userRegisterDTO);
+        if(userRegisterDTO.getName().isBlank()||userRegisterDTO.getPassword().isBlank()||userRegisterDTO.getNickName().isBlank())throw new InvalidParameterException(MessageConstant.PARAMETER_BLANK);
+        String name = userRegisterDTO.getName();
+        String pattern = "^[a-zA-Z0-9]+$";
+        if(!Pattern.matches(pattern,name))
+            return Result.error("账号应只包含数字和英文");
+            userService.register(userRegisterDTO);
 
         return Result.success();
     }
@@ -151,14 +164,14 @@ public class UserController {
 
     @GetMapping()
     @Operation(summary = "获取资料")
-    public Result getProfile(@RequestParam Long userId) {
+    public Result<UserProfileVO> getProfile(@RequestParam Long userId) {
         Long id = Long.parseLong(BaseContext.getCurrentUser().get(JwtClaimsConstant.USER_ID).toString());
         return Result.success(userService.getProfile(userId, id));
     }
 
     @PostMapping("/requestUploadAvatar")
     @Operation(summary = "请求上传头像")
-    public Result requestUploadAvatar() throws UnsupportedEncodingException {
+    public Result<OSSPostSignatureVO> requestUploadAvatar() throws UnsupportedEncodingException {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         long id = (long) currentUser.get(JwtClaimsConstant.USER_ID);
         String username = userService.getUsername(id);
@@ -186,6 +199,8 @@ public class UserController {
         long id = (long) currentUser.get(JwtClaimsConstant.USER_ID);
         String role = currentUser.get(JwtClaimsConstant.USER_ROLE).toString();
         List<Long> courseIds = userService.getCourseIds(role,id);
+        if(courseIds.isEmpty())
+            return Result.success();
         List<Course> courses = userService.getCourses(courseIds);
         return Result.success(courses);
     }
@@ -196,6 +211,23 @@ public class UserController {
         long id = (long) currentUser.get(JwtClaimsConstant.USER_ID);
         List<Long> classIds = userService.getClassIds(id);
         List<TClass> classes = userService.getClasses(classIds);
-        return Result.success();
+        return Result.success(classes);
     }
+
+    @GetMapping("/searchUser")
+    @Operation(summary = "根据学/工号查询用户")
+    public Result<List<UserProfileVO>> searchUser(@RequestParam String userName){
+        List<User> users = userService.getUserByName(userName);
+        List<UserProfileVO> result = new ArrayList<UserProfileVO>();
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        long id = (long) currentUser.get(JwtClaimsConstant.USER_ID);
+
+        for(User user:users){
+            result.add(UserProfileVO.fromUser(user,subscribeService.isSubscribed(user.getId(), id)));
+        }
+
+        return Result.success(result);
+    }
+
+
 }

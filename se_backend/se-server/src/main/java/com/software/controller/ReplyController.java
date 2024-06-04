@@ -5,6 +5,8 @@ import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.RoleConstant;
 import com.software.dto.ReplyCreateDto;
+import com.software.entity.Reply;
+import com.software.exception.InvalidParameterException;
 import com.software.exception.PermissionDeniedException;
 import com.software.result.Result;
 import com.software.service.ReplyService;
@@ -27,6 +29,7 @@ public class ReplyController {
     @PostMapping("/create")
     @Operation(summary = "发表回复")
     public Result makeReply(@RequestBody ReplyCreateDto replyCreateDto) {
+        if(replyCreateDto.getContent().isBlank())throw new InvalidParameterException(MessageConstant.PARAMETER_BLANK);
         replyService.makeReply(replyCreateDto);
         return Result.success();
     }
@@ -43,7 +46,7 @@ public class ReplyController {
 
     @GetMapping("/getReply")
     @Operation(summary = "获取回复")
-    public Result getReply(Long id) {
+    public Result<Reply> getReply(Long id) {
         return Result.success(replyService.getReply(id));
     }
 }

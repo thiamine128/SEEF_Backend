@@ -2,6 +2,7 @@ package com.software.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.software.config.WebConfiguration;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.constant.OperationTypeConstant;
@@ -18,6 +19,7 @@ import com.software.service.BlogService;
 import com.software.service.EventService;
 import com.software.utils.BaseContext;
 import com.software.vo.BlogPreviewVO;
+import com.software.vo.CategoryVO;
 import com.software.vo.CommentVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.mahout.cf.taste.common.TasteException;
@@ -37,11 +39,9 @@ import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.xm.similarity.text.CosineSimilarity;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,6 +59,8 @@ public class BlogServiceImpl implements BlogService {
     private EventService eventService;
     @Autowired
     private SpaceMapper spaceMapper;
+
+    private final CosineSimilarity cosineSimilarity = new CosineSimilarity();
 
     @Override
     public void create(BlogCreateDTO blogCreateDTO) {
@@ -88,14 +90,88 @@ public class BlogServiceImpl implements BlogService {
             }
         });
         String tags = ";" + blogCreateDTO.getTags().stream().map(str -> str + ";").collect(Collectors.joining());
-        blogMapper.updateBlog(blogCreateDTO.getTitle(), blogCreateDTO.getContext(), id, blogCreateDTO.getTopicId(), tags,blogCreateDTO.getCategory_id(),blogCreateDTO.getBlogId());
+        blogMapper.updateBlog(blogCreateDTO.getTitle(), blogCreateDTO.getContent(), id, blogCreateDTO.getTopicId(), tags,blogCreateDTO.getCategory_id(),blogCreateDTO.getBlogId());
     }
 
     @Override
-    public List<Category> getCategoryList(Long userId) {
-        List <Category> categories = spaceMapper.getCategoryList(userId);
+    public List<CategoryVO> getCategoryList(Long userId) {
+        List <CategoryVO> categories = spaceMapper.getCategoryList(userId);
         return categories;
     }
+
+    @Override
+    public void createFavourCategory(String category) {
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
+        blogMapper.createFavourCategory(category,id);
+    }
+
+    @Override
+    public void deleteFavourCategory(String category) {
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
+        blogMapper.deleteFavourCategory(category,id);
+    }
+
+    @Override
+    public void updateFavourCategory(String newCategoryName, Long categoryId) {
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
+        blogMapper.updateFavourCategory(newCategoryName,id,categoryId);
+    }
+
+    @Override
+    public List<Category> getFavourCategoryList(Long userId) {
+        List <Category> categories = blogMapper.getFavourCategoryList(userId);
+        return categories;
+    }
+
+    @Override
+    public String getFavourCategory(Long blogId) {
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
+        return blogMapper.getFavourCategoryById(id,blogId);
+    }
+
+    @Override
+    public List<BlogPreviewVO> similar(Long blogId, Long count, int previewLength) {
+        Blog target = blogMapper.getBlog(blogId);
+        String content = target.getContent();
+        String title = target.getTitle();
+        String tags = target.getTags();
+        List<Blog> blogs = blogMapper.getAllBlog();
+        TreeSet<BlogSimilarity> treeSet = new TreeSet<>(new Comparator<BlogSimilarity>() {
+            @Override
+            public int compare(BlogSimilarity p1, BlogSimilarity p2) {
+                if (p1.similarity < p2.similarity)
+                    return 1;
+                else
+                    return -1;
+            }
+        });
+        for (Blog blog : blogs) {
+            if (blog.getId().equals(blogId)) continue;
+            BlogSimilarity blogSimilarity = new BlogSimilarity();
+            double contentSimilarity = cosineSimilarity.getSimilarity(content, blog.getContent());
+            double titleSimilarity = cosineSimilarity.getSimilarity(title, blog.getTitle());
+            double tagsSimilarity = cosineSimilarity.getSimilarity(tags, blog.getTags());
+            blogSimilarity.similarity = titleSimilarity + 4 * contentSimilarity + tagsSimilarity;
+            blogSimilarity.blog = blog;
+            treeSet.add(blogSimilarity);
+            if (treeSet.size() > count) {
+                treeSet.pollLast();
+            }
+        }
+        Long id = Long.parseLong(BaseContext.getCurrentUser().get(JwtClaimsConstant.USER_ID).toString());
+        List<BlogPreviewVO> results = treeSet.stream().map(bs -> bs.blog).map(blog -> { return BlogPreviewVO.fromBlog((Blog) blog, previewLength, blogMapper.isLiked(((Blog) blog).getId(),id),blogMapper.isFavor(((Blog) blog).getId(),id),blogMapper.getFavourCategoryById(id,((Blog)blog).getId()));}).toList();
+        return results;
+    }
+
+    static class BlogSimilarity {
+        public Blog blog;
+        public double similarity;
+    }
+
 
     @Override
     public Blog getDetail(Long blogId) {
@@ -129,12 +205,14 @@ public class BlogServiceImpl implements BlogService {
             blogMapper.cancelLike(blogId, id);
             blogMapper.decreaseLikes(blogId);
             operationMapper.deleteOperation(id, blogId, OperationTypeConstant.LIKE);
+            blogMapper.updatePopularity(blogId, -WebConfiguration.LIKE_SCORE);
         }
         else{
             eventService.newEvent(Event.like(id, blogId, getDetail(blogId).getUserId()));
             blogMapper.like(blogId, id);
             blogMapper.increaseLikes(blogId);
             operationMapper.insertOperation(id,blogId, OperationTypeConstant.LIKE);
+            blogMapper.updatePopularity(blogId, WebConfiguration.LIKE_SCORE);
         }
     }
 
@@ -148,19 +226,21 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public void favor(Long blogId) {
+    public void favor(Long blogId, String category) {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
         if(blogMapper.isFavor(blogId, id)!=null){
             blogMapper.cancelFavor(blogId, id);
             blogMapper.decreaseFavors(blogId);
             operationMapper.deleteOperation(id, blogId, OperationTypeConstant.FAVOR);
+            blogMapper.updatePopularity(blogId, -WebConfiguration.FAVOUR_SCORE);
         }
         else{
-            blogMapper.favor(blogId, id);
+            blogMapper.favor(blogId, id, category);
             blogMapper.increaseFavors(blogId);
             eventService.newEvent(Event.favour(id,blogId,getDetail(blogId).getUserId()));
             operationMapper.insertOperation(id,blogId, OperationTypeConstant.FAVOR);
+            blogMapper.updatePopularity(blogId, WebConfiguration.FAVOUR_SCORE);
         }
     }
 
@@ -185,17 +265,25 @@ public class BlogServiceImpl implements BlogService {
         PageHelper.startPage(pages, pageSize);
         Page<Blog> page = (Page<Blog>) blogMapper.favorPageQuery(ids, pages,pageSize);
         return new PageResult(page.getTotal(),page.getResult().stream().map(blog ->{
-            return BlogPreviewVO.fromBlog((Blog) blog, previewLength, blogMapper.isLiked(((Blog) blog).getId(),id),blogMapper.isFavor(((Blog) blog).getId(),id));
+            return BlogPreviewVO.fromBlog((Blog) blog, previewLength, blogMapper.isLiked(((Blog) blog).getId(),id),blogMapper.isFavor(((Blog) blog).getId(),id),blogMapper.getFavourCategoryById(id,((Blog)blog).getId()));
         }).toList());
     }
-
+    @Transactional
     @Override
     public void increaseReadCnt(Long blogId) {
         blogMapper.increaseReadCnt(blogId);
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
+        System.out.println(operationMapper.getRecord(id, blogId, OperationTypeConstant.VIEW));
+        if (operationMapper.getRecord(id, blogId, OperationTypeConstant.VIEW) == null) {
+            operationMapper.insertOperation(id, blogId, OperationTypeConstant.VIEW);
+            blogMapper.increaseReadUsers(blogId);
+            blogMapper.updatePopularity(blogId, WebConfiguration.READ_SCORE);
+        }
     }
 
     @Override
-    public List<Long> recommend(Integer userId, int previewLength) throws TasteException {
+    public List<BlogPreviewVO> recommend(Integer userId, int previewLength) throws TasteException {
 
         Long id = Long.valueOf(userId);
         List<UserBlogOperation> userList = blogMapper.getAllUserPreference();
@@ -211,8 +299,8 @@ public class BlogServiceImpl implements BlogService {
         List<RecommendedItem> recommendedItems = recommender.recommend(userId, 10);
         List<Long> itemIds = recommendedItems.stream().map(RecommendedItem::getItemID).collect(Collectors.toList());
         List<Blog> blogs=blogMapper.recommend(itemIds);
-        List<BlogPreviewVO> results = blogs.stream().map(blog -> { return BlogPreviewVO.fromBlog((Blog) blog, previewLength, blogMapper.isLiked(((Blog) blog).getId(),id),blogMapper.isFavor(((Blog) blog).getId(),id));}).toList();
-        return itemIds;
+        List<BlogPreviewVO> results = blogs.stream().map(blog -> { return BlogPreviewVO.fromBlog((Blog) blog, previewLength, blogMapper.isLiked(((Blog) blog).getId(),id),blogMapper.isFavor(((Blog) blog).getId(),id),blogMapper.getFavourCategoryById(id,((Blog)blog).getId()));}).toList();
+        return results;
 
     }
 
@@ -235,7 +323,6 @@ public class BlogServiceImpl implements BlogService {
     }
 
 
-
     @Override
     public PageResult getBlogs(BlogPreviewPageQueryDTO blogPageQueryDto) {
         PageHelper.startPage(blogPageQueryDto.getPage(), blogPageQueryDto.getPageSize());
@@ -243,7 +330,10 @@ public class BlogServiceImpl implements BlogService {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
         return new PageResult(page.getTotal(), page.getResult().stream().map(blog ->{
-            return BlogPreviewVO.fromBlog((Blog) blog, blogPageQueryDto.getPreviewLength(), blogMapper.isLiked(((Blog) blog).getId(),id),blogMapper.isFavor(((Blog) blog).getId(),id));
+            return BlogPreviewVO.fromBlog((Blog) blog, blogPageQueryDto.getPreviewLength(), blogMapper.isLiked(((Blog) blog).getId(),id),blogMapper.isFavor(((Blog) blog).getId(),id),blogMapper.getFavourCategoryById(id,((Blog)blog).getId()));
         }).toList());
     }
+
+
+
 }
