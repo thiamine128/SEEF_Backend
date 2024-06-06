@@ -1,5 +1,5 @@
 <template>
-    <div class="box-container">
+    <div class="box-container" @mouseenter="hover=true" @mouseleave="hover=false">
         <img v-if="imgShow" class="img-adjust" :src="src_img" alt="404 not found" @click="callArticle">
         <div v-if="!imgShow" class="no-img-adjust" @click="callArticle">
             <div style="font-size: 80px; color: rgba(22, 22, 22, 0.1)"> {{titleShow}} </div>
@@ -17,7 +17,7 @@
                 <div :class="{ otherMsgFont: true }">{{"作者："+author}}</div>
                 <div :class="{ otherMsgFont: true }">{{" | 发布时间："+postTime}}</div>
                 <div :class="{ otherMsgFont: true }">{{" | 点赞："+likes}}</div>
-                <div class="otherMsgFontDelete" v-if="authorId === loginNow && !isDeleted && !dShow" @click="deleteArticle"> 删除 </div>
+                <div class="otherMsgFontDelete" v-if="(isAdmin || authorId === loginNow) && !isDeleted && !dShow" @click="deleteArticle"> 删除 </div>
                 <div class="otherMsgFontDelete" v-if="isDeleted && !dShow"> 失效博客 </div>
             </div>
         </div>
@@ -54,7 +54,7 @@ export default {
             this.author = personal_data.name;
         },
 
-        setImage(){
+        async setImage(){
 
             const reg = /\(([^)]+)\)/;
             if (this.imgSource != null){
@@ -71,7 +71,14 @@ export default {
                 }else this.imgShow = false;
             }
 
-            if (this.tags) this.tagList = this.tags;
+            if (this.tags) {
+                this.tagList = [];
+                for (let t of this.tags){
+                    if ((t+'').length > 0) this.tagList.push(t);
+                }
+            }
+
+            await this.pullPersonalData();
 
         }
 
@@ -85,7 +92,6 @@ export default {
 
         if (this.hrNotShow) this.isHr = false;
         this.loginNow = store.getters.getData.id;
-
     },
     data(){
         return{
@@ -95,10 +101,14 @@ export default {
             isHr: true,
             intervalId: ref(null),
             tagList: [],
-            loginNow: -1
+            loginNow: -1,
+            hover: false,
         }
     },
     computed:{
+        isAdmin(){
+            return store.getters.getData.role === 'admin';
+        },
         titleShow(){
             if (this.title != null){
                 return this.title.slice(0, 1);
@@ -117,14 +127,29 @@ export default {
     justify-content: left;
     margin: 4px;
     cursor: pointer;
+    transition: background-color 0.5s;
 }
+
+.box-container:hover{
+    height: 100px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    margin: 4px;
+    cursor: pointer;
+    background-color: rgba(11, 11, 11, 0.02);
+    transition: background-color 0.5s;
+}
+
 .img-adjust{
-    width: 25%;
+
+    aspect-ratio: 5/3;
     height: 100%;
     display: flex;
 }
 .no-img-adjust{
-    width: 25%;
+    aspect-ratio: 5/3;
     height: 100%;
     display: flex;
     background: url('@/assets/blog/article-bg.png');
@@ -171,14 +196,14 @@ export default {
 }
 
 .tagSet{
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 5px;
+    padding-right: 5px;
     margin-left: 3px;
     height: 60%;
     min-width: 0;
     display: flex;
     flex-direction: row;
-    background-color: #e8fbff;
+    background-color: #def2ff;
     border-radius: 6px;
     justify-content: center;
     align-items: center;

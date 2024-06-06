@@ -4,11 +4,11 @@
 
         <div class="content-left">
 
-            <article-list height-set="740px" r-title="~Topic~ 专区搜索结果"
+            <article-list height-set="740px" r-title="专区搜索结果"
                           :list-set="sectionList" select="section" :total-page="sectionTotalPage"
                           @page-change="getSections"/>
 
-            <article-list height-set="880px" r-title="~Blog~ 博客搜索结果"
+            <article-list height-set="880px" r-title="博客搜索结果"
                           :list-set="articleList" select="article" :total-page="articleTotalPage"
                           @page-change="getArticles"></article-list>
 
@@ -45,9 +45,16 @@ export default {
         }
     },
     mounted() {
-        this.searchContent = this.$route.params.search.replace(/\s/g, '');
-        this.getSections(1);
-        this.getArticles(1);
+        try{
+            document.documentElement.scrollTop = 0;
+            this.searchContent = this.$route.params.search.replace(/\s/g, '');
+            this.getSections(1);
+            this.getArticles(1);
+        }catch (e) {
+            callError(e);
+            this.$router.push('/blog/');
+        }
+
     },
     methods:{
 
@@ -66,7 +73,7 @@ export default {
         async getArticles(pageNum){
             try{
                 const response = await this.$http.get(
-                    `blog/viewBlogs?page=${pageNum}&pageSize=6&previewLength=500&keyword=${this.searchContent}`
+                    `blog/viewBlogs?page=${pageNum}&pageSize=6&previewLength=500&keyword=${this.searchContent}&orderBy=popularity&sort=desc`
                 );
                 console.log(response);
                 if (response.status === 200) {

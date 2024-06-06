@@ -1,10 +1,11 @@
 <template>
     <el-input
       v-model="searchInput"
-      placeholder="搜索你喜欢的博客......"
+      placeholder="搜索特定博客......"
       clearable class="el-input-style"
       @mouseenter="hover=true"
       @mouseleave="hover=false"
+      @keydown.enter="callSearchPage()"
     >
     <template #suffix>
       <div class="circular-icon-container">
@@ -16,6 +17,8 @@
 </template>
 
 <script>
+import {callInfo} from "@/callMessage";
+
 export default {
     name: "searchBar",
     data(){
@@ -26,6 +29,14 @@ export default {
     },
     methods:{
         callSearchPage(){
+            if (this.searchInput.length > 100){
+                callInfo('搜索内容过长');
+                return;
+            }
+            if (this.searchInput.length === 0){
+                callInfo('搜索内容不得为空');
+                return;
+            }
             this.$router.push(`/blog/`);
             setTimeout(()=>{
                 this.$router.push(`/blog/find/${this.searchInput}`);
@@ -47,7 +58,7 @@ export default {
 
 .el-input-style:hover{
     margin-right: 40px;
-    width: 400px;
+    width: 350px;
     transition: width 0.3s ease;
 }
 

@@ -2,9 +2,9 @@
     <div class="frameSet">
         <div class="personContainer">
             <div class="personInfo">
-                <img class="portraitSet" :src="avatar" alt="404 not found">
+                <img class="portraitSet" :src="avatar" alt="404 not found" @click="callPersonalFunc(userId)" @error="altImg">
                 <div class="textSet">
-                    <div :class="{ nameFont: true }"> {{name}} </div>
+                    <div :class="{ nameFont: true }" @click="callPersonalFunc(userId)"> {{name}} </div>
                     <div :class="{ contentFont: true }"> {{email}} </div>
                     <div :class="{ contentFont: true }"> 发布于 {{createTime}} </div>
                 </div>
@@ -20,7 +20,7 @@
                 <personal-button v-if="!isSubscribe" :img-path="require('@/assets/blog/subscribe.png')" content="关注" @click="subscribeAuthor" />
                 <personal-button v-if="isSubscribe" :img-path="require('@/assets/blog_change/subscribe.png')" content="关注" @click="subscribeAuthor" />
 
-                <personal-button :img-path="require('@/assets/blog/edit.png')" content="编辑" />
+                <personal-button :img-path="require('@/assets/blog/edit.png')" content="编辑" @click="editArticle"/>
 
             </div>
         </div>
@@ -29,13 +29,51 @@
 
 <script>
 import personalButton from "@/pages/blog/components/personalButton/index.vue";
-import {callError} from "@/callMessage";
+import {callError, callInfo} from "@/callMessage";
 import {favor_func, getUserData, like_func, subscribe_func, unSubscribe_func} from "@/pages/blog/api";
+import store from "@/store/store";
+import {ref} from "vue";
 export default {
     name: "personalBox",
     components:{personalButton},
-    props: [ 'userId', 'createTime', 'isFavor', 'isLike', 'isSubscribe', 'thumbNum'],
+    props: [
+        'userId', 'createTime', 'isFavor', 'isLike', 'isSubscribe', 'thumbNum',
+        'mdTitle', 'content'
+    ],
+    computed:{
+        isAdmin(){
+            return store.getters.getData.role === 'admin';
+        },
+    },
     methods:{
+
+        altImg(e){
+            this.avatar = require('@/assets/blog/user.png');
+        },
+
+        callPersonalFunc(userId){
+            this.$router.push(`/blog/`);
+            setTimeout(()=>{
+                this.$router.push(`/blog/personal/${userId}`);
+            }, 100);
+        },
+
+        editArticle(){
+
+            if (this.userId !== store.getters.getData.id ){
+                callInfo('不能编辑别人的文章');
+                return;
+            }
+
+            store.commit('setContent', {
+                "title": this.mdTitle,
+                "content": this.content
+            });
+
+            const blogId = this.$route.params.id;
+            this.$router.push(`/blog/editor/${blogId}`);
+
+        },
 
         likeArticle(){
             const blogId = this.$route.params.id;
@@ -53,15 +91,22 @@ export default {
             const blogId = this.$route.params.id;
             if (!this.isFavor){
                 //收藏文章
-                favor_func(blogId, true);
+                this.$emit('callMyFavorList');
+                //favor_func(blogId, true);
             }else{
                 //取消收藏
                 favor_func(blogId, false);
+                this.$emit('callFavor');
             }
-            this.$emit('callFavor');
         },
 
         subscribeAuthor(){
+
+            if (store.getters.getData.id === this.userId){
+                callInfo('不可以关注自己');
+                return;
+            }
+
             if (!this.isSubscribe){
                 //关注
                 subscribe_func(this.userId);
@@ -75,7 +120,8 @@ export default {
         async pullPersonalData(){
             const personal_data = await getUserData(this.userId, false);
             try{
-                this.avatar = require(personal_data.avatar);
+                personal_data.avatar = personal_data.avatar + '?t=' + new Date().getTime();
+                this.avatar = ref(personal_data.avatar);
             }catch (error){}
             this.email = personal_data.email;
             this.name = personal_data.name;
@@ -151,5 +197,6 @@ export default {
     font-size: 25px;
     font-weight: bold;
     text-align: left;
+    cursor: pointer;
 }
 </style>

@@ -9,23 +9,38 @@
 
         <comment-textarea v-if="floatSelect == 1 || floatSelect == 3" style="margin: auto" :blog-id="blogId"
           @cancelFloat="cancelFloatWindow" :holder-content="holderText"
-          :reply-data="replyData" :sel="floatSelect"/>
+          :reply-data="replyData" :sel="floatSelect" />
 
         <article-list v-if="floatSelect == 2" style="width: 50%; margin: auto"
               height-set="510px" r-title="选择专区"
               :list-set="sectionList" select="section" :total-page="totalPage"
               @page-change="getSections" @cancelFloat="cancelFloatWindow"
-              @sel="selectTopic" :editor-set="true" ref="selectSectionList"></article-list>
+              @sel="selectTopic" :editor-set="true" ref="selectSectionList"
+              ></article-list>
+
+        <space-create v-if="floatSelect == 4" style="margin: auto" create-name="Space"
+        @cancelFloat="cancelFloatWindow" />
+
+        <folder-select v-if="floatSelect == 5" style="margin: auto" @cancelFloat="cancelFloatWindow"
+        @sel="selectCategory" folder-name="选择文章分区" />
+
+        <space-create v-if="floatSelect == 6" style="margin: auto" create-name="Category"
+          @cancelFloat="cancelFloatWindow" />
+
+        <folder-select v-if="floatSelect == 7" style="margin: auto" @cancelFloat="cancelFloatWindow"
+        @sel="selectCategory" folder-name="选择收藏夹" />
 
     </div>
 
-    <div :class="{setNavBar: step, setNavBarOp: !step}" >
-        <nav-bar :class="{navColorStyle: notHead, navColorStyleHead: !notHead}" ></nav-bar>
+    <el-backtop :right="50" :bottom="50" />
+
+    <div :class="{setNavBar: step, setNavBarOp: !step}" @mouseenter="step = true">
+        <nav-bar :class="{navColorStyle: notHead, navColorStyleHead: !notHead}"></nav-bar>
     </div>
     <div class="view-set-margin">
 
-        <router-view @callFloat="callFloatWindow" :section-name="sectionName"
-             :topic-id="topicId" ref="views"/>
+        <router-view @callFloat="callFloatWindow" :section-name="sectionName" :category-name="categoryName"
+             :topic-id="topicId"  :category-id="categoryId" ref="views"/>
 
     </div>
     <blog-bottom/>
@@ -39,10 +54,14 @@ import {reactive} from "vue";
 import CommentTextarea from "@/pages/blog/components/commentTextarea/index.vue";
 import articleList from "@/pages/blog/components/articleList/index.vue";
 import {callError} from "@/callMessage";
+import SpaceCreate from "@/pages/blog/components/spaceCreate/index.vue";
+import FolderSelect from "@/pages/blog/components/folderSelect/index.vue";
 
 export default {
     name: "blog",
     components: {
+        FolderSelect,
+        SpaceCreate,
         articleList,
         CommentTextarea,
         navBar, blogBottom
@@ -95,7 +114,10 @@ export default {
           sectionName: '选择专区',
           topicId: -1,
           blogId: -1,
-          replyData: {}
+          replyData: {},
+
+          categoryName: '选择类别',
+          categoryId: -1
 
       }
     },
@@ -124,8 +146,15 @@ export default {
             this.cancelFloatWindow();
         },
 
+        selectCategory(id, cName){
+            if (cName.length > 4) this.categoryName = cName.slice(0, 4)+'...';
+            else this.categoryName = cName;
+            this.categoryId = id;
+            this.cancelFloatWindow();
+        },
+
         cancelFloatWindow(){
-            this.floatComment = false;
+            if (this.floatComment) this.floatComment = false;
         },
 
         async getSections(pageNum){
@@ -165,7 +194,7 @@ export default {
         transform: rotate(0deg);
     }
     to {
-        transform: rotate(360deg);
+        transform: rotate(-360deg);
     }
 }
 
@@ -174,7 +203,7 @@ export default {
     top: 0;
     left: -20%;
     height: 100%;
-    animation: rotate 10s infinite linear;
+    animation: rotate 30s infinite linear;
 }
 
 .floatSet{
@@ -188,7 +217,7 @@ export default {
     top: 0;
     left: 0;
     display: flex;
-    transition: opacity 0.8s;
+    transition: opacity 0.4s;
 }
 
 .floatSetNone{
@@ -202,7 +231,7 @@ export default {
     top: 0;
     left: 0;
     display: flex;
-    transition: opacity 0.8s;
+    transition: opacity 0.4s;
 }
 
 .setNavBar{

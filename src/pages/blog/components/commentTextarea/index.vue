@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import {callError, callSuccess} from "@/callMessage";
+import {callError, callInfo, callSuccess} from "@/callMessage";
 
 export default {
     name: "commentTextarea",
@@ -28,6 +28,17 @@ export default {
     methods:{
 
         async postComment(){
+
+            if (this.commentContent.length > 500){
+                callInfo('内容过长');
+                return;
+            }
+
+            if (this.commentContent.length === 0){
+                callInfo('内容不得为空');
+                return;
+            }
+
             if (this.sel == 1){
                 try {
                     const response = await this.$http.post(`comment/create`, {

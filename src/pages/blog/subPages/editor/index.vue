@@ -14,6 +14,12 @@
         </div>
         <div class="inputStyle">
             <div class="tagLine">
+
+                <el-button style="width: 100px; height: 100%"
+                           type="info" plain @click="callCategory()"> {{categoryName}} </el-button>
+
+                <div style="width: 0" />
+
                 <el-button style="width: 100px; height: 100%"
                    type="info" plain @click="callSection()"> {{sectionName}} </el-button>
 
@@ -39,24 +45,36 @@ import LeftButton from "@/pages/blog/components/leftButton/index.vue";
 import store from "@/store/store";
 import {callSuccess, callError, callWarning} from "@/callMessage";
 import axios from "axios";
+import {getBlogData} from "@/pages/blog/api";
 
 export default {
     name: "editor",
     components: {LeftButton, MdField},
-    props: ['sectionName', 'topicId'],
+    props: ['categoryName', 'categoryId', 'sectionName', 'topicId'],
     data(){
         const content = ref('');
         return{
-            content, mdTitle: '', tagName: '',
+            content,
+            mdTitle: '',
+            tagName: '',
             tags: []
         }
     },
-    mounted() {
+    async mounted() {
         let preData = store.getters.getContent;
         if (preData.title.length > 0){
             this.mdTitle = preData.title;
             this.content = preData.content;
         }
+
+        if (this.$route.params.blogId != -1){
+            const blogData = await getBlogData(this.$route.params.blogId);
+            if (blogData.userId !== store.getters.getData.id ){
+                callError('你没有权限编辑');
+                this.$router.push('/blog/');
+            }
+        }
+
     },
     computed:{
         result(){
@@ -67,6 +85,10 @@ export default {
 
         callSection(){
             this.$emit('callFloat', '', 2);
+        },
+
+        callCategory(){
+            this.$emit('callFloat', '', 5);
         },
 
         createTag(){
@@ -132,10 +154,20 @@ export default {
             });
             callSuccess('暂存成功');
         },
+
         async post(){
+
+            if (this.content.length === 0 || this.mdTitle === 0){
+                callWarning('内容不得为空');
+                return;
+            }
 
             if (this.content.length > 20000){
                 callWarning('文章过长');
+                return;
+            }
+            if (this.mdTitle.length > 16){
+                callWarning('标题过长');
                 return;
             }
 
@@ -143,24 +175,57 @@ export default {
                 "title": '',
                 "content": ''
             });
-            if (this.topicId != -1){
-                try{
-                    const response = await this.$http.post(`blog/create`, {
-                        "title": this.mdTitle,
-                        "context": this.content,
-                        "topicId": this.topicId,
-                        "tags": this.tags
-                    });
-                    if (response.status === 200) {
-                        callSuccess('发表博客成功');
-                        this.$router.push(`/blog/articles/${this.topicId}/${this.sectionName}`);
-                    } else callError('网络错误');
-                }catch (error){
-                    callError(error);
-                }
-            }else callError('请选择专区');
+
+            const postData = {
+                "title": this.mdTitle,
+                "context": this.content,
+                "tags": this.tags
+            };
+
+            if (this.topicId != -1) postData["topicId"] = this.topicId;
+            if (this.categoryId != -1) postData["category_id"] = this.categoryId;
+
+            if (this.$route.params.blogId != -1){
+                //更新
+                await this.updateBlog(postData);
+            }else{
+                //发布
+                await this.createBlog(postData);
+            }
+
         },
 
+        async createBlog(postData){
+            try{
+                const response = await this.$http.post(`blog/create`, postData);
+                if (response.status === 200) {
+                    callSuccess('发表博客成功');
+                    setTimeout(()=>{
+                        this.$router.push(`/blog/`);
+                    },1000);
+                } else callError('网络错误');
+            }catch (error){
+                callError(error);
+            }
+        },
+
+        async updateBlog(updateData){
+            updateData["blogId"] = parseInt(this.$route.params.blogId);
+            updateData["content"] = updateData["context"];
+            console.log("update: ");
+            console.log(updateData);
+            try{
+                const response = await this.$http.post(`blog/updateBlog`, updateData);
+                if (response.status === 200) {
+                    callSuccess('更新博客成功');
+                    setTimeout(()=>{
+                        this.$router.push(`/blog/article/${updateData["blogId"]}`);
+                    },1000);
+                } else callError('网络错误');
+            }catch (error){
+                callError(error);
+            }
+        },
 
         uploadImage(){
             const fileInput = document.createElement("input");
@@ -272,6 +337,7 @@ export default {
     font-size: 20px;
     resize: none;
     padding-left: 40px;
+    cursor: default;
 }
 .textarea-tag{
     /*width: 100%;*/
@@ -291,6 +357,7 @@ export default {
     font-size: 18px;
     padding: 40px;
     resize: none;
+    cursor: default;
 }
 
 .mdStyle{

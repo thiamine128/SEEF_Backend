@@ -2,7 +2,7 @@
     <div class="content-container">
         <div class="content-left">
 
-            <article-list height-set="1940px" r-title="Blogs ~Wonderful Zone~"
+            <article-list height-set="1925px" :r-title="topicName"
             :list-set="artiList" select="article" :total-page="totalPage"
             @page-change="pullArticles"></article-list>
 
@@ -25,6 +25,7 @@ import recommend from "@/pages/blog/components/recommend/index.vue";
 import rightPin from "@/pages/blog/components/rightPin/index.vue";
 import {useRouter} from "vue-router";
 import {callError} from "@/callMessage";
+
 export default {
     name: "articles",
     components: {rightPin, recommend, articleList},
@@ -32,19 +33,24 @@ export default {
     data(){
         return{
             artiList : [],
-            totalPage : 10
+            totalPage : 10,
+            topicName : ''
         }
     },
     methods:{
         async pullArticles(pageNum){
             try{
+
                 const response = await this.$http.get(
-                    `blog/viewBlogs?page=${pageNum}&pageSize=15&topicId=${this.$route.params.topicId}&previewLength=500`
-                );
+                    `blog/viewBlogs?page=${pageNum}&pageSize=15&previewLength=500&topicIds=${this.$route.params.topicId}&orderBy=popularity&sort=desc`,{
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                });
+
                 console.log(response);
                 if (response.status === 200) {
                     this.artiList = response.data.data.records;
                     this.totalPage = Math.ceil(response.data.data.total / 15);
+                    document.documentElement.scrollTop = 0;
                 } else callError('网络错误');
             }catch (error){
                 callError(error);
@@ -52,7 +58,13 @@ export default {
         }
     },
     mounted() {
-        this.pullArticles(1);
+        try{
+            this.topicName = this.$route.params.sectionName;
+            this.pullArticles(1);
+        }catch (e) {
+            callError(e);
+            this.$router.push('/blog/');
+        }
     }
 }
 </script>

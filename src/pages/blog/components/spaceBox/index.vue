@@ -2,9 +2,9 @@
     <div class="frameSet" v-if="spaceShow">
         <div class="personContainer">
             <div class="personInfo">
-                <img class="portraitSet" :src="avatar_set" @error="altImg">
+                <img class="portraitSet" :src="avatar_set" @error="altImg" @click="callPersonalFunc">
                 <div class="textSet">
-                    <div :class="{ nameFont: true }"> {{name}} </div>
+                    <div :class="{ nameFont: true }" @click="callPersonalFunc"> {{name}} </div>
                     <div :class="{ contentFont: true }"> {{description}} </div>
                     <div v-if="replyShow" :class="{ replyFont: true }"> {{replyContent}}  </div>
 <!--                    <hr class="setHr">-->
@@ -14,7 +14,7 @@
                     <article-box v-if="articleShow" :title="articleData.title"
                     :author-id="articleData.authorId" :abstract="articleData.abstract.replaceAll('#', '')"
                     :img-source="articleData.imgSource" :post-time="articleData.postTime"
-                    :article-id="articleData.authorId" :likes="articleData.likes" :hr-not-show="true"
+                    :article-id="articleData.articleId" :likes="articleData.likes" :hr-not-show="true"
                     :d-show="1"/>
 
                     <div v-if="replyToShow || replyToCommentShow"
@@ -35,6 +35,7 @@
 import ArticleBox from "@/pages/blog/components/articleBox/index.vue";
 import {getBlogData, getUserData, getCommentData, getReplyData, dateF} from "@/pages/blog/api";
 import ReplyBox from "@/pages/blog/components/replyBox/index.vue";
+import {ref} from "vue";
 
 export default {
     name: "spaceBox",
@@ -43,6 +44,7 @@ export default {
     data(){
         return{
             spaceShow: true,
+            userId: -1,
             name: '',
             description: '',
             avatar_set: require('@/assets/blog/user.png'),
@@ -72,9 +74,11 @@ export default {
     async mounted() {
         const fromUserData = await getUserData(this.eventBlock.subject);
         try{
-            this.avatar_set = require(fromUserData.avatar);
+            fromUserData.avatar = fromUserData.avatar + '?t=' + new Date().getTime();
+            this.avatar_set = ref(fromUserData.avatar);
         }catch (e){}
         this.name = fromUserData.name;
+        this.userId = fromUserData.id;
 
         try{
             if (this.eventBlock.type === 'subscribe') await this.makeSubscribe();
@@ -89,6 +93,13 @@ export default {
 
     },
     methods:{
+
+        callPersonalFunc(){
+            this.$router.push(`/blog/`);
+            setTimeout(()=>{
+                this.$router.push(`/blog/personal/${this.userId}`);
+            }, 100);
+        },
 
         async makeSubscribe(){
             this.description = '关注了你';
@@ -156,6 +167,7 @@ export default {
 
         async pullReplyData(replyId){
             const reply_data = await getReplyData(replyId);
+            console.log(replyId);
             console.log(reply_data);
             this.replyData.toId = reply_data.toId;
             this.replyData.userId = reply_data.userId;
@@ -221,6 +233,7 @@ export default {
     font-size: 25px;
     font-weight: bold;
     text-align: left;
+    cursor: pointer;
 }
 .replyFont{
     font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
