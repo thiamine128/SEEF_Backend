@@ -225,7 +225,6 @@ public class UserController {
         for(User user:users){
             result.add(UserProfileVO.fromUser(user,subscribeService.isSubscribed(user.getId(), id)));
         }
-
         return Result.success(result);
     }
 

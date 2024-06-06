@@ -41,4 +41,6 @@ public interface CourseService {
     void deleteBathcStudents(List<DeleteStudentReqDTO> students);
 
     List<CourseClassVO> getTeacherClass(Long teacherId);
+
+    List<Long> getStudentIds(Long classId);
 }

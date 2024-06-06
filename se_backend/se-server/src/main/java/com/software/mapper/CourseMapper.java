@@ -44,4 +44,6 @@ public interface CourseMapper {
     List<Long> getClassesId(Long teacherId);
 
     List<CourseClass> getTeacherClasses(List<Long> classIds);
+    @Select("select student_id from enrollments where class_id = #{classId} ")
+    List<Long> getStudentIds(Long classId);
 }

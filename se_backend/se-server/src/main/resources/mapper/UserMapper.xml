@@ -30,6 +30,12 @@
         #{id}
         </foreach>
     </select>
+    <select id="getUserByIds" resultType="com.software.entity.User">
+        select * from users where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
 
     <insert id="addButchUser" >
         insert into users (name, email, role, password, real_name) Values

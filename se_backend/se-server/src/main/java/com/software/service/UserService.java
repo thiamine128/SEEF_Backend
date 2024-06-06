@@ -46,4 +46,6 @@ public interface UserService {
     List<User> getUserByName(String userName);
 
     User getByACCount(String userAccount);
+
+    List<User> geUsersByIds(List<Long> ids);
 }

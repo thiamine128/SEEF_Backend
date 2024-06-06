@@ -204,6 +204,11 @@ public class UserServiceImpl implements UserService {
         return userMapper.getByAccount(userAccount);
     }
 
+    @Override
+    public List<User> geUsersByIds(List<Long> ids) {
+        return userMapper.getUserByIds(ids);
+    }
+
 
     private void verifyCodeOrThrow(String email, String code) {
         if (Boolean.FALSE.equals(redisTemplate.hasKey(email)))

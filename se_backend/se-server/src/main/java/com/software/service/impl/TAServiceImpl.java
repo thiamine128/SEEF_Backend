@@ -1,6 +1,8 @@
 package com.software.service.impl;
 
+import com.software.constant.MessageConstant;
 import com.software.entity.User;
+import com.software.exception.InvalidParameterException;
 import com.software.mapper.TAMapper;
 import com.software.mapper.UserMapper;
 import com.software.service.TAService;
@@ -24,6 +26,9 @@ public class TAServiceImpl implements TAService {
     @Override
     public void addTA(String studentAccount, Long classId, Long courseId) {
         Long id = userMapper.getIdByName(studentAccount);
+        if(id == null) {
+            throw new InvalidParameterException(MessageConstant.ACCOUNT_NOT_FOUND);
+        }
         taMapper.addTA(id, classId, courseId);
     }
 

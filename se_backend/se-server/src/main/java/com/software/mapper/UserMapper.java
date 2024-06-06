@@ -71,4 +71,6 @@ public interface UserMapper {
     List<User> getUserByName(String userName);
     @Select("select id from users where name = #{studentAccount}")
     Long getIdByName(String studentAccount);
+
+    List<User> getUserByIds(List<Long> ids);
 }

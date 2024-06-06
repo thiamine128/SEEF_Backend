@@ -17,12 +17,14 @@ import com.software.exception.PermissionDeniedException;
 import com.software.result.PageResult;
 import com.software.result.Result;
 import com.software.service.CourseService;
+import com.software.service.SubscribeService;
 import com.software.service.UserService;
 import com.software.utils.AliOssUtil;
 import com.software.utils.BaseContext;
 import com.software.vo.CourseClassVO;
 import com.software.vo.CourseVO;
 import com.software.vo.OSSPostSignatureVO;
+import com.software.vo.UserProfileVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -55,6 +57,9 @@ public class CourseController {
     private UserService userService;
     @Autowired
     private AliOssUtil aliOssUtil;
+
+    @Autowired
+    private SubscribeService subscribeService;
 
     @PostMapping("/create")
     @Operation(summary = "创建课程")
@@ -140,6 +145,8 @@ public class CourseController {
     @AuthCheck(mustRole = {RoleConstant.ADMIN,RoleConstant.TEACHER})
     public Result addTeacher(@RequestParam String teacherAccount, @RequestParam Long courseId) {
         User u = userService.getByACCount(teacherAccount);
+        if(u == null)
+            throw new InvalidParameterException(MessageConstant.ACCOUNT_NOT_FOUND);
         Long teacherId = u.getId();
         if (!courseService.hasPermission(courseId)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         if (!userService.isTeacher(teacherId)) throw new InvalidUserException(MessageConstant.INVALID_USER);
@@ -153,6 +160,8 @@ public class CourseController {
     public Result addTeacherToClass(@RequestParam String teacherAccount, @RequestParam Long classId) {
         Long courseId = courseService.getCourseByClass(classId);
         User u = userService.getByACCount(teacherAccount);
+        if(u == null)
+            throw new InvalidParameterException(MessageConstant.ACCOUNT_NOT_FOUND);
         Long teacherId = u.getId();
         if (!courseService.hasPermission(courseId)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         if (!userService.isTeacher(teacherId)) throw new InvalidUserException(MessageConstant.INVALID_USER);
@@ -165,6 +174,8 @@ public class CourseController {
     @AuthCheck(mustRole = {RoleConstant.ADMIN,RoleConstant.TEACHER})
     public Result deleteTeacherFromClass(@RequestParam String teacherAccount, @RequestParam Long classId) {
         User u = userService.getByACCount(teacherAccount);
+        if(u == null)
+            throw new InvalidParameterException(MessageConstant.ACCOUNT_NOT_FOUND);
         Long teacherId = u.getId();
         Long courseId = courseService.getCourseByClass(classId);
         if (!courseService.hasPermission(courseId)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
@@ -395,8 +406,23 @@ public class CourseController {
     @PostMapping
     @Operation(summary = "批量删除教学班中学生")
     public Result deleteButchStudents(List<DeleteStudentReqDTO> students){
-        courseService.deleteBathcStudents(students);
 
+        courseService.deleteBathcStudents(students);
         return  Result.success();
+    }
+    @GetMapping("/getClassStudent")
+    @Operation(summary = "获取教学班所有学生")
+    public Result <List<UserProfileVO>> getClassStudent(Long classId){
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        long id = (long) currentUser.get(JwtClaimsConstant.USER_ID);
+        List<Long> ids = new ArrayList<Long>();
+        ids = courseService.getStudentIds(classId);
+        if(ids.isEmpty()) return Result.success(null);
+        List<User> users = userService.geUsersByIds(ids);
+        List<UserProfileVO> result = new ArrayList<UserProfileVO>();
+        for(User user:users){
+            result.add(UserProfileVO.fromUser(user,subscribeService.isSubscribed(user.getId(), id)));
+        }
+        return Result.success(result);
     }
 }

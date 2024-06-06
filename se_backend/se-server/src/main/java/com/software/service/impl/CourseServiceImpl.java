@@ -229,4 +229,9 @@ public class CourseServiceImpl implements CourseService {
             return CourseClassVO.fromCourseClass(courseClass, classMapper.getTeachers(courseClass.getId()), true, getCourseById(courseClass.getCourseId()).getName());
         }).toList();
     }
+
+    @Override
+    public List<Long> getStudentIds(Long classId) {
+        return courseMapper.getStudentIds(classId);
+    }
 }
