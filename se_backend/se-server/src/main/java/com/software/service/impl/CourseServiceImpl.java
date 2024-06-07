@@ -7,19 +7,19 @@ import com.github.pagehelper.PageHelper;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
 import com.software.dto.*;
-import com.software.entity.Course;
-import com.software.entity.CourseClass;
-import com.software.entity.Enrollment;
-import com.software.entity.JoinClassRequest;
+import com.software.entity.*;
 import com.software.exception.InvalidRequestException;
 import com.software.exception.RequestSentException;
 import com.software.mapper.ClassMapper;
 import com.software.mapper.CourseMapper;
 import com.software.mapper.JoinClassRequestMapper;
+import com.software.mapper.UserMapper;
 import com.software.result.PageResult;
 import com.software.service.CourseService;
+import com.software.service.UserService;
 import com.software.utils.BaseContext;
 import com.software.vo.CourseClassVO;
+import com.software.vo.JoinClassRequestVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +31,8 @@ import java.util.UUID;
 
 @Service
 public class CourseServiceImpl implements CourseService {
+    @Autowired
+    private UserMapper userMapper;
     @Autowired
     private CourseMapper courseMapper;
     @Autowired
@@ -161,7 +163,6 @@ public class CourseServiceImpl implements CourseService {
         }
     }
 
-    @Transactional
     @Override
     public void pendJoinClassRequest(String id, Integer state) {
         if (state == null || !(state.equals(1) || state.equals(2)) || joinClassRequestMapper.updateState(id, state) == 0) {
@@ -177,8 +178,13 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public PageResult listJoinClassRequest(JoinClassRequestPageQueryDto joinClassRequestPageQueryDto) {
         PageHelper.startPage(joinClassRequestPageQueryDto.getPage(), joinClassRequestPageQueryDto.getPageSize());
-        Page page = (Page) joinClassRequestMapper.pageQuery(joinClassRequestPageQueryDto.getCourseId());
-        return new PageResult(page.getTotal(), page.getResult());
+        Page<JoinClassRequest> page = (Page) joinClassRequestMapper.pageQuery(joinClassRequestPageQueryDto.getCourseId());
+        return new PageResult(page.getTotal(), page.getResult().stream().map(
+                req -> {
+                    User user = userMapper.getByID(req.getStudentId());
+                    return JoinClassRequestVO.from(req, user.getName(), user.getRealName());
+                }
+        ).toList());
     }
 
     @Override

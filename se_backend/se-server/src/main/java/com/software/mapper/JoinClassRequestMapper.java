@@ -17,7 +17,7 @@ public interface JoinClassRequestMapper {
     @Update("update join_class_requests set state=#{state} where id=#{id} and state=0")
     Long updateState(String id, Integer state);
 
-    @Select("select student_id from join_class_requests where student_id=#{studentId} and class_id=#{classId} and (state=0 or state=1)")
+    @Select("select student_id from join_class_requests where student_id=#{studentId} and class_id=#{classId} and (state=0)")
     Long canRequest(Long studentId, Long classId);
 
     @Select("select r.id, r.student_id, r.class_id, r.state from join_class_requests r left join classes c on r.class_id = c.id where r.state=0 and c.course_id = #{courseId}")
