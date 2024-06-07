@@ -210,7 +210,7 @@ public class TAController {
                                             } else {
                                                 nameList.add(account);
                                                 User user = userService.getByACCount(account);
-                                                if(user != null) {
+                                                if(user == null) {
                                                     return Result.error("导入失败(第" + theRow + "行,name" + account + "不存在)");
                                                 }
                                                 TA.setStudentId(user.getId());
@@ -218,7 +218,7 @@ public class TAController {
                                         } else {
                                             nameList.add(account);
                                             User user = userService.getByACCount(account);
-                                            if(user != null) {
+                                            if(user == null) {
                                                 return Result.error("导入失败(第" + theRow + "行,name" + account + "不存在)");
                                             }
                                             TA.setStudentId(user.getId());
@@ -265,9 +265,6 @@ public class TAController {
                                     isThrow = true;
                                     return Result.error("导入失败(第" + theRow + "行,班级不能为空)");
                                 }
-
-
-
                                 TAList.add(TA);
                             }
                             if (isThrow) {
