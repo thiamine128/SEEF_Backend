@@ -1,5 +1,6 @@
 package com.software.mapper;
 
+import com.software.dto.AddBatchTADTO;
 import com.software.entity.User;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -23,4 +24,6 @@ public interface TAMapper {
     List<User> getCourseTA(Long courseId);
     @Select("select class_id from student_class_management where student_id = #{id}")
     List<Long> getMyClassIds(long id);
+
+    void addButchTA(List<AddBatchTADTO> tas);
 }
