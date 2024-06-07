@@ -13,6 +13,7 @@ import com.software.exception.InvalidParameterException;
 import com.software.properties.JwtProperties;
 import com.software.result.Result;
 import com.software.service.SubscribeService;
+import com.software.service.TAService;
 import com.software.service.UserService;
 import com.software.service.impl.EmailUtil;
 import com.software.utils.AliOssUtil;
@@ -61,7 +62,8 @@ public class UserController {
 
     @Autowired
     private  SubscribeService subscribeService;
-
+    @Autowired
+    private TAService taService;
     @PostMapping("/login")
     @Operation(summary = "用户登录")
     public Result<LoginUserVO> login(@RequestBody UserLoginDTO userLoginDTO) {
@@ -77,7 +79,10 @@ public class UserController {
                 jwtProperties.getAdminSecretKey(),
                 jwtProperties.getAdminTtl(),
                 claims);
-
+        Boolean isTA = false;
+        List<Long> classIds = taService.getMyClass(user.getId());
+        if(classIds.size()>0)
+            isTA = true;
        LoginUserVO loginUserVO = LoginUserVO.builder()
                 .id(user .getId())
                 .name(user.getName())
@@ -86,6 +91,7 @@ public class UserController {
                 .profile(user.getProfile())
                 .role(user.getRole())
                 .email(user.getEmail())
+                .isTA(isTA)
                 .token(token)
                 .build();
 
@@ -149,8 +155,7 @@ public class UserController {
         String pattern = "^[a-zA-Z0-9]+$";
         if(!Pattern.matches(pattern,name))
             return Result.error("账号应只包含数字和英文");
-            userService.register(userRegisterDTO);
-
+        userService.register(userRegisterDTO);
         return Result.success();
     }
 

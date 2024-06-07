@@ -47,6 +47,10 @@ public class LoginUserVO implements Serializable {
      * 用户昵称
      */
     private String email;
+    /**
+     * 是否为助教
+     */
+    private Boolean isTA;
 
     private String token;
 

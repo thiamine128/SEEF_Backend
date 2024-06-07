@@ -118,7 +118,7 @@ public class TAController {
         return Result.success(classIds);
     }
     @GetMapping("/myClass")
-    @Operation(summary = "助教管理的课程")
+    @Operation(summary = "是否是我管理的课程（助教）")
     public Result<Boolean> isMyClass(@RequestParam  Long classId){
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         long id = (long) currentUser.get(JwtClaimsConstant.USER_ID);
@@ -128,7 +128,7 @@ public class TAController {
         return Result.success(true);
     }
     @PostMapping("/addButchTAExcel")
-    @Operation(summary = "批量添加助教")
+    @Operation(summary = "批量添加助教（excel）")
     @Transactional
     @AuthCheck(mustRole = {RoleConstant.TEACHER})
     public Result addButchTAExcel(MultipartFile file) throws IOException {
@@ -233,7 +233,7 @@ public class TAController {
 
                                 if (row.getCell(1) != null) {
                                     row.getCell(1).setCellType(CellType.STRING);
-                                    String course = row.getCell(2).getStringCellValue();
+                                    String course = row.getCell(1).getStringCellValue();
                                     if (StringUtils.isEmpty(course)) {
                                         isThrow = true;
                                         return Result.error("导入失败(第" + theRow + "行,课程不能为空)");
