@@ -405,7 +405,7 @@ public class CourseController {
 
     @PostMapping
     @Operation(summary = "批量删除教学班中学生")
-    public Result deleteButchStudents(List<DeleteStudentReqDTO> students){
+    public Result deleteButchStudents(@RequestBody  List<DeleteStudentReqDTO> students){
 
         courseService.deleteBathcStudents(students);
         return  Result.success();
