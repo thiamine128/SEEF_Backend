@@ -111,7 +111,8 @@ public class AdminController {
                             Row row = sheet.getRow(i);
                             //首行  提取注解
                             if (firstRow) {
-                                if (row.getCell(0).getStringCellValue().equals("工号")
+                                if (!row.getCell(0).getStringCellValue().isBlank()&&!row.getCell(1).getStringCellValue().isBlank()&&!row.getCell(2).getStringCellValue().isBlank()
+                                        &&row.getCell(0).getStringCellValue().equals("工号")
                                         && row.getCell(1).getStringCellValue().equals("邮箱")
                                          && row.getCell(2).getStringCellValue().equals("姓名")
                                        )
@@ -274,7 +275,8 @@ public class AdminController {
                             Row row = sheet.getRow(i);
                             //首行  提取注解
                             if (firstRow) {
-                                if (row.getCell(0).getStringCellValue().equals("学号")
+                                if (!row.getCell(0).getStringCellValue().isBlank()&&!row.getCell(1).getStringCellValue().isBlank()&&!row.getCell(2).getStringCellValue().isBlank()
+                                        &&row.getCell(0).getStringCellValue().equals("学号")
                                         && row.getCell(1).getStringCellValue().equals("邮箱")
                                         && row.getCell(2).getStringCellValue().equals("姓名")
                                 )

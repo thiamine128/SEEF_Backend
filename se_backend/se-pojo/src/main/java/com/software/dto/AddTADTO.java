@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Data
 public class AddTADTO {
-    private Long studentId;
+    private String studentAccount;
     private  Long classId;
     private Long courseId;
 }

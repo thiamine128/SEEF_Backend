@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -48,14 +49,15 @@ public class TAController {
         taService.addTA(studentAccount, classId, courseId);
         return Result.success();
     }
-//    @PostMapping("/addButchTA")
-//    @Operation(summary = "批量添加助教")
-//    @AuthCheck(mustRole = {RoleConstant.TEACHER})
-//    public Result addButchTA(@RequestBody List<AddTADTO> addTADTOs){
-//        for(AddTADTO student:addTADTOs)
-//            taService.addTA(student.getStudentId(), student.getClassId(), student.getCourseId());
-//        return Result.success();
-//    }
+    @PostMapping("/addButchTA")
+    @Operation(summary = "批量添加助教")
+    @Transactional
+    @AuthCheck(mustRole = {RoleConstant.TEACHER})
+    public Result addButchTA(@RequestBody List<AddTADTO> addTADTOs){
+        for(AddTADTO student:addTADTOs)
+            taService.addTA(student.getStudentAccount(), student.getClassId(), student.getCourseId());
+        return Result.success();
+    }
     @DeleteMapping("/deleteTA")
     @Operation(summary = "删除助教")
     @AuthCheck(mustRole = {RoleConstant.TEACHER})
@@ -65,6 +67,7 @@ public class TAController {
     }
     @PostMapping("/deleteButchTA")
     @Operation(summary = "批量删除助教")
+    @Transactional
     @AuthCheck(mustRole = {RoleConstant.TEACHER})
     public Result deleteButchTA(@RequestBody List<DeleteTADTO> deleteTADTOs){
         for(DeleteTADTO student:deleteTADTOs)
