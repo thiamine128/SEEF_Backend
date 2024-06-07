@@ -1,6 +1,7 @@
 package com.software.service.impl;
 
 import com.software.constant.MessageConstant;
+import com.software.dto.AddBatchTADTO;
 import com.software.entity.User;
 import com.software.exception.InvalidParameterException;
 import com.software.mapper.TAMapper;
@@ -45,5 +46,10 @@ public class TAServiceImpl implements TAService {
     @Override
     public List<Long> getMyClass(long id) {
        return taMapper.getMyClassIds(id);
+    }
+
+    @Override
+    public void addButchTA(List<AddBatchTADTO> tas) {
+        taMapper.addButchTA(tas);
     }
 }
