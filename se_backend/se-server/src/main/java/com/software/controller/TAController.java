@@ -171,7 +171,7 @@ public class TAController {
                             //首行  提取注解
                             if (firstRow) {
                                 if (!row.getCell(0).getStringCellValue().isBlank()&&!row.getCell(1).getStringCellValue().isBlank()&&!row.getCell(2).getStringCellValue().isBlank()
-                                        &&row.getCell(0).getStringCellValue().equals("学号号")
+                                        &&row.getCell(0).getStringCellValue().equals("学号")
                                         && row.getCell(1).getStringCellValue().equals("课程")
                                         && row.getCell(2).getStringCellValue().equals("班级")
                                 )
