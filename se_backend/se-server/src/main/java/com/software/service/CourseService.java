@@ -9,7 +9,7 @@ import com.software.vo.CourseClassVO;
 import java.util.List;
 
 public interface CourseService {
-    Course createCourse(CourseCreateDto courseCreateDto);
+    Course createCourse(CourseCreateDto courseCreateDto, Long id);
     void updateCourse(CourseUpdateDto courseUpdateDto);
     CourseClass addClass(ClassCreateDto classCreateDto);
     PageResult pageQuery(CoursePageQueryDto coursePageQueryDto);

@@ -70,7 +70,8 @@ public class CourseController {
        // if (!role.equals(RoleConstant.TEACHER)) throw new PermissionDeniedException(MessageConstant.PERMISSION_DENIED);
         if(courseCreateDto.getName()==null||courseCreateDto.getName().isBlank()||courseCreateDto.getEvaluation().isBlank())
             throw new InvalidParameterException(MessageConstant.PARAMETER_BLANK);
-        return Result.success(courseService.createCourse(courseCreateDto));
+        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
+        return Result.success(courseService.createCourse(courseCreateDto, id));
     }
 
     @PostMapping("/updateCourse")

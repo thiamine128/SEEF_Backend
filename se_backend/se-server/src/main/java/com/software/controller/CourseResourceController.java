@@ -58,7 +58,7 @@ public class CourseResourceController {
             throw new IllegalArgumentException("目录必须以/开头，以/结束");
         }
         String objectName = "course_resource/"+id+currentDirectory+filename;
-        AliOssUtil.PostSignature postSignature = aliOssUtil.generatePostSignature(objectName, System.currentTimeMillis() + OssConfiguration.EXPIRE_SEC * 1000, 52428800);
+        AliOssUtil.PostSignature postSignature = aliOssUtil.generatePostSignature(objectName, System.currentTimeMillis() + OssConfiguration.EXPIRE_SEC * 1000, 524288000);
         OSSPostSignatureVO ossPostSignatureVO = OSSPostSignatureVO.builder()
                 .accessKeyId(postSignature.getAccessKeyId())
                 .objectName(postSignature.getObjectName())

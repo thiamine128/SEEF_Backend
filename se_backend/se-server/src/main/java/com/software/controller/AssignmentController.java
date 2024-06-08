@@ -49,7 +49,7 @@ public class AssignmentController {
     @Operation(summary = "老师上传作业附件")
     public Result<OSSPostSignatureVO> uploadDescAttachment() throws UnsupportedEncodingException {
         String objectName = "assignmentDesc/" + UUID.randomUUID().toString();
-        AliOssUtil.PostSignature postSignature = aliOssUtil.generatePostSignatureNoFilename(objectName, System.currentTimeMillis() + OssConfiguration.EXPIRE_SEC * 1000, 52428800);
+        AliOssUtil.PostSignature postSignature = aliOssUtil.generatePostSignatureNoFilename(objectName, System.currentTimeMillis() + OssConfiguration.EXPIRE_SEC * 1000, 524288000);
         OSSPostSignatureVO ossPostSignatureVO = OSSPostSignatureVO.builder()
                 .accessKeyId(postSignature.getAccessKeyId())
                 .objectName(postSignature.getObjectName())
@@ -65,7 +65,7 @@ public class AssignmentController {
         User user = userService.getByACCount(userService.getUsername(id));
         Assignment assignment = assignmentService.getAssignment(assignmentId);
         String objectName = "assignment/" + assignmentId + "/" + user.getName() + "_" + user.getRealName() + "_" + assignment.getTitle();
-        AliOssUtil.PostSignature postSignature = aliOssUtil.generatePostSignature(objectName, System.currentTimeMillis() + OssConfiguration.EXPIRE_SEC * 1000, 52428800);
+        AliOssUtil.PostSignature postSignature = aliOssUtil.generatePostSignature(objectName, System.currentTimeMillis() + OssConfiguration.EXPIRE_SEC * 1000, 524288000);
         OSSPostSignatureVO ossPostSignatureVO = OSSPostSignatureVO.builder()
                 .accessKeyId(postSignature.getAccessKeyId())
                 .objectName(postSignature.getObjectName())

@@ -43,7 +43,7 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private CourseService courseService;
     @Override
-    public Course createCourse(CourseCreateDto courseCreateDto) {
+    public Course createCourse(CourseCreateDto courseCreateDto, Long creator) {
         Course course = new Course();
         course.setName(courseCreateDto.getName());
         course.setCredit(courseCreateDto.getCredit());
@@ -51,9 +51,8 @@ public class CourseServiceImpl implements CourseService {
         course.setSyllabus(courseCreateDto.getSyllabus());
         course.setEvaluation(courseCreateDto.getEvaluation());
         courseMapper.create(course);
-        Map<String,Object> currentUser = BaseContext.getCurrentUser();
-        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
-        courseMapper.addTeacher(course.getId(), id);
+
+        courseMapper.addTeacher(course.getId(), creator);
         return course;
     }
 
