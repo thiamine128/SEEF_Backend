@@ -316,26 +316,11 @@ public class CourseController {
                                         return Result.error("导入失败(第" + theRow + "行,不能为空)");
 
                                     } else {
-                                        if (!nameList.isEmpty() && nameList.size() > 0) {
-                                            //判断是否重复
-                                            if (nameList.contains(name)) {
-                                                isThrow = true;
-                                                return Result.error("导入失败(第" + theRow + "行,学号" + name + "有重复)");
-
-                                            } else {
-                                                nameList.add(name);
-                                                User u =userService.getByACCount(name);
-                                                if(u==null)
-                                                  return  Result.error("导入失败(第" + theRow + "行,学生" + name + "不存在)");
-                                                 student.setUserId(u.getId());
-                                            }
-                                        } else {
                                             nameList.add(name);
                                             User u =userService.getByACCount(name);
                                             if(u==null)
                                                 Result.error("导入失败(第" + theRow + "行,学号" + name + "不存在)");
                                             student.setUserId(u.getId());
-                                        }
                                     }
                                 } else {
                                     log.info("2");
