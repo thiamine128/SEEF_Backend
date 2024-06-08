@@ -201,28 +201,12 @@ public class TAController {
                                         return Result.error("导入失败(第" + theRow + "行,学号不能为空)");
 
                                     } else {
-                                        if (!nameList.isEmpty() && nameList.size() > 0) {
-                                            //判断是否重复
-                                            if (nameList.contains(account)) {
-                                                isThrow = true;
-                                                return Result.error("导入失败(第" + theRow + "行,name" + account + "有重复)");
-
-                                            } else {
-                                                nameList.add(account);
-                                                User user = userService.getByACCount(account);
-                                                if(user == null) {
-                                                    return Result.error("导入失败(第" + theRow + "行,name" + account + "不存在)");
-                                                }
-                                                TA.setStudentId(user.getId());
-                                            }
-                                        } else {
                                             nameList.add(account);
                                             User user = userService.getByACCount(account);
                                             if(user == null) {
-                                                return Result.error("导入失败(第" + theRow + "行,name" + account + "不存在)");
+                                                return Result.error("导入失败(第" + theRow + "行,学号" + account + "不存在)");
                                             }
                                             TA.setStudentId(user.getId());
-                                        }
                                     }
                                 } else {
                                     log.info("2");
