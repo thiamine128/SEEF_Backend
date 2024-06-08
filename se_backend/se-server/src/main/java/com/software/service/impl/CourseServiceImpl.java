@@ -6,6 +6,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.software.constant.JwtClaimsConstant;
 import com.software.constant.MessageConstant;
+import com.software.constant.RoleConstant;
 import com.software.dto.*;
 import com.software.entity.*;
 import com.software.exception.InvalidRequestException;
@@ -100,7 +101,11 @@ public class CourseServiceImpl implements CourseService {
     public boolean checkClassPermission(Long classId) {
         Map<String,Object> currentUser = BaseContext.getCurrentUser();
         Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
+        String role = (String) currentUser.get(JwtClaimsConstant.USER_ROLE);
+        if(role.equals(RoleConstant.TEACHER))
         return classMapper.checkTeacher(id, classId) != null;
+        else
+            return classMapper.checkStudent(id,classId)!=null;
     }
 
     @Override
