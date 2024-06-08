@@ -185,6 +185,26 @@ public class AliOssUtil {
                 .host(getHost()).build();
     }
 
+    public PostSignature generatePostSignatureNoFilename(String objectName, long expireEndTime, long maxSize) throws UnsupportedEncodingException {
+        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+        Date expiration = new Date(expireEndTime);
+        PolicyConditions policyConds = new PolicyConditions();
+        policyConds.addConditionItem(PolicyConditions.COND_CONTENT_LENGTH_RANGE, 0, maxSize);
+        policyConds.addConditionItem(MatchMode.Exact, PolicyConditions.COND_KEY, objectName);
+        String postPolicy = ossClient.generatePostPolicy(expiration, policyConds);
+
+        byte[] binaryData = postPolicy.getBytes("utf-8");
+
+        String encodedPolicy = Base64Helper.encode(binaryData);
+        String postSignature = ossClient.calculatePostSignature(postPolicy);
+        return PostSignature.builder()
+                .accessKeyId(accessKeyId)
+                .objectName(objectName)
+                .postSignature(postSignature)
+                .encodedPolicy(encodedPolicy)
+                .host(getHost()).build();
+    }
+
     public String getHost() {
         return "http://" + bucketName + "." + endpoint;
     }

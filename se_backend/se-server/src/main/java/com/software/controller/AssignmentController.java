@@ -45,8 +45,21 @@ public class AssignmentController {
     @Autowired
     private UserService userService;
 
+    @PostMapping("/uploadDescAttachment")
+    @Operation(summary = "老师上传作业附件")
+    public Result<OSSPostSignatureVO> uploadDescAttachment() throws UnsupportedEncodingException {
+        String objectName = "assignmentDesc/" + UUID.randomUUID().toString();
+        AliOssUtil.PostSignature postSignature = aliOssUtil.generatePostSignatureNoFilename(objectName, System.currentTimeMillis() + OssConfiguration.EXPIRE_SEC * 1000, 52428800);
+        OSSPostSignatureVO ossPostSignatureVO = OSSPostSignatureVO.builder()
+                .accessKeyId(postSignature.getAccessKeyId())
+                .objectName(postSignature.getObjectName())
+                .encodedPolicy(postSignature.getEncodedPolicy())
+                .postSignature(postSignature.getPostSignature())
+                .host(postSignature.getHost()).build();
+        return Result.success(ossPostSignatureVO);
+    }
     @PostMapping("/uploadAttachment")
-    @Operation(summary = "上传作业附件")
+    @Operation(summary = "学生上传作业附件")
     public Result<OSSPostSignatureVO> uploadAttachment(Long assignmentId) throws UnsupportedEncodingException {
         Long id = Long.parseLong(BaseContext.getCurrentUser().get(JwtClaimsConstant.USER_ID).toString());
         User user = userService.getByACCount(userService.getUsername(id));
