@@ -7,12 +7,14 @@ import com.software.constant.RoleConstant;
 import com.software.dto.*;
 import com.software.entity.Assignment;
 import com.software.entity.StudentAssignment;
+import com.software.entity.User;
 import com.software.exception.InvalidParameterException;
 import com.software.exception.PermissionDeniedException;
 import com.software.result.PageResult;
 import com.software.result.Result;
 import com.software.service.AssignmentService;
 import com.software.service.CourseService;
+import com.software.service.UserService;
 import com.software.utils.AliOssUtil;
 import com.software.utils.BaseContext;
 import com.software.vo.AssignmentVO;
@@ -40,11 +42,16 @@ public class AssignmentController {
     private CourseService courseService;
     @Autowired
     AliOssUtil aliOssUtil;
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/uploadAttachment")
     @Operation(summary = "上传作业附件")
-    public Result<OSSPostSignatureVO> uploadAttachment() throws UnsupportedEncodingException {
-        String objectName = "assignment/" + UUID.randomUUID().toString();
+    public Result<OSSPostSignatureVO> uploadAttachment(Long assignmentId) throws UnsupportedEncodingException {
+        Long id = Long.parseLong(BaseContext.getCurrentUser().get(JwtClaimsConstant.USER_ID).toString());
+        User user = userService.getByACCount(userService.getUsername(id));
+        Assignment assignment = assignmentService.getAssignment(assignmentId);
+        String objectName = "assignment/" + assignmentId + "/" + user.getName() + "_" + user.getRealName() + "_" + assignment.getTitle();
         AliOssUtil.PostSignature postSignature = aliOssUtil.generatePostSignature(objectName, System.currentTimeMillis() + OssConfiguration.EXPIRE_SEC * 1000, 52428800);
         OSSPostSignatureVO ossPostSignatureVO = OSSPostSignatureVO.builder()
                 .accessKeyId(postSignature.getAccessKeyId())

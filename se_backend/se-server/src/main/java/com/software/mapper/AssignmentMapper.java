@@ -29,4 +29,6 @@ public interface AssignmentMapper {
     List<AssignmentVO> getAllAssignments(AssignmentQueryDto assignmentQueryDto);
     @Select("select * from student_assignment where assignment_id=#{assignmentId}")
     List<StudentAssignment> getStudentAssignments(Long assignmentId);
+    @Select("select * from assignments where id=#{assignmentId}")
+    Assignment getAssignment(Long assignmentId);
 }

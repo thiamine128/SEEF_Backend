@@ -16,7 +16,7 @@ public interface AssignmentService {
     void publishAssignment(AssignmentPublishDto assignmentPublishDto);
     List<Assignment> getAssignmentsInClass(Long classId);
     void submitAssignment(Long studentId, AssignmentSubmitDto assignmentSubmitDto);
-
+    Assignment getAssignment(Long assignmentId);
     void markHw(HomeWorkFeedBackDTO homeWorkFeedBackDTO);
     List<AssignmentVO> getAllAssignments(AssignmentQueryDto assignmentQueryDto);
     List<StudentAssignment> getStudentAssignments(Long assignmentId);

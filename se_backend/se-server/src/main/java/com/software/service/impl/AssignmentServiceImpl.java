@@ -45,6 +45,11 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
+    public Assignment getAssignment(Long assignmentId) {
+        return assignmentMapper.getAssignment(assignmentId);
+    }
+
+    @Override
     public void markHw(HomeWorkFeedBackDTO homeWorkFeedBackDTO) {
         assignmentMapper.markHw(homeWorkFeedBackDTO);
     }

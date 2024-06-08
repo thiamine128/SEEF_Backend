@@ -1,0 +1,45 @@
+services:
+  backend:
+    build:
+      context: backend
+      target: dev-envs
+    ports:
+      - 8080
+    restart: always
+    networks:
+      - vue-spring
+      - spring-mysql
+    volumes:
+  db:
+    image: mysql:8.0.19
+    environment:
+      - MYSQL_DATABASE=sedb
+      - MYSQL_ROOT_PASSWORD=seproj
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 3s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - spring-mysql
+  frontend:
+    restart: always
+    build:
+      context: frontend
+      target: dev-envs
+    volumes:
+      - ./frontend/src:/code/src
+    ports:
+      - 80
+    networks:
+      - vue-spring
+
+volumes:
+  db-data: {}
+
+networks:
+  vue-spring: {}
+  spring-mysql: {}
