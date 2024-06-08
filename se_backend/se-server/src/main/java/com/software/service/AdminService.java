@@ -17,4 +17,6 @@ public interface AdminService {
     void addTeacher(TeacherDTO teacherDTO);
 
     void addButchUser(List<User> userList);
+
+    void deleteClass(Long classId);
 }

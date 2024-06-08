@@ -17,15 +17,13 @@ import com.software.utils.BaseContext;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -46,6 +44,19 @@ import java.util.Map;
 public class AdminController {
     @Autowired
     private AdminService adminService;
+
+
+    @DeleteMapping("/deleteClass")
+    @Operation(summary = "删除班级")
+    @AuthCheck(mustRole = {RoleConstant.ADMIN})
+    public Result deleteClass(@RequestParam Long  classId){
+
+        adminService.deleteClass(classId);
+        return Result.success();
+    }
+
+
+
     @PostMapping("/addAdmin")
     @Operation(summary = "添加管理员")
     @AuthCheck(mustRole = {RoleConstant.ADMIN})
@@ -407,6 +418,8 @@ public class AdminController {
         }
         return true;
     }
+
+
 
 
 }

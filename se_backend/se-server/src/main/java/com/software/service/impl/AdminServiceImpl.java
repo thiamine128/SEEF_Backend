@@ -52,4 +52,9 @@ public class AdminServiceImpl implements AdminService {
     public void addButchUser(List<User> userList) {
         userMapper.addButchUser(userList);
     }
+
+    @Override
+    public void deleteClass(Long classId) {
+        adminMapper.deleteClass(classId);
+    }
 }
