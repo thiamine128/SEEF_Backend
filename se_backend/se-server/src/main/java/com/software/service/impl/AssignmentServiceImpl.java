@@ -1,23 +1,20 @@
 package com.software.service.impl;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import com.software.constant.MessageConstant;
-import com.software.dto.AssignmentPublishDto;
-import com.software.dto.AssignmentQueryDto;
-import com.software.dto.AssignmentSubmitDto;
-import com.software.dto.HomeWorkFeedBackDTO;
+import com.software.dto.*;
 import com.software.entity.Assignment;
 import com.software.entity.StudentAssignment;
+import com.software.entity.User;
 import com.software.exception.AssignmentOverdueException;
 import com.software.mapper.AssignmentMapper;
-import com.software.result.PageResult;
+import com.software.mapper.UserMapper;
 import com.software.service.AssignmentService;
 import com.software.vo.AssignmentVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +23,9 @@ import java.util.List;
 public class AssignmentServiceImpl implements AssignmentService {
     @Autowired
     private AssignmentMapper assignmentMapper;
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
     public void publishAssignment(AssignmentPublishDto assignmentPublishDto) {
         assignmentMapper.publishAssignment(assignmentPublishDto);
@@ -60,7 +60,16 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public List<StudentAssignment> getStudentAssignments(Long assignmentId) {
-        return assignmentMapper.getStudentAssignments(assignmentId);
+    public List<StudentAssignmentDTO> getStudentAssignments(Long assignmentId) {
+        List<StudentAssignment> studentAssignments = assignmentMapper.getStudentAssignments(assignmentId);
+        List<StudentAssignmentDTO> result = new ArrayList<StudentAssignmentDTO>();
+        for (StudentAssignment studentAssignment : studentAssignments) {
+           User user= userMapper.getByID(studentAssignment.getStudentId());
+           if (user == null)
+               continue;
+           StudentAssignmentDTO studentAssignmentDTO = new StudentAssignmentDTO(user.getName(),studentAssignment.getAssignmentId(),studentAssignment.getAssignmentFile(),studentAssignment.getGrade(),studentAssignment.getSubmissionTime(),studentAssignment.getAttachmentContext(),studentAssignment.getFeedback());
+            result.add(studentAssignmentDTO);
+        }
+        return result;
     }
 }

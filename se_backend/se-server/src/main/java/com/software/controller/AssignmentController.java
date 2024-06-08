@@ -120,7 +120,8 @@ public class AssignmentController {
 
     @GetMapping("/studentAssignment")
     @Operation(summary = "获取学生作业")
-    public Result<List<StudentAssignment>> studentAssignment(@RequestParam Long assignmentId) {
-        return Result.success(assignmentService.getStudentAssignments(assignmentId));
+    public Result<List<StudentAssignmentDTO>> studentAssignment(@RequestParam Long assignmentId) {
+        List<StudentAssignmentDTO> result = assignmentService.getStudentAssignments(assignmentId);
+        return Result.success(result);
     }
 }

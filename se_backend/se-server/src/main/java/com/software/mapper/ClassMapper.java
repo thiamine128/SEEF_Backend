@@ -35,7 +35,7 @@ public interface ClassMapper {
 
     @Select("select teacher_id from teacher_class where teacher_id=#{id} and class_id=#{classId}")
     Long checkTeacher(Long id, Long classId);
-    @Select("select student_id from student_class where student_id=#{id} and class_id=#{classId}")
+    @Select("select student_id from enrollments where student_id=#{id} and class_id=#{classId}")
     Long checkStudent(Long id, Long classId);
     @Select("select id from classes where name =#{name}")
     Long getClassIdByName(String name);
