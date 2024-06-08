@@ -50,11 +50,17 @@ public class AdminController {
     @Operation(summary = "删除班级")
     @AuthCheck(mustRole = {RoleConstant.ADMIN})
     public Result deleteClass(@RequestParam Long  classId){
-
         adminService.deleteClass(classId);
         return Result.success();
     }
 
+    @DeleteMapping("/deleteCourse")
+    @Operation(summary = "删除课程")
+    @AuthCheck(mustRole = {RoleConstant.ADMIN})
+    public Result deleteCourse(@RequestParam Long  classId){
+        adminService.deleteCourse(classId);
+        return Result.success();
+    }
 
 
     @PostMapping("/addAdmin")

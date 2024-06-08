@@ -12,4 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface AdminMapper {
     @Delete("delete from classes where id =#{classId} ")
     void deleteClass(Long classId);
+
+    @Delete("delete from courses where id=#{courseId}")
+    void deleteCourse(Long courseId);
 }

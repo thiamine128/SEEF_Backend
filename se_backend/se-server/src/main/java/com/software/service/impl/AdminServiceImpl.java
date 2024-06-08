@@ -57,4 +57,9 @@ public class AdminServiceImpl implements AdminService {
     public void deleteClass(Long classId) {
         adminMapper.deleteClass(classId);
     }
+
+    @Override
+    public void deleteCourse(Long courseId) {
+        adminMapper.deleteCourse(courseId);
+    }
 }
