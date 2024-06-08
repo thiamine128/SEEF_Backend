@@ -194,6 +194,9 @@ public class UserController {
     @PostMapping("/update")
     @Operation(summary = "更新用户昵称/简介")
     public Result updateUserMessage(@RequestBody UserUpdateDTO userUpdateDTO){
+        Map<String,Object> currentUser = BaseContext.getCurrentUser();
+        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
+        userUpdateDTO.setId(id);
         userService.updateUserMessage(userUpdateDTO);
         return Result.success();
     }

@@ -56,8 +56,8 @@ public class WebSocketConfig extends ServerEndpointConfig.Configurator {
         super.modifyHandshake(sec, request, response);
     }
 
-    @Bean
-    public ServerEndpointExporter serverEndpointExporter() {
-        return new ServerEndpointExporter();
-    }
+//    @Bean
+//    public ServerEndpointExporter serverEndpointExporter() {
+//        return new ServerEndpointExporter();
+//    }
 }

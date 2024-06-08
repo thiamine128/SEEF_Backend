@@ -130,9 +130,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserMessage(UserUpdateDTO userUpdateDTO) {
-        Map<String,Object> currentUser = BaseContext.getCurrentUser();
-        Long id =(long) currentUser.get(JwtClaimsConstant.USER_ID);
-        userUpdateDTO.setId(id);
         userMapper.update(userUpdateDTO);
     }
 
