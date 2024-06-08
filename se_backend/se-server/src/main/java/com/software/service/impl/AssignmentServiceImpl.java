@@ -67,7 +67,7 @@ public class AssignmentServiceImpl implements AssignmentService {
            User user= userMapper.getByID(studentAssignment.getStudentId());
            if (user == null)
                continue;
-           StudentAssignmentDTO studentAssignmentDTO = new StudentAssignmentDTO(user.getName(),studentAssignment.getAssignmentId(),studentAssignment.getAssignmentFile(),studentAssignment.getGrade(),studentAssignment.getSubmissionTime(),studentAssignment.getAttachmentContext(),studentAssignment.getFeedback());
+           StudentAssignmentDTO studentAssignmentDTO = new StudentAssignmentDTO(studentAssignment.getStudentId(),user.getName(),studentAssignment.getAssignmentId(),studentAssignment.getAssignmentFile(),studentAssignment.getGrade(),studentAssignment.getSubmissionTime(),studentAssignment.getAttachmentContext(),studentAssignment.getFeedback());
             result.add(studentAssignmentDTO);
         }
         return result;

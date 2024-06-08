@@ -15,7 +15,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudentAssignmentDTO {
-    private String studentId;
+    private Long studentId;
+    private String studentAccount;
     private Long assignmentId;
     private String assignmentFile;
     private double grade;
