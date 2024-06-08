@@ -319,7 +319,7 @@ public class CourseController {
                                             nameList.add(name);
                                             User u =userService.getByACCount(name);
                                             if(u==null)
-                                                Result.error("导入失败(第" + theRow + "行,学号" + name + "不存在)");
+                                            return  Result.error("导入失败(第" + theRow + "行,学号" + name + "不存在)");
                                             student.setUserId(u.getId());
                                     }
                                 } else {
