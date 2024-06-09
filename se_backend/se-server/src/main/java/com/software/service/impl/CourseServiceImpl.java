@@ -210,8 +210,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Long getClassIdByName(String name) {
-        return classMapper.getClassIdByName(name);
+    public Long getClassIdByName(String name, String courseName) {
+        return classMapper.getClassIdByName(name, getCourseByName(courseName).getId());
     }
 
     @Override

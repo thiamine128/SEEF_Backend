@@ -35,7 +35,7 @@ public interface CourseService {
 
     Course getCourseByName(String name);
 
-    Long getClassIdByName(String name);
+    Long getClassIdByName(String name, String courseName);
     void addButchStudents(List<JoinClassDTO> students);
 
     void deleteBathcStudents(List<DeleteStudentReqDTO> students);

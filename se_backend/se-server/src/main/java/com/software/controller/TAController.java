@@ -215,9 +215,10 @@ public class TAController {
 
                                 }
 
+                                String course;
                                 if (row.getCell(1) != null) {
                                     row.getCell(1).setCellType(CellType.STRING);
-                                    String course = row.getCell(1).getStringCellValue();
+                                    course = row.getCell(1).getStringCellValue();
                                     if (StringUtils.isEmpty(course)) {
                                         isThrow = true;
                                         return Result.error("导入失败(第" + theRow + "行,课程不能为空)");
@@ -239,7 +240,7 @@ public class TAController {
                                         isThrow = true;
                                         return Result.error("导入失败(第" + theRow + "行,班级不能为空)");
                                     } else {
-                                        Long classId = courseService.getClassIdByName(className);
+                                        Long classId = courseService.getClassIdByName(className, course);
                                         if(classId == null) {
                                             return Result.error("导入失败(第" + theRow + "行,班级不存在)");
                                         }

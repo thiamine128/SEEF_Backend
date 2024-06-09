@@ -35,11 +35,8 @@ public class MessageServiceImpl implements MessageService {
             throw new InvalidUserException(MessageConstant.INVALID_USER);
         }
         Message message = new Message(UUID.randomUUID().toString(), send, sendMessageDTO.getTo(), sendMessageDTO.getContent(), new Date(System.currentTimeMillis()), false);
-        try {
-            WebSocketServer.sendInfo("message" + JSON.toJSONString(message), sendMessageDTO.getTo());
-        } catch (Exception ignored) {
-            messageMapper.createMessage(message);
-        }
+
+        messageMapper.createMessage(message);
     }
 
     @Override
