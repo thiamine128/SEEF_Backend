@@ -24,6 +24,7 @@ export default createStore({
         profile: null,
         role: null,
         email: null,
+        isTA: null,
         tempTitle: '',
         tempContent: '',
         eventList: [],
@@ -32,7 +33,8 @@ export default createStore({
         blogMap: new Map(),
         commentMap: new Map(),
         replyMap: new Map(),
-        courseMap: new Map()
+        courseMap: new Map(),
+        classMap: new Map(),
 
     },
 
@@ -54,13 +56,14 @@ export default createStore({
                 avatar: state.avatar,
                 profile: state.profile,
                 role: state.role,
-                email: state.email
+                email: state.email,
+                isTA: state.isTA,
             }
         },
         //获取登录认证令牌
         getToken(state){
-            console.log('当前时间：'+Date.now());
-            console.log('token过期时间：'+state.tokenExpire);
+            // console.log('当前时间：'+Date.now());
+            // console.log('token过期时间：'+state.tokenExpire);
             if (Date.now() > state.tokenExpire){
                 state.token = null;
                 state.eventList = [];
@@ -70,7 +73,7 @@ export default createStore({
                 state.commentMap = new Map();
                 state.replyMap = new Map();
 
-                console.log('token已经过期');
+                //console.log('token已经过期');
             }
             return state.token;
         },
@@ -99,8 +102,20 @@ export default createStore({
             return state.role;
         },
 
+        getEduIsTA(state) {
+            return state.isTA;
+        },
+
+        getId(state) {
+            return state.id;
+        },
+
         getMapCourse: (state) => (courseId) => {
             return state.courseMap[courseId];
+        },
+
+        getMapClass: (state) => (classId) => {
+            return state.classMap[classId];
         }
 
     },
@@ -112,6 +127,7 @@ export default createStore({
         setToken(state, token) {
             state.token = token;
             state.tokenExpire = Date.now() + 3600 * 1000;
+            //state.tokenExpire = Date.now() + 3600 * 1000;
         },
 
         //设置个人信息
@@ -123,6 +139,7 @@ export default createStore({
             state.profile = data.profile;
             state.role = data.role;
             state.email = data.email;
+            state.isTA = data.isTA;
             state.eduIdentity = 'teacher';
 
             state.userMap = new Map();
@@ -150,9 +167,9 @@ export default createStore({
         addMapUser(state, data){
             const userId = data.userId;
             const userData = data.userData;
-            console.log('尝试缓存user:'+userId);
+            //console.log('尝试缓存user:'+userId);
             state.userMap[userId] = userData;
-            console.log(state.userMap);
+            //console.log(state.userMap);
             //state.userMap.set(userId, userData);
         },
 
@@ -179,10 +196,19 @@ export default createStore({
 
         addMapCourse(state, data){
             const courseId = data.courseId;
-            const courseData = data.courseData;
-            console.log('尝试缓存course:'+courseId);
+            const courseData = data.result;
+            //console.log('尝试缓存course:'+courseId);
             state.courseMap[courseId] = courseData;
-            console.log(state.userMap);
+            //console.log(state.userMap);
+            //state.courseMap.set(courseId, courseData);
+        },
+
+        addMapClass(state, data){
+            const classId = data.classId;
+            const classData = data.result;
+            //console.log('尝试缓存class:'+classId);
+            state.courseMap[classId] = classData;
+            //console.log(state.userMap);
             //state.courseMap.set(courseId, courseData);
         },
 
@@ -194,17 +220,19 @@ export default createStore({
         async login({ commit, state }, credentials) {
             try {
                 const response = await axios.post('/user/login', credentials);
-                console.log(response.data);
+                //console.log(response.data);
                 if (response.status === 200){
                     if (response.data.code == 1){
                         commit('setToken', response.data.data.token);
                         commit('setData', response.data.data);
                         callSuccess('登录成功');
-                        router.push('/blog');
+                        setTimeout(()=>{
+                            router.push('/blog');
+                        }, 1000);
                     }else callError(response.data.msg);
                 }else callError('网络错误');
             } catch (error) {
-                console.log('there are some errors in login');
+                //console.log('there are some errors in login');
                 callError('密码错误或用户不存在');
             }
             return 1;
@@ -212,7 +240,7 @@ export default createStore({
 
 
         //邮箱登录
-        async eLogin({ commit }, credentials) {
+        async eLogin({commit, state}, credentials) {
             try {
                 const response = await axios.post('/user/eLogin', credentials);
                 if (response.status === 200){
@@ -224,10 +252,30 @@ export default createStore({
                     }else callError(response.data.msg);
                 }else callError('网络错误');
             } catch (error) {
-                console.log('there are some errors in login');
+                //console.log('there are some errors in login');
                 callError('密码错误或用户不存在');
             }
         },
+
+
+        // async addCourse({ commit, state }, credentials) {
+        //     try {
+        //         const response = await axios.post('/user/login', credentials);
+        //         console.log(response.data);
+        //         if (response.status === 200){
+        //             if (response.data.code == 1){
+        //                 commit('setToken', response.data.data.token);
+        //                 commit('setData', response.data.data);
+        //                 callSuccess('登录成功');
+        //                 router.push('/blog');
+        //             }else callError(response.data.msg);
+        //         }else callError('网络错误');
+        //     } catch (error) {
+        //         console.log('there are some errors in login');
+        //         callError('密码错误或用户不存在');
+        //     }
+        //     return 1;
+        // },
 
 
         //登出，清除token
@@ -236,7 +284,7 @@ export default createStore({
                 commit('setToken', null);
                 router.push('/');
             } catch (error) {
-                console.log('there are some errors in logout');
+                //console.log('there are some errors in logout');
             }
         },
 

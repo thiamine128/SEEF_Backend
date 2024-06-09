@@ -78,7 +78,7 @@ export default {
         async getSections(pageNum){ //获取全部板块信息
             try{
                 const response = await this.$http.get(`topic/pagedList?page=${pageNum}&pageSize=15`);
-                console.log(response);
+                //console.log(response);
                 if (response.status === 200) {
                     this.sectionList = response.data.data.records;
                     this.totalPage = Math.ceil(response.data.data.total / 15);

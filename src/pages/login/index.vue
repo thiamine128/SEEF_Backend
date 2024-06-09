@@ -1,6 +1,13 @@
 <template>
     <div class="bg-container"/>
+    <div class="bg-strong-container"/>
     <div class="right-set">
+
+        <div class="seef-set">
+            <div style="font-size: 100px;display: flex;flex-direction: row">SEE<div style="color: #0c82e9">F</div></div>
+            <div style="font-size: 15px; margin-top: -20px; margin-bottom: 20px"> Software Engineering Education Forum </div>
+        </div>
+
         <div class="login-frame">
             <div class="login-content">
                 <div :class="{ customFont: true }">软工教学论坛</div>
@@ -8,7 +15,7 @@
                 <div class="select-set">
                     <div :class="{selectButtonSetNone: situation!==1, selectButtonSet: situation === 1}"
                         @click="setSituation(1)">
-                        用户登录
+                        学号登录
                     </div>
                     <div :class="{selectButtonSetNone: situation!==2, selectButtonSet: situation === 2}"
                          @click="setSituation(2)">
@@ -20,13 +27,19 @@
                     </div>
                     <div :class="{selectButtonSetNone: situation!==4, selectButtonSet: situation === 4}"
                          @click="setSituation(4)">
-                        找回密码
+                        修改密码
                     </div>
                 </div>
 
                 <div class="input-frame" v-if="situation !== 2 && situation !== 4">
-                    <el-input v-model="username" style="width: 80%; height: 40px" placeholder="请输入用户名">
-                    <template #prepend>姓名</template>
+                    <el-input v-model="username" style="width: 80%; height: 40px" placeholder="请输入学号">
+                    <template #prepend>学号</template>
+                    </el-input>
+                </div>
+
+                <div class="input-frame" v-if="situation === 3">
+                    <el-input v-model="nickName" style="width: 80%; height: 40px" placeholder="请输入用户名">
+                        <template #prepend>姓名</template>
                     </el-input>
                 </div>
 
@@ -57,7 +70,6 @@
                 <el-button class="button-set" type="primary" plain @click="transit()">{{buttonName}}</el-button>
 
             </div>
-
             <img class="sosSet" alt="404" src="@/assets/login/sos.png">
         </div>
     </div>
@@ -68,6 +80,7 @@ import {useStore} from "vuex";
 import {getPositionDataWithUnit} from "element-plus";
 import {register, resetPassword, sendEmail} from "@/pages/login/api/api";
 import {ref} from "vue";
+import {callInfo} from "@/callMessage";
 
 export default {
     name: "login",
@@ -75,6 +88,7 @@ export default {
         return{
             store: useStore(),
             username: '',
+            nickName: '',
             password: '',
             code: '',
             email: '',
@@ -96,7 +110,20 @@ export default {
             if (num === 4) this.passwordPlaceHolder = '请输入新密码';
             else this.passwordPlaceHolder = '请输入密码';
         },
+
         transit(){
+
+            if (this.username.length > 50 || this.password.length > 50 ||
+            this.code.length > 50 || this.email.length > 50 || this.nickName.length > 50){
+                callInfo('输入信息过长');
+                return;
+            }
+
+            if (0 !== this.username.replace(/[a-zA-Z0-9]/g, '').length){
+                callInfo('学号只能包含字母和数字');
+                return;
+            }
+
             if (this.clickSet){
                 switch (this.situation){
                     case 1: this.login(); break;
@@ -109,8 +136,8 @@ export default {
                     this.clickSet = true;
                 }, 5000);
             }
-
         },
+
         reset(){
             let data = {
                 email: this.email,
@@ -132,11 +159,16 @@ export default {
                 name: this.username,
                 email: this.email,
                 verificationCode: this.code,
-                password: this.password
+                password: this.password,
+                nickName: this.nickName
             };
             register(data);
         },
         sendmailFunc(){
+            if (this.email.length === 0){
+                callInfo('邮箱不可为空');
+                return;
+            }
             sendEmail(this.email);
             this.handleCool();
         },
@@ -219,7 +251,7 @@ export default {
 }
 .bg-container {
     background: url('@/assets/login/login_bg.png');
-    opacity: 0.7;
+    opacity: 0.8;
     background-size: cover;
     position: fixed;
     height: 100vh;
@@ -228,17 +260,28 @@ export default {
     top: 0;
     left: 0;
 }
+.bg-strong-container {
+    background: url('@/assets/login/bg.png');
+    opacity: 0.9;
+    background-size: cover;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    z-index: -2;
+    top: 0;
+    left: 0;
+}
 .right-set{
     display: flex;
     flex-direction: row;
-    justify-content: right;
+    justify-content: space-between;
     width: 100%;
     height: 100%;
 }
 .login-frame{
     width: 300px;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.5);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -261,5 +304,13 @@ export default {
     justify-content: center;
     align-items: center;
     width: 100%;
+}
+.seef-set{
+    height: 100%;
+    align-items: end;
+    align-content: end;
+    margin-left: 40px;
+    text-align: left;
+    font-family: 'modern', 'sans-serif';
 }
 </style>

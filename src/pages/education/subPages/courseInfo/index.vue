@@ -2,7 +2,7 @@
   <el-container class="layout-container">
     <el-aside width="300px">
       <el-scrollbar>
-        <el-menu 
+        <el-menu
         default-active="2"
         class="el-menu-vertical-demo"
         @open="handleOpen"
@@ -141,7 +141,7 @@
     </el-aside>
     <el-container>
     <el-header>
-      
+
       <el-menu
     :default-active="activeIndex"
     class="el-menu-demo"
@@ -220,11 +220,11 @@
       </div>
       <!-- 代码略 -->
     </div>
-    
- 
 
 
-  
+
+
+
     <div class="course-summary">
         <h2>课程概述</h2>
         <a href="https://www.flaticon.com/free-icons/productivity" title="productivity icons">Productivity icons created by juicy_fish - Flaticon</a>
@@ -262,7 +262,7 @@
 
 
   </el-container>
-      
+
 </el-container>
 
 </template>
@@ -276,17 +276,17 @@ import { ref } from 'vue'
 const activeIndex = ref('1')
 const activeIndex2 = ref('1')
 const handleSelect = (key, keyPath) => {
-  console.log(key, keyPath)
+  // console.log(key, keyPath)
 }
 const handleOpen = (key, keyPath) => {
-  console.log(key, keyPath)
+  // console.log(key, keyPath)
 }
 const handleClose = (key, keyPath) => {
-  console.log(key, keyPath)
+  // console.log(key, keyPath)
 }
 
 
-  
+
 
 </script>
 
@@ -317,7 +317,7 @@ const handleClose = (key, keyPath) => {
     .web-course-banner{
       width: 100%;
       height: 700px;
-      background:  rgba(255, 255, 255, 0.8) url(../../../../assets/education/courseInfo/back1.jpg) no-repeat; 
+      background:  rgba(255, 255, 255, 0.8) url(../../../../assets/education/courseInfo/back1.jpg) no-repeat;
       background-size: cover;
       text-align: center;
       overflow: hidden;
@@ -374,11 +374,10 @@ const handleClose = (key, keyPath) => {
         width: 1200px;
         text-align: left
     }
-    
+
     .course-summary p{
         font: 1em sans-serif;
     }
   </style>
 
 
-    

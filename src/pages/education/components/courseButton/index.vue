@@ -1,9 +1,8 @@
 <template>
     <div class="title-container"
          @mouseenter="hover = true"
-         @mouseleave="hover = false">
-
-        <a :href="dest" class="linkStyle">
+         @mouseleave="hover = false" @click="goto">
+        <a :href="'/education/courses/' + dest" class="linkStyle">
             <div class="text">{{rName}}</div>
         </a>
     </div>
@@ -17,6 +16,11 @@ export default {
         return{
             hover: false
         }
+    },
+    methods:{
+        goto(){
+            this.$router.push('/education/courses/' + this.dest);
+        }
     }
 }
 </script>
@@ -25,7 +29,7 @@ export default {
 .text{
     text-align: center;
     font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
-    font-size: 16px;
+    font-size: 13px;
     margin: 0 auto;
 }
 .title-container{
@@ -44,8 +48,7 @@ export default {
     cursor: pointer;
 }
 .title-container:hover{
-    background-color: rgba(147, 63, 63, 0.1);
+    background-color: rgba(63, 115, 147, 0.1);
     border-radius: 15px; /* Sets a 15px radius for all corners */
-    border: 1px solid #ccc;
 }
 </style>

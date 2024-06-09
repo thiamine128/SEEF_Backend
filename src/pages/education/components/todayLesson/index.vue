@@ -2,14 +2,14 @@
     <div :style="frameStyle">
         <div class="container">
             <div class="title-container">
-                <div :class="{ titleFont: true }">{{rTitle}}</div><a class="linkStyle">
-                    <div :class="{ moreFont: true }"> 更多课程> </div>
-                </a>
+                <div :class="{ titleFont: true }">{{rTitle}}</div>
             </div>
             <hr>
             <div :style="listStyle">
-                <ddl-button v-for="item in lessonList" :r-name="item.name+' 时间：'+item.date+' 教室: '+item.classroom">
-                </ddl-button>
+                <div v-for="cls in classes">
+                    <recommend-button :r-name="cls.courseName" @click="goto(cls.courseId)"></recommend-button>
+<!--                    <el-link type="primary" :href="'/education/courses/' + cls.courseId">{{ cls.courseName }}</el-link>-->
+                </div>
             </div>
         </div>
     </div>
@@ -17,20 +17,21 @@
 
 <script>
 import ddlButton from "@/pages/education/components/ddlButton/index.vue";
+import {getMyClassAPI, getTeachersInClassAPI, listTeacherClassAPI} from "@/pages/education/api";
+import RecommendButton from "@/pages/blog/components/recommendButton/index.vue";
 export default {
     name: "todayLesson",
     props: ['heightSet', 'rTitle'],
-    components:{ddlButton},
+    components:{RecommendButton, ddlButton},
     data(){
         return{
             frameStyle:{
                 width: '100%',
-                height: '500px',
+                height: '45%',
                 backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                borderRadius: '5px',
-                border: '1px solid rgba(155, 155, 155, 0.7)',
+                border: '0.2px solid rgba(155, 155, 155, 0.3)',
                 display: 'flex',
-                marginBottom: '10px'
+
             },
             listStyle:{
                 width: '100%',
@@ -39,19 +40,23 @@ export default {
                 overflowY: 'auto',
                 flexGrow: '1'
             },
-            lessonList: [
-                {name: '软件工程', date: '09:50', classroom: '主南405'}, {name: '科研课堂', date: '14:00', classroom: 'G1128'},
-                {name: '工程伦理与沟通技巧', date: '15:50', classroom: '(三)203'}, {name: '软工上机', date: '19:00', classroom: '新北机房'},
-            ],
+            classes: [],
         }
     },
     methods: {
+        async pullClasses() {
+            this.classes = await getMyClassAPI();
+        },
+        goto(courseId){
+            this.$router.push("/education/courses/" + courseId);
+        }
     },
     computed: {
 
     },
     mounted() {
         // this.frameStyle.height = this.heightSet;
+        this.pullClasses();
     }
 }
 </script>

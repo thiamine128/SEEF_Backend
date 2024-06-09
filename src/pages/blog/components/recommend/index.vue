@@ -109,10 +109,18 @@ export default {
 
         if (this.rTitle === '热门博主'){
             try{
-                const users_init = [22371182, 22371183, 22371184, 22371185, 22371186, 22371187, 22371188];
+                let cnt = 0;
+                const users_init = [22371182];
+                for (let i=1;i<=40;i++){
+                    users_init.push(i);
+                }
                 for (let sb of users_init){
                     const userData = await getUserData(sb);
-                    this.users.push({'name': userData.name, 'id': sb});
+                    if (userData && userData.subscribers && userData.subscribers > 0){
+                        this.users.push({'name': userData.name, 'id': sb});
+                        cnt++;
+                    }
+                    if (cnt > 10) break;
                 }
             }catch (error){}
         }
@@ -120,7 +128,7 @@ export default {
         if (this.rTitle === '相关博客'){
             try{
 
-                const response = await this.$http.get(`blog/similar?blogId=${this.$route.params.id}&count=10&previewLength=30`);
+                const response = await this.$http.get(`blog/similar?blogId=${this.$route.params.id}&count=10&previewLength=25`);
                 for (let b of response.data.data){
                     const userData = await getUserData(b.userId);
                     this.blogs.push({'name': b.title, 'id': b.id, 'abstract': b.preview, 'tags': b.tags, 'author': userData.name, 'createTime': dateF(b.createTime)});

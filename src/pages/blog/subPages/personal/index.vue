@@ -4,7 +4,13 @@
             <img class="portraitSet" :src="my_avatar" @error="altImg" @click="uploadUserAvatar">
             <div class="textSet">
                 <div class="nameSet">
-                    <div :class="{ nameFont: true }"> {{my_name}} </div>
+
+                    <div style="height: 50px" @click="isEditName = !noPermit" v-click-outside="handleOutsideProfileName">
+                        <div style="height: 100%" v-if="!isEditName" :class="{ nameFont: true }"> {{my_name}} </div>
+
+                        <el-input style="height: 100%; width: 200px" v-if="isEditName && !noPermit" v-model="my_name" :class="{ nameFontEdit: true }">
+                        </el-input>
+                    </div>
 
                     <personal-button v-if="noPermit" class="subscribeSet"
                                      :img-path="require('@/assets/blog/subscribe.png')"
@@ -15,7 +21,8 @@
                                      content="登出" @click="logoutFunc"/>
 
                 </div>
-                <div :class="{ contentFont: true }"> {{email}} </div>
+                <div :class="{contentFontStu: true}">{{stu_id}}(学工号)</div>
+                <div :class="{ contentFont: true }">{{email}}(联系方式)</div>
                 <div :class="{ contentFont: true }"> 注册于 {{dateF(createTime)}} </div>
             </div>
         </div>
@@ -33,16 +40,16 @@
 
             <div class="show">
                 <div class="like" >
-                    <div :class="{ contentFont: true }"> 热度 </div>
-                    <div :class="{ contentFont: true }"> {{ popularity }}</div>
+                    <div :class="{ contentFontLike: true }"> 热度 </div>
+                    <div :class="{ contentFontLike: true }"> {{ popularity }}</div>
                 </div>
                 <div class="like" >
-                    <div :class="{ contentFont: true }"> 关注 </div>
-                    <div :class="{ contentFont: true }"> {{subscribes}} </div>
+                    <div :class="{ contentFontLike: true }"> 关注 </div>
+                    <div :class="{ contentFontLike: true }"> {{subscribes}} </div>
                 </div>
                 <div class="like" >
-                    <div :class="{ contentFont: true }"> 文章 </div>
-                    <div :class="{ contentFont: true }"> {{articles}} </div>
+                    <div :class="{ contentFontLike: true }"> 文章 </div>
+                    <div :class="{ contentFontLike: true }"> {{articles}} </div>
                 </div>
             </div>
 
@@ -91,7 +98,7 @@ import * as echarts from 'echarts';
 import dayjs from "dayjs";
 import {callError, callInfo} from "@/callMessage";
 import store from "@/store/store";
-import {getUserData, subscribe_func, unSubscribe_func, uploadAvatar} from "@/pages/blog/api";
+import {getUserData, getUserStuId, subscribe_func, unSubscribe_func, uploadAvatar} from "@/pages/blog/api";
 import {ref} from "vue";
 import articleList from "@/pages/blog/components/articleList/index.vue";
 
@@ -102,7 +109,9 @@ export default {
     data(){
         return{
             my_avatar: require('@/assets/blog/user.png'),
+            stu_id: '',
             my_name: '',
+            past_my_name: '',
             createTime: 0,
             email: '', //邮箱，现在还没有返回
             popularity: 0, //热度
@@ -112,6 +121,7 @@ export default {
             past_introduction: '该用户没有留下简介......',
             isSubscribe: false, //是否关注过
             isEdit: false,
+            isEditName: false,
 
             hotspotPageSize: 1,
             hotspotList: []
@@ -139,7 +149,7 @@ export default {
                 const response = await this.$http.get(
                     `blog/viewBlogs?page=${pageNum}&pageSize=6&previewLength=500&userId=${this.$route.params.userId}&orderBy=popularity&sort=desc`
                 );
-                console.log(response);
+                //console.log(response);
                 if (response.status === 200) {
                     this.hotspotList = response.data.data.records;
                     this.hotspotPageSize = Math.ceil(response.data.data.total / 6);
@@ -175,25 +185,45 @@ export default {
             }
         },
 
+        async handleOutsideProfileName(event){
+            if (this.isEditName){
+                this.isEditName = false;
+                if (this.my_name.length > 6){
+                    callInfo('姓名过长');
+                    this.my_name = '默认名称';
+                }else if (this.my_name.length === 0){
+                    this.my_name = '默认名称';
+                }else if (this.my_name !== this.past_my_name){
+                    await this.$http.post('user/update', {
+                        "nickname": this.my_name
+                    });
+                    callInfo('姓名已修改');
+                    this.past_my_name = this.my_name;
+                }
+            }
+        },
+
         altImg(e){
             this.my_avatar = require('@/assets/blog/user.png');
         },
 
         dateF(num) {
-            return dayjs(num).format('YYYY-MM-DD');
+            return dayjs(num).format('YYYY年MM月DD日');
         },
 
         async pullPersonalData(){
+            this.stu_id = await getUserStuId(this.$route.params.userId);
             const personal_data = await getUserData(this.$route.params.userId, false);
-            console.log('personal_data:');
-            console.log(personal_data);
+            // console.log('personal_data:');
+            // console.log(personal_data);
             try{
                 personal_data.avatar = personal_data.avatar + '?t=' + new Date().getTime();
                 this.my_avatar = ref(personal_data.avatar);
             }catch (e){
-                console.error(e);
+                //console.error(e);
             }
             this.my_name = personal_data.name;
+            this.past_my_name = personal_data.name;
             this.createTime = personal_data.createTime;
             this.email = personal_data.email;
             this.isSubscribe = personal_data.subscribed;
@@ -368,6 +398,19 @@ export default {
 }
 .contentFont{
     font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
+    font-size: 16px;
+    text-align: left;
+    color: gray;
+}
+.contentFontStu{
+    font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
+    font-size: 18px;
+    text-align: left;
+    color: gray;
+    font-weight: bold;
+}
+.contentFontLike{
+    font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
     font-size: 20px;
     text-align: left;
     color: gray;
@@ -377,5 +420,12 @@ export default {
     font-size: 40px;
     font-weight: bold;
     text-align: left;
+}
+.nameFontEdit{
+    font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: left;
+    color: #8e8e8e;
 }
 </style>

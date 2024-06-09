@@ -2,8 +2,8 @@
     <div class="col"
          @mouseenter="hover = true"
          @mouseleave="hover = false"
-         @mouseover="hover = true">
-        <a  :href="dest" class="linkStyle">
+         @mouseover="hover = true" @click="goto">
+        <a class="linkStyle">
             <div :class="{ customFont: true }">{{buttonName}}</div>
         </a>
     </div>
@@ -22,6 +22,11 @@ export default {
     mounted() {
 
     },
+    methods:{
+        goto(){
+            this.$router.push(this.dest);
+        },
+    }
 }
 </script>
 
@@ -32,7 +37,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0.34, 0.34, 0.34, 0.1);
+    background-color: rgba(0.34, 0.34, 0.34, 0.01);
     transition: background-color 0.5s ease ;
 }
 .col:hover{

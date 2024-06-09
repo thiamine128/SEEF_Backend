@@ -1,6 +1,6 @@
 <template>
     <div ref="pinComponent">
-        <recommend v-if="contentName==='recommend'" height-set="530px" :r-title="rTitle"/>
+        <recommend v-if="contentName==='recommend'" height-set="400px" :r-title="rTitle"/>
         <catalog v-if="contentName==='catalog'" :container="container" />
     </div>
 </template>

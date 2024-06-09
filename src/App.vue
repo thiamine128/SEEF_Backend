@@ -29,4 +29,13 @@ export default {
     width: 100%;
     height: 100%;
 }
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #0fb2ff;
+    opacity: 0.7;
+    border-radius: 5px;
+}
 </style>

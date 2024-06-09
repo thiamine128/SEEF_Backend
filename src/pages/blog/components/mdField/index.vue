@@ -1,5 +1,5 @@
 <template>
-    <div :class="{textSet: true}">
+    <div class="textSet">
         <div class="marginSet">
             <markdown :source="inputContent" :plugins="plugins"/>
         </div>
@@ -41,4 +41,5 @@ export default {
 .marginSet{
     margin: 70px;
 }
+
 </style>

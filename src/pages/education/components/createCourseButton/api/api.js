@@ -1,18 +1,32 @@
 import axios from "axios";
+import {callError, callSuccess} from "@/callMessage";
+import {createTopic} from "@/pages/blog/api";
+// import createStore from '@/store/store';
 
 export async function createCourseAPI(data) {
+    let ok = false;
+    // let newCourseId = null;
     try {
         const response = await axios.post('/course/create', data)
-
-        console.log(response.status);
         if(response.status === 200) {
-            console.log(response.data.code);
-            if(response.data.code === 1) window.alert('添加课程成功');
-            else window.alert(response.data.msg);
+            // console.log(response.data.data.id);
+            // newCourseId = response.data.data.id;
+            if(response.data.code === 1) {
+                callSuccess('添加课程成功，新课程id为'+response.data.data.id);
+                ok = true;
+            }
+            else {
+                callError('添加课程失败');
+            }
         } else {
-            window.alert('网络错误');
+            callError('网络错误');
         }
     } catch (error) {
-        console.log("some errors happened when create a course")
+        // console.log("创建课程时出错")
+    }
+    if(ok) {
+        let topicName = data.name;
+        let introduction = data.introduction.substring(0, 20) + '...';
+        await createTopic(topicName, introduction);
     }
 }

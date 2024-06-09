@@ -53,12 +53,12 @@ export default {
                         }, 1000);
                     } else callError('网络错误');
                 }catch (error){
-                    callError(error);
+                    //callError(error);
                 }
             }else if (this.sel == 3){
                 try {
                     let response = null;
-                    console.log('reply: ' + this.replyData.to);
+                    //console.log('reply: ' + this.replyData.to);
                     if (this.replyData.to < 0){
                         response = await this.$http.post(`reply/create`, {
                             "content": this.commentContent,

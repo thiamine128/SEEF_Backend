@@ -66,7 +66,7 @@ export default {
                     this.sectionTotalPage = Math.ceil(response.data.data.total / 10);
                 } else callError('网络错误');
             }catch (error){
-                callError(error);
+                //callError(error);
             }
         },
 
@@ -75,13 +75,13 @@ export default {
                 const response = await this.$http.get(
                     `blog/viewBlogs?page=${pageNum}&pageSize=6&previewLength=500&keyword=${this.searchContent}&orderBy=popularity&sort=desc`
                 );
-                console.log(response);
+                //console.log(response);
                 if (response.status === 200) {
                     this.articleList = response.data.data.records;
                     this.articleTotalPage = Math.ceil(response.data.data.total / 6);
                 } else callError('网络错误');
             }catch (error){
-                callError(error);
+                //callError(error);
             }
         }
 
