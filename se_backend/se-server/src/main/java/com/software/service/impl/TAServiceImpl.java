@@ -7,6 +7,8 @@ import com.software.exception.InvalidParameterException;
 import com.software.mapper.TAMapper;
 import com.software.mapper.UserMapper;
 import com.software.service.TAService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +19,9 @@ import java.util.List;
  * @Description：
  * @date
  */
+
 @Service
+@Slf4j
 public class TAServiceImpl implements TAService {
     @Autowired
     TAMapper taMapper;

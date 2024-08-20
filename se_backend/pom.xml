@@ -34,6 +34,7 @@
     <jjwt>0.9.1</jjwt>
     <jaxb-api>2.3.1</jaxb-api>
     <poi>3.16</poi>
+    <nacos>2.1.0</nacos>
   </properties>
   <dependencyManagement>
     <dependencies>

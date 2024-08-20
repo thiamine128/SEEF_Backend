@@ -79,6 +79,16 @@ logging:
         service: info
         controller: info
 
+dubbo:
+  application:
+    name: se-provider
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    id: nacos-registry
+    address: nacos://localhost:8848
+
 software:
   jwt:
     # 设置jwt签名加密时使用的秘钥

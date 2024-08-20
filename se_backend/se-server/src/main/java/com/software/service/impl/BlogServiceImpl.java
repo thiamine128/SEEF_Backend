@@ -22,6 +22,7 @@ import com.software.vo.BlogPreviewVO;
 import com.software.vo.CategoryVO;
 import com.software.vo.CommentVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.impl.common.FastByIDMap;
 import org.apache.mahout.cf.taste.impl.model.GenericDataModel;
@@ -43,6 +44,7 @@ import org.xm.similarity.text.CosineSimilarity;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
 
 @Service
 @Slf4j
