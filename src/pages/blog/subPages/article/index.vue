@@ -1,5 +1,5 @@
 <template>
-    <blogTitle :title="title" :post-time="postTime" :update-time="updateTime"/>
+    <blogTitle :tags="tags" :title="title" :post-time="postTime" :update-time="updateTime"/>
     <div class="content-container">
         <div class="content-left">
             <md-field id="md-hook" :input-content="content"></md-field>
@@ -67,7 +67,7 @@ export default {
 
         try{
             const blog_Data = await getBlogData(this.$route.params.id, false);
-            console.log(blog_Data);
+            //console.log(blog_Data);
             this.content = blog_Data.context;
             this.updateTime = this.dateF(blog_Data.updateTIme);
             this.postTime = this.dateF(blog_Data.createTime);
@@ -76,6 +76,10 @@ export default {
             this.thumbNum = blog_Data.thumbNum;
             this.isLike = blog_Data.isLike;
             this.isFavor = blog_Data.isFavor;
+            // this.tags = blog_Data.tags;
+            for (let t of blog_Data.tags){
+                if ((t+'').length > 0) this.tags.push(t);
+            }
             await this.pageChange();
 
             setTimeout(()=>{
@@ -94,6 +98,7 @@ export default {
             catalogShow: false, authorId: -1, personalShow: false,
             thumbNum: -1, isFavor: false, isLike: false,
             intervalId: ref(null),
+            tags: []
         }
     },
     methods:{
@@ -134,14 +139,14 @@ export default {
                 const response = await this.$http.get(
                     `blog/viewComments?page=${this.currentPos}&pageSize=10&blogId=${this.$route.params.id}`
                 );
-                console.log(response);
+                //console.log(response);
                 if (response.status === 200) {
                     this.commentNum = response.data.data.total;
                     this.comments = response.data.data.records;
                     this.totalPage = Math.ceil(response.data.data.total / 10);
                 } else callError('网络错误');
             }catch (error){
-                callError(error);
+                //callError(error);
             }
         }
 

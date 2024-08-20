@@ -35,8 +35,8 @@ export default {
             try{
 
                 const response = await this.$http.get('event/eventCount');
-                console.log('event count: ');
-                console.log(response);
+                // console.log('event count: ');
+                // console.log(response);
 
                 if (response.status === 200){
                     if (response.data.data != null && response.data.data > 0){
@@ -46,7 +46,7 @@ export default {
                 }else callError('网络错误');
 
             }catch(error){
-                callError(error);
+                //callError(error);
             }
 
         }

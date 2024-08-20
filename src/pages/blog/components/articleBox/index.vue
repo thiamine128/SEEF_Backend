@@ -65,7 +65,7 @@ export default {
                             this.src_img =  new URL(matchResult[1], import.meta.url).href;
                             this.imgShow = true;
                         }catch (error){
-                            console.log(error);
+                            //console.log(error);
                         }
                     }
                 }else this.imgShow = false;
@@ -78,7 +78,10 @@ export default {
                 }
             }
 
-            await this.pullPersonalData();
+            try{
+                await this.pullPersonalData();
+            }catch (e){}
+
 
         }
 
@@ -86,12 +89,13 @@ export default {
     mounted() {
 
 
+        try{
+            this.pullPersonalData();
+            this.intervalId = setInterval(this.setImage, 500);
 
-        this.pullPersonalData();
-        this.intervalId = setInterval(this.setImage, 500);
-
-        if (this.hrNotShow) this.isHr = false;
-        this.loginNow = store.getters.getData.id;
+            if (this.hrNotShow) this.isHr = false;
+            this.loginNow = store.getters.getData.id;
+        }catch (e){}
     },
     data(){
         return{

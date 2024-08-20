@@ -167,8 +167,8 @@ export default {
 
         async pullReplyData(replyId){
             const reply_data = await getReplyData(replyId);
-            console.log(replyId);
-            console.log(reply_data);
+            // console.log(replyId);
+            // console.log(reply_data);
             this.replyData.toId = reply_data.toId;
             this.replyData.userId = reply_data.userId;
             this.replyData.content = reply_data.content;

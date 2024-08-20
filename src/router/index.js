@@ -5,7 +5,7 @@ import store from "@/store/store";
 //路由设置
 
 const router = createRouter({
-    // history: createWebHashHistory(),  // hash 模式
+    // history: createWebHashHistory(process.env.BASE_URL),  // hash 模式
     history: createWebHistory(),  // history 模式
     routes: [
 
@@ -20,41 +20,14 @@ const router = createRouter({
         },
 
 
-        // {
-        //     path: '/education',
-        //     name: 'education',
-        //     component: defineAsyncComponent(() => import(`../pages/education/index.vue`)),
-        //     children: [
-        //         {
-        //             path: '/education/myLesson',
-        //             name: 'myLesson',
-        //             component: defineAsyncComponent(() => import(`../pages/education/subPages/myLesson/index.vue`)),
-        //             // meta: {
-        //             //     title: '我的课程',
-        //             // }
-        //         },
-        //         {
-        //             path: '/education/mySchoolTimeTable',
-        //             name: 'mySchoolTimeTable',
-        //             component: defineAsyncComponent(() => import(`@/pages/education/subPages/mySchoolTimeTable/index.vue`)),
-        //             // meta: {
-        //             //     title: '我的课表',
-        //             // }
-        //         },
-        //         {
-        //             path: '/education/courseSquare',
-        //             name: 'courseSquare',
-        //             component: defineAsyncComponent(() =>
-        //                 import(`@/pages/education/subPages/courseSquare/index.vue`)),
-        //             // meta: {
-        //             //     title: '课程广场',
-        //             // }
-        //         },
-        //     ],
-        //     meta: {
-        //         title: '教学论坛',
-        //     },
-        // },
+        {
+            path: '/education',
+            name: 'education',
+            component: defineAsyncComponent(() => import(`../pages/education/index.vue`)),
+            meta: {
+                title: '教务系统',
+            }
+        },
         {
             path: '/education/myLesson',
             name: 'myLesson',
@@ -81,26 +54,47 @@ const router = createRouter({
             }
         },
         {
-            path: '/education/personCenter',
-            name: 'personSquare',
+            path: '/education/adminCenter',
+            name: 'adminCenter',
             component: defineAsyncComponent(() =>
-                import('@/pages/education/subPages/personCenter/index.vue')),
+                import('@/pages/education/subPages/adminCenter/index.vue')),
             meta: {
-                title: '个人中心',
+                title: '管理中心',
             }
         },
         {
-            path: '/education/courses/:EnName',
+            path: '/education/TACenter',
+            name: 'TACenter',
+            component: defineAsyncComponent(() =>
+                import('@/pages/education/subPages/TACenter/index.vue')),
+            meta: {
+                title: '我的助教',
+            }
+        },
+        {
+            path: '/education/courses/:courseId',
             name: 'courses',
             component: defineAsyncComponent(() =>
                 import(`@/pages/education/subPages/courses/index.vue`)),
         },
+        // {
+        //     path: '/education/classes/:classId',
+        //     name: 'classes',
+        //     component: defineAsyncComponent(() =>
+        //         import(`@/pages/education/subPages/classes/index.vue`)),
+        // },
 
         {
             path: '/education/CourseInfo',
             name: 'courseInfo',
             component: defineAsyncComponent(() =>
                 import(`@/pages/education/subPages/courseInfo/index.vue`)),
+        },
+
+        {
+            //错误路由重定向
+            path: '/education/:catchAll(.*)',
+            redirect: '/education',
         },
 
         //博客界面路由
@@ -139,7 +133,7 @@ const router = createRouter({
                 },
                 {
                     //编辑器
-                    path: '/blog/editor',
+                    path: '/blog/editor/:blogId',
                     name: 'editor',
                     component: defineAsyncComponent(() =>
                         import(`../pages/blog/subPages/editor/index.vue`)),
@@ -200,7 +194,7 @@ router.beforeEach((to, from, next)=>{
     const hasToken = store.getters.getToken;
 
     if (hasToken != null){
-        console.log('现在存在token：'+hasToken);
+        //console.log('现在存在token：'+hasToken);
         if (to.path === '/login') {
             //已经登录了，去博客页面
             next({ path: '/blog' })
@@ -228,7 +222,7 @@ router.beforeEach((to, from, next)=>{
 
 router.afterEach((to, from)=>{
     //切换路由成功
-    console.log('change page succeed');
+    //console.log('change page succeed');
 })
 
 export default router

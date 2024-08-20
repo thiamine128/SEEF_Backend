@@ -12,6 +12,7 @@
             <left-button :path="require('@/assets/blog/post.png')" name="发布" @click="post"/>
 
         </div>
+
         <div class="inputStyle">
             <div class="tagLine">
 
@@ -34,6 +35,7 @@
             <input class="textarea-title" v-model="mdTitle" placeholder="在此处输入标题">
             <textarea class="textarea-content" v-model="content" ref="left_s" placeholder="在此处编辑Markdown"></textarea>
         </div>
+
         <md-field class="mdStyle" :inputContent="result" ref="right_s"/>
     </div>
 </template>
@@ -52,9 +54,8 @@ export default {
     components: {LeftButton, MdField},
     props: ['categoryName', 'categoryId', 'sectionName', 'topicId'],
     data(){
-        const content = ref('');
         return{
-            content,
+            content: '',
             mdTitle: '',
             tagName: '',
             tags: []
@@ -97,7 +98,7 @@ export default {
                 callError('标签不可为空');
                 return;
             }
-            if (this.tagName.length > 10){
+            if (this.tagName.length > 6){
                 callError('标签过长');
                 return;
             }
@@ -127,7 +128,7 @@ export default {
         upload(){
             const fileInput = document.createElement("input");
             fileInput.type = "file";
-            fileInput.accept = ".md, .markdown";
+            fileInput.accept = ".md, .markdown, .txt";
             fileInput.addEventListener("change", this.handleFileUpload);
             fileInput.click();
         },
@@ -157,7 +158,7 @@ export default {
 
         async post(){
 
-            if (this.content.length === 0 || this.mdTitle === 0){
+            if (this.content.length === 0 || this.mdTitle.length === 0){
                 callWarning('内容不得为空');
                 return;
             }
@@ -212,8 +213,8 @@ export default {
         async updateBlog(updateData){
             updateData["blogId"] = parseInt(this.$route.params.blogId);
             updateData["content"] = updateData["context"];
-            console.log("update: ");
-            console.log(updateData);
+            // console.log("update: ");
+            // console.log(updateData);
             try{
                 const response = await this.$http.post(`blog/updateBlog`, updateData);
                 if (response.status === 200) {
@@ -248,7 +249,7 @@ export default {
                     },
                 });
 
-                console.log(response.data);
+                //console.log(response.data);
                 const keyData = {
                     "name": 'ok',
                     "policy": response.data.data.encodedPolicy,
@@ -277,7 +278,7 @@ export default {
                 }
 
             } catch (error) {
-                console.error(error);
+                //console.error(error);
             }
         }
 
@@ -361,9 +362,10 @@ export default {
 }
 
 .mdStyle{
-    width: 48%;
-    height: 700px;
-    min-height: 700px;
+    width: 48% !important;
+    height: 700px !important;
+    min-height: 700px !important;
+    max-height: 700px !important;
     overflow-y: auto;
 }
 :deep(.marginSet){

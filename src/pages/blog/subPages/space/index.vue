@@ -47,9 +47,9 @@ export default {
                     store.commit('addEvent', e0);
                 }
                 this.eventList = store.getters.getEventList.concat();
-                console.log(this.eventList);
+                //console.log(this.eventList);
             }catch(error){
-                callError(error);
+                //callError(error);
             }
         }
     }

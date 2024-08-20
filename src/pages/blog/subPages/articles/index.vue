@@ -46,14 +46,14 @@ export default {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 });
 
-                console.log(response);
+                //console.log(response);
                 if (response.status === 200) {
                     this.artiList = response.data.data.records;
                     this.totalPage = Math.ceil(response.data.data.total / 15);
                     document.documentElement.scrollTop = 0;
                 } else callError('网络错误');
             }catch (error){
-                callError(error);
+                //callError(error);
             }
         }
     },

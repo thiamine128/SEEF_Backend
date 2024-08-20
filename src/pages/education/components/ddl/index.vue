@@ -3,17 +3,10 @@
         <div class="container">
             <div class="title-container">
                 <div :class="{ titleFont: true }">{{rTitle}}</div>
-                <button @click="sortList('asc', 'date')" class="sortButton">按时间升序</button>
-                <button @click="sortList('desc', 'date')" class="sortButton">按时间降序</button>
-                <button @click="sortList('asc', 'priority')" class="sortButton">按优先级升序</button>
-                <button @click="sortList('desc', 'priority')" class="sortButton">按优先级降序</button>
-                <a class="linkStyle">
-                    <div :class="{ moreFont: true }"> 更多ddl> </div>
-                </a>
             </div>
             <hr>
             <div :style="listStyle">
-                <ddl-button v-for="item in ddlList" :r-name="item.name+' ddl：'+item.date+' 优先级: '+item.priority">
+                <ddl-button v-for="item in ddlList" :course-id="item.courseId" :title="item.title" :course-name="item.courseName" :due-date="dateF(item.dueDate)" :submitted="item.submissionTime">
                 </ddl-button>
             </div>
         </div>
@@ -22,6 +15,9 @@
 
 <script>
 import ddlButton from "@/pages/education/components/ddlButton/index.vue";
+import {callError} from "@/callMessage";
+import dayjs from "dayjs";
+
 export default {
     name: "ddl",
     props: ['heightSet', 'rTitle'],
@@ -30,12 +26,10 @@ export default {
         return{
             frameStyle:{
                 width: '100%',
-                height: '500px',
+                height: '45%',
                 backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                borderRadius: '5px',
-                border: '1px solid rgba(155, 155, 155, 0.7)',
+                border: '0.2px solid rgba(155, 155, 155, 0.3)',
                 display: 'flex',
-                marginBottom: '10px'
             },
             listStyle:{
                 width: '100%',
@@ -45,22 +39,35 @@ export default {
                 flexGrow: '1'
             },
             ddlList: [
-                {name: '数据期中大作业', date: '2024.05.14', priority: 2}, {name: '软件工程文档', date: '2024.05.05', priority: 2},
-                {name: '人工智障', date: '2024.05.02', priority: 3}, {name: '操作系统第四次作业', date: '2024.05.09', priority: 1},
+
             ],
         }
     },
     methods: {
-        sortList(direction, key) {
-            if (direction === 'asc' && key === 'date') {
-                this.ddlList.sort((a, b) => a.date.localeCompare(b.date));
-            } else if (direction === 'desc' && key === 'date') {
-                this.ddlList.sort((a, b) => b.date.localeCompare(a.date));
-            } else if (direction === 'asc' && key === 'priority') {
-                this.ddlList.sort((a, b) => a.priority - b.priority);
-            } else if (direction === 'desc' && key === 'priority') {
-                this.ddlList.sort((a, b) => b.priority - a.priority);
+        async pullDDLs(pageNum){
+            try{
+                const response = await this.$http.get(
+                    `assignment/all?showOutdated=false`,{
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                });
+
+                // console.log(response);
+                if (response.status === 200) {
+                    this.ddlList = response.data.data;
+
+                    this.ddlList.sort((a, b) => {
+                        if (a.submissionTime == null) return -1;
+                        if (b.submissionTime == null) return 1;
+                        return a.dueDate - b.dueDate;
+                    });
+                    // console.log(this.ddlList)
+                } else callError('网络错误');
+            }catch (error){
+                callError(error);
             }
+        },
+        dateF(num) {
+            return dayjs(num).format('YYYY-MM-DD');
         },
     },
     computed: {
@@ -68,6 +75,7 @@ export default {
     },
     mounted() {
         // this.frameStyle.height = this.heightSet;
+        this.pullDDLs(1);
     }
 }
 </script>

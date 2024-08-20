@@ -1,6 +1,6 @@
 <template>
     <div :class="{titleControlInit: init_set, titleControl: !init_set}">
-        <title-group :title="title" :date-string="dateString" class="groupControl"></title-group>
+        <title-group :tag-list="tags" :title="title" :date-string="dateString" class="groupControl"></title-group>
     </div>
 </template>
 
@@ -10,7 +10,7 @@ import titleGroup from "@/pages/blog/components/titleGroup/index.vue";
 
 export default {
     name: "blogTitle",
-    props: ['title', 'postTime', 'updateTime'],
+    props: ['title', 'postTime', 'updateTime', 'tags'],
     components: {
         titleGroup
     },

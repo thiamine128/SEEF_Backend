@@ -1,6 +1,11 @@
 <template>
     <div class="titleFather">
       <div :class="{ titleFont: true }">{{title}}</div>
+        <div v-if="tagList.length > 0" style="display: flex; flex-direction: row; justify-content: center; align-items: center; height: 25px">
+        <div v-for="item in tagList" class="tagSet">
+            {{item}}
+        </div>
+        </div>
       <div :class="{ dateFont: true }">{{dateString}}</div>
     </div>
 </template>
@@ -8,7 +13,7 @@
 <script>
 export default {
     name: "titleGroup",
-    props: ['title', 'dateString'],
+    props: ['title', 'dateString', 'tagList'],
 }
 </script>
 
@@ -30,5 +35,21 @@ export default {
     color: #bcbcbc;
     font-size: 20px;
     margin: auto;
+}
+.tagSet{
+    padding: 3px 5px;
+    margin-left: 3px;
+    height: 60%;
+    min-width: 0;
+    display: flex;
+    flex-direction: row;
+    background-color: rgba(208, 208, 208, 0.2);
+    border-radius: 2px;
+    justify-content: center;
+    align-items: center;
+    cursor: default;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: bold;
 }
 </style>

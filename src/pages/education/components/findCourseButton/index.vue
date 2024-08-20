@@ -6,18 +6,18 @@
             <div class="modal-content">
                 <span class="close-icon" @click="showFindCourseModal = false">&times;</span>
 
-                <h2>查询课程</h2>
+                <h3>查询课程</h3>
 
                 <form @submit.prevent="findCourse">
                     <div class="input-group">
-                        <label for="courseName">课程名称:</label>
-                        <input type="text" id="courseName" v-model="courseName" required>
+                        <input placeholder="请输入课程名称" style="height: 20px" type="text" id="courseName" v-model="courseName">
                     </div>
 
-                    <button type="submit">确认</button>
+                    <button type="submit" style="width: 100%">确认</button>
                 </form>
             </div>
         </div>
+
     </div>
 </template>
 
@@ -26,25 +26,13 @@ import {findCourseAPI} from "@/pages/education/components/findCourseButton/api/a
 // import { defineEmit } from 'vue';
 import { ref } from 'vue';
 export default {
-    // setup() {
-    //     const searchQuery = ref('');
-    //     const emitSearchQuery = defineEmit('searchQuery'); // Define the event
-    //
-    //     const onSearch = () => {
-    //         emitSearchQuery(searchQuery.value); // Emit the event with query
-    //     };
-    //     return {
-    //         searchQuery,
-    //         onSearch,
-    //     }
-    // },
     name: "findCourseButton",
     data() {
         return {
             showFindCourseModal: false,
-            courseName: '课程名称',
+            courseName: '',
             page: 1,
-            pageSize: 10,
+            pageSize: 50,
             courses: [],
         };
     },
@@ -60,10 +48,13 @@ export default {
                 page: this.page,
                 pageSize: this.pageSize,
             };
-            console.log("调用findCourseAPT");
+            // console.log("调用findCourseAPT");
             this.courses = await findCourseAPI(data);
-            console.log('In findCourseButton');
-            console.log(this.courses);
+            this.$emit('update-courses', this.courses);
+            this.$emit('update-show-class-list', false);
+            this.$emit('update-show-course-list', true);
+            this.$emit('update-find-name', this.courseName);
+            this.showFindCourseModal = false;
         },
     },
 }
@@ -74,7 +65,8 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 20px;
+    width: 180px;
+    height: 60px;
 }
 
 .create-course-button {
@@ -115,6 +107,8 @@ export default {
     display: flex;
     flex-direction: column;
     margin-bottom: 15px;
+    width: 200px;
+
 }
 
 .input-group label {
@@ -132,18 +126,19 @@ export default {
 }
 
 .first-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(11, 11, 11, 0.02);
     border: none;
     cursor: pointer;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);*/
     transition: background-color 0.3s ease;
-    font-size: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #2b2b2b;
 }
 
 .first-button:hover {
-    background-color: #0056b3;
+    background-color: rgba(55, 55, 55, 0.1);
 }
 </style>

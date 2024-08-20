@@ -142,7 +142,7 @@ export default {
             if (topicName.length > 4) this.sectionName = topicName.slice(0, 4)+'...';
             else this.sectionName = topicName;
             this.topicId = id;
-            console.log('topic: '+id+ " "+topicName);
+            //console.log('topic: '+id+ " "+topicName);
             this.cancelFloatWindow();
         },
 
@@ -160,13 +160,13 @@ export default {
         async getSections(pageNum){
             try{
                 const response = await this.$http.get(`topic/pagedList?page=${pageNum}&pageSize=6`);
-                console.log(response);
+                //console.log(response);
                 if (response.status === 200) {
                     this.sectionList = response.data.data.records;
                     this.totalPage = Math.ceil(response.data.data.total / 6);
                 } else callError('网络错误');
             }catch (error){
-                callError(error);
+                //callError(error);
             }
         }
 
@@ -187,6 +187,14 @@ export default {
     z-index: -1;
     top: 0;
     left: 0;
+}
+
+.bg-bottom-container {
+    background: url('@/assets/blog/ic0001a.png');
+    opacity: 0.9;
+    background-size: cover;
+    height: 100vh;
+    width: 100vw;
 }
 
 @keyframes rotate {

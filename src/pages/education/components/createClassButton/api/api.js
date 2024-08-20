@@ -1,17 +1,22 @@
 import axios from "axios";
+import {callSuccess, callError} from "@/callMessage";
 
 export async function createClassAPI(data) {
+
+    let classId = null;
+    // 添加班级
     try {
-        const response = await axios.post('/course/addClass', data)
-        console.log(response.status);
+        const response = await axios.post('/course/addClass', data);
+        // console.log(response.data);
+        classId = response.data.data.id;
         if(response.status === 200) {
-            console.log(response.data.code);
-            if(response.data.code === 1) window.alert('添加教学班成功');
-            else window.alert(response.data.msg);
+            if(response.data.code === 1) callSuccess('添加班级成功，新班级编号为：' + classId);
+            else callError(response.data.msg);
         } else {
-            window.alert('网络错误');
+            callError('网络错误');
         }
     } catch (error) {
-        console.log("some errors happened when create a course")
+        callError("some errors happened when add a class");
     }
+
 }

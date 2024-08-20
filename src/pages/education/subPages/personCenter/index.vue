@@ -19,7 +19,7 @@ export default {
     },
     methods:{
         myClass() {
-            console.log("Click");
+            // console.log("Click");
         }
     }
 }
@@ -38,7 +38,7 @@ export default {
     grid-gap: 16px;
 }
 .bg-container {
-    background: url('@/assets/education/education_bg.jpg');
+    background: url('@/assets/education/bg.png');
     background-size: cover;
     position: fixed;
     height: 100vh;

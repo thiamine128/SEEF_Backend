@@ -121,8 +121,8 @@ export default {
                 //callError(error);
             }
 
-            console.log('关注博客：');
-            console.log(this.blogList);
+            // console.log('关注博客：');
+            // console.log(this.blogList);
 
             for (let b of this.blogList){
                 if (!b.favourCategory) await this.addBlogToCategory(b, -1);
@@ -141,7 +141,7 @@ export default {
                     this.totalPage = Math.ceil(response.data.data.total / 15);
                 } else callError('网络错误');
             }catch (error){
-                callError(error);
+                //callError(error);
             }
 
             for (let b of this.blogList){
@@ -184,8 +184,8 @@ export default {
                     const response = await this.$http.get(
                         `space/getALLCategory?userId=${this.$route.params.userId}`
                     );
-                    console.log('category: ');
-                    console.log(response);
+                    // console.log('category: ');
+                    // console.log(response);
                     if (response.status === 200){
                         if (response.data.data){
                             for (let e of response.data.data){
@@ -213,8 +213,8 @@ export default {
                         `blog/getFavourCategory?userId=${this.$route.params.userId}`
                     );
 
-                    console.log('favourCategory:');
-                    console.log(response);
+                    // console.log('favourCategory:');
+                    // console.log(response);
 
                     if (response.status === 200){
                         if (response.data.data){

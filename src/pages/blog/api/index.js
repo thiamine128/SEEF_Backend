@@ -35,7 +35,7 @@ export async function like_func(blogId, result){
 
 export async function favor_func(blogId, result, categoryName = '默认收藏夹'){
     try{
-        console.log('尝试收藏到 '+categoryName);
+        //console.log('尝试收藏到 '+categoryName);
         const response = await axios.post(
             `blog/favor?blogId=${blogId}&category=${categoryName}`
         );
@@ -49,11 +49,11 @@ export async function favor_func(blogId, result, categoryName = '默认收藏夹
 }
 
 export async function getUserData(userId, useCache = true){
-    console.log('读取user数据');
+    //console.log('读取user数据');
     let result = null;
     const pre = store.getters.getMapUser(userId);
     if (pre && useCache) {
-        console.log('读取user缓存成功');
+        //console.log('读取user缓存成功');
         return pre;
     }
     try{
@@ -71,11 +71,26 @@ export async function getUserData(userId, useCache = true){
     return result;
 }
 
+export async function getUserStuId(userId){
+    //console.log('读取user数据');
+    let result = null;
+    try{
+        const response = await axios.get(`/user?userId=${userId}`);
+        if (response.status === 200){
+            result = response.data.data;
+            result = result["name"];
+        }
+    }catch (error){
+        //callError(error);
+    }
+    return result;
+}
+
 export async function getBlogData(blogId, useCache = true){
     let result = null;
     const pre = store.getters.getMapBlog(blogId);
     if (pre && useCache) {
-        console.log('读取blog缓存成功');
+        //console.log('读取blog缓存成功');
         return pre;
     }
     try{
@@ -94,7 +109,7 @@ export async function getCommentData(commentId){
     let result = null;
     const pre = store.getters.getMapComment(commentId);
     if (pre) {
-        console.log('读取comment缓存成功');
+        //console.log('读取comment缓存成功');
         return pre;
     }
     try{
@@ -113,7 +128,7 @@ export async function getReplyData(replyId){
     let result = null;
     const pre = store.getters.getMapReply(replyId);
     if (pre) {
-        console.log('读取reply缓存成功');
+        //console.log('读取reply缓存成功');
         return pre;
     }
     try{
@@ -199,7 +214,7 @@ export async function handleImage(event){
             },
         });
 
-        console.log(response.data);
+        //console.log(response.data);
         const keyData = {
             "name": 'ok',
             "policy": response.data.data.encodedPolicy,
@@ -230,7 +245,7 @@ export async function handleImage(event){
         }
 
     } catch (error) {
-        console.error(error);
+        //console.error(error);
     }
 }
 
@@ -242,7 +257,7 @@ export async function deleteSpace(categoryName){
             location.reload();
         }
     }catch (e){
-        console.log(e);
+        //console.log(e);
     }
 }
 
@@ -254,7 +269,7 @@ export async function deleteCategory(categoryName){
             location.reload();
         }
     }catch (e){
-        console.log(e);
+        //console.log(e);
     }
 }
 

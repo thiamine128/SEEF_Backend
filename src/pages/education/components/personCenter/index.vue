@@ -57,12 +57,12 @@ export default {
                 axios.post('/upload', formData)// 等待修改
                     .then(response => {
                         // Handle successful upload
-                        console.log('Image uploaded successfully!');
+                        // console.log('Image uploaded successfully!');
                         this.imageUrl = response.data.imageUrl; // Assuming response contains an imageUrl property
                     })
                     .catch(error => {
                         // Handle upload error
-                        console.error('Error uploading image:', error);
+                        // console.error('Error uploading image:', error);
                     });
             }
         },
